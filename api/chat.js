@@ -5,25 +5,40 @@ export default async function handler(req, res) {
 
   const { message } = req.body;
 
+  if (!message || !message.trim()) {
+    return res.status(200).json({
+      reply: "Your voice matters. I am listening.",
+    });
+  }
+
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: message },
-        ],
+        model: "gpt-4.1-mini",
+        input: message,
+        max_output_tokens: 120
       }),
     });
 
     const data = await response.json();
-    res.status(200).json({ reply: data.choices[0].message.content });
+
+    // return raw text directly
+    const reply = data.output_text;
+
+    res.status(200).json({
+      reply: reply || "I hear you. You are not alone."
+    });
+
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong" });
+    console.error(error);
+
+    res.status(200).json({
+      reply: "Take a slow breath. You are not alone.",
+    });
   }
 }
