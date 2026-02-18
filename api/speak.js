@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   if (!message || !message.trim()) {
     return res.status(200).json({
-      reply: "Your voice matters. I am listening.",
+      reply: "Your voice matters. Speak freely.",
     });
   }
 
@@ -21,24 +21,25 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "gpt-4.1-mini",
         input: message,
-        max_output_tokens: 120
       }),
     });
 
     const data = await response.json();
 
-    // return raw text directly
-    const reply = data.output_text;
+    console.log("OPENAI RESPONSE:", JSON.stringify(data));
 
-    res.status(200).json({
-      reply: reply || "I hear you. You are not alone."
-    });
+    const reply =
+      data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
+      "Thank you for sharing. Tell me more.";
+
+    res.status(200).json({ reply });
 
   } catch (error) {
     console.error(error);
 
     res.status(200).json({
-      reply: "Take a slow breath. You are not alone.",
+      reply: "I’m listening. Take your time.",
     });
   }
 }
