@@ -269,17 +269,37 @@ footer a:hover {
 </footer>
 
 <script>
-function handleEnter(event) {
+async function handleEnter(event) {
   if (event.key === "Enter") {
+
     const input = document.getElementById("userInput").value;
     const responseBox = document.getElementById("responseBox");
+
     if (!input.trim()) {
       responseBox.innerHTML = "Your voice matters.";
       return;
     }
-    responseBox.innerHTML = "You are heard. This space exists for expression without fear.";
+
+    responseBox.innerHTML = "Listening...";
+
+    try {
+      const res = await fetch("/api/speak", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: input })
+      });
+
+      const data = await res.json();
+      responseBox.innerHTML = data.reply;
+
+    } catch (err) {
+      responseBox.innerHTML = "Connection error. Please try again.";
+    }
   }
 }
+
 
 function showTnC() {
   document.getElementById("homepageContent").style.display = "none";
