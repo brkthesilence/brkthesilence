@@ -35,7 +35,7 @@ body {
   opacity: 0.7;
 }
 
-/* Center Content */
+/* Homepage Content */
 .container {
   flex: 1;
   display: flex;
@@ -181,9 +181,9 @@ footer a:hover {
 <body>
 
 <!-- Logo -->
-<div class="logo" onclick="scrollToTop()">BRK THE SILENCE</div>
+<div class="logo" onclick="showHome()">BRK THE SILENCE</div>
 
-<!-- Main Homepage Content -->
+<!-- Homepage Content -->
 <div class="container" id="homepageContent">
   <div class="headline">Empower your inner voice.</div>
   <div class="subheadline">A quiet space to express what you usually keep inside.</div>
@@ -282,14 +282,17 @@ function handleEnter(event) {
   }
 }
 
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function showTnC() {
+  document.getElementById("homepageContent").style.display = "none";
   const tc = document.getElementById("tcSection");
   tc.style.display = "block";
   tc.scrollIntoView({ behavior: "smooth" });
+}
+
+function showHome() {
+  document.getElementById("tcSection").style.display = "none";
+  document.getElementById("homepageContent").style.display = "flex";
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
 
