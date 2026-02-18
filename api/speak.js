@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const openaiRes = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,33 +20,22 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `You are a calm and supportive emotional listener.
-Respond warmly and briefly.
-
-User: ${message}`,
+        input: message,
+        max_output_tokens: 120
       }),
     });
 
-    const data = await openaiRes.json();
-    console.log("FULL RESPONSE:", JSON.stringify(data));
+    const data = await response.json();
 
-    // 🔎 Extract reply safely
-    let reply = "";
+    // return raw text directly
+    const reply = data.output_text;
 
-    if (data.output_text) {
-      reply = data.output_text;
-    } else if (data.output?.[0]?.content?.[0]?.text) {
-      reply = data.output[0].content[0].text;
-    }
-
-    if (!reply || reply.trim().length === 0) {
-      reply = "I hear you. You are not alone in this moment.";
-    }
-
-    res.status(200).json({ reply });
+    res.status(200).json({
+      reply: reply || "I hear you. You are not alone."
+    });
 
   } catch (error) {
-    console.error("API ERROR:", error);
+    console.error(error);
 
     res.status(200).json({
       reply: "Take a slow breath. You are not alone.",
