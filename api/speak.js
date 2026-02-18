@@ -5,8 +5,14 @@ export default async function handler(req, res) {
 
   const { message } = req.body;
 
+  if (!message || !message.trim()) {
+    return res.status(200).json({
+      reply: "Your voice matters. I am listening.",
+    });
+  }
+
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -18,24 +24,34 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              "You are a calm, non-judgmental emotional listener. Respond gently and briefly.",
+              "You are a calm, supportive emotional listener. Respond gently, warmly, and briefly.",
           },
-          { role: "user", content: message },
+          {
+            role: "user",
+            content: message,
+          },
         ],
         max_tokens: 150,
+        temperature: 0.7,
       }),
     });
 
-    const data = await response.json();
+    const data = await openaiRes.json();
 
-    const reply =
-      data?.choices?.[0]?.message?.content?.trim() ||
-      "I am here with you. You are not alone.";
+    // 🔎 Extract reply safely
+    let reply = data?.choices?.[0]?.message?.content;
+
+    // fallback if empty
+    if (!reply || reply.trim().length === 0) {
+      reply = "I hear you. You are not alone in this moment.";
+    }
 
     res.status(200).json({ reply });
 
   } catch (error) {
-    res.status(500).json({
+    console.error("API ERROR:", error);
+
+    res.status(200).json({
       reply: "Take a slow breath. You are safe in this moment.",
     });
   }
