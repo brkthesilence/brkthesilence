@@ -30,6 +30,8 @@ body {
   cursor: pointer;
 }
 
+.logo:hover { opacity: 0.7; }
+
 .container {
   flex: 1;
   display: flex;
@@ -44,7 +46,7 @@ body {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 12px;
-  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
+  background: linear-gradient(90deg,#ff7a18,#ff3cac,#7b2ff7,#00c6ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -60,8 +62,8 @@ body {
   max-width: 700px;
   padding: 2px;
   border-radius: 30px;
-  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
-  margin-bottom: 30px;
+  background: linear-gradient(90deg,#ff7a18,#ff3cac,#7b2ff7,#00c6ff);
+  margin-bottom: 25px;
 }
 
 .search-input {
@@ -71,42 +73,73 @@ body {
   border-radius: 30px;
   padding: 0 22px;
   font-size: 16px;
-  color: #ffffff;
+  color: #fff;
   background: #121212;
   outline: none;
 }
 
 .response {
-  margin-top: 20px;
+  margin-top: 12px;
   max-width: 700px;
-  color: #cfcfcf;
+  color: #d7d7d7;
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 16px;
+  min-height: 24px;
+}
+
+.loading {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* T&C */
+.tc-section {
+  display: none;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  text-align: left;
+}
+
+.tc-section h1 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.tc-section p {
+  margin-bottom: 12px;
+  color: #ccc;
 }
 
 footer {
   text-align: center;
-  padding: 20px;
+  padding: 18px;
   font-size: 14px;
   color: #888;
   border-top: 1px solid #111;
 }
+
+footer a {
+  color: #888;
+  cursor: pointer;
+}
+footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 
-<div class="logo">BRK THE SILENCE</div>
+<div class="logo" onclick="showHome()">BRK THE SILENCE</div>
 
-<div class="container">
-  <div class="headline">Empower your inner voice.</div>
-  <div class="subheadline">A quiet space to express what you usually keep inside.</div>
+<div class="container" id="home">
+  <div class="headline">Speak freely. No judgement.</div>
+  <div class="subheadline">A quiet space to express what’s on your mind.</div>
 
   <div class="search-wrapper">
-    <input 
-      type="text" 
-      class="search-input" 
+    <input
+      type="text"
+      class="search-input"
       id="userInput"
-      placeholder="What’s on your mind"
+      placeholder="Type anything..."
       onkeydown="handleEnter(event)"
     >
   </div>
@@ -114,27 +147,35 @@ footer {
   <div class="response" id="responseBox"></div>
 </div>
 
+<div class="tc-section" id="tc">
+  <h1>Terms & Conditions</h1>
+  <p>This platform is a quiet space for personal expression.</p>
+  <p>It is not therapy, medical advice, or crisis support.</p>
+  <p>If you are in immediate danger, contact local emergency services.</p>
+</div>
+
 <footer>
   No Identity. No Judgement. Just Expression.
+  | <a onclick="showTnC()">T&C</a>
 </footer>
 
 <script>
 async function handleEnter(event) {
   if (event.key === "Enter") {
 
-    const input = document.getElementById("userInput").value;
-    const responseBox = document.getElementById("responseBox");
+    const input = document.getElementById("userInput").value.trim();
+    const box = document.getElementById("responseBox");
 
-    if (!input.trim()) {
-      responseBox.innerHTML = "Your voice matters.";
+    if (!input) {
+      box.innerHTML = "You can share anything here.";
       return;
     }
 
-    responseBox.innerHTML = "Listening...";
+    box.innerHTML = "Thinking...";
+    box.classList.add("loading");
 
     try {
       const res = await fetch("https://www.brkthesilence.com/api/speak", {
-
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -144,16 +185,27 @@ async function handleEnter(event) {
 
       const data = await res.json();
 
-      if (data.reply) {
-        responseBox.innerHTML = data.reply;
-      } else {
-        responseBox.innerHTML = "I’m here with you.";
-      }
+      box.classList.remove("loading");
+
+      box.innerHTML = data.reply
+        ? data.reply
+        : "I didn't fully understand. Try expressing it differently.";
 
     } catch (err) {
-      responseBox.innerHTML = "Take a slow breath. You are not alone.";
+      box.classList.remove("loading");
+      box.innerHTML = "Connection issue. Please try again.";
     }
   }
+}
+
+function showTnC() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("tc").style.display = "block";
+}
+
+function showHome() {
+  document.getElementById("tc").style.display = "none";
+  document.getElementById("home").style.display = "flex";
 }
 </script>
 
