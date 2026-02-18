@@ -283,7 +283,7 @@ async function handleEnter(event) {
     responseBox.innerHTML = "Listening...";
 
     try {
-      const res = await fetch("/api/speak", {
+      const res = await fetch(window.location.origin + "/api/speak", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
