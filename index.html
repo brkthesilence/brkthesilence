@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BRK THE SILENCE</title>
+<title>Terms & Conditions | BRK THE SILENCE</title>
 
 <style>
 * {
@@ -16,124 +16,64 @@
 body {
   background: #0b0b0b;
   color: #ffffff;
+  line-height: 1.7;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-/* Logo */
-.logo {
-  padding-top: 60px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  cursor: pointer;
-}
-
-.logo:hover {
-  opacity: 0.7;
-}
-
-/* Container */
 .container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  flex-direction: column;
-  text-align: center;
-}
-
-/* Headline */
-.headline {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  white-space: nowrap;
-}
-
-.subheadline {
-  font-size: 15px;
-  color: #b0b0b0;
-  margin-bottom: 35px;
-}
-
-/* Search */
-.search-wrapper {
-  width: 100%;
-  max-width: 700px;
-  padding: 2px;
-  border-radius: 30px;
-  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
-}
-
-.search-input {
-  width: 100%;
-  height: 54px;
-  border: none;
-  border-radius: 30px;
-  padding: 0 22px;
-  font-size: 16px;
-  color: #ffffff;
-  background: #121212;
-  outline: none;
-}
-
-.search-input::placeholder {
-  color: #777;
-}
-
-.response {
-  margin-top: 30px;
-  max-width: 700px;
-  color: #cfcfcf;
-  line-height: 1.6;
-  font-size: 15px;
-}
-
-/* T&C Section */
-.tc-section {
   max-width: 800px;
   margin: 60px auto;
   padding: 0 20px;
   text-align: left;
 }
 
-.tc-section h1 {
-  font-size: 26px;
-  margin-bottom: 10px;
+.logo {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 15px;
   background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-align: center;
 }
 
-.tc-section h2 {
-  font-size: 18px;
+.updated {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 20px;
   margin-top: 40px;
   margin-bottom: 15px;
 }
 
-.tc-section p, .tc-section li {
+p, li {
   color: #cfcfcf;
   margin-bottom: 12px;
 }
 
-.tc-section ul {
+ul {
   margin-left: 20px;
+  margin-bottom: 20px;
 }
 
-/* Footer */
 footer {
   text-align: center;
-  padding: 20px;
+  padding: 30px;
   font-size: 14px;
   color: #888;
   border-top: 1px solid #111;
+  margin-top: 60px;
 }
 
 footer a {
@@ -146,19 +86,12 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Mobile */
 @media (max-width: 600px) {
-  .headline {
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
     font-size: 18px;
-  }
-
-  .search-input {
-    height: 48px;
-    font-size: 14px;
-  }
-
-  .tc-section h1 {
-    font-size: 22px;
   }
 }
 </style>
@@ -166,33 +99,12 @@ footer a:hover {
 
 <body>
 
-<!-- Logo -->
-<div class="logo" onclick="scrollToTop()">
-  BRK THE SILENCE
-</div>
-
-<!-- Center Container -->
 <div class="container">
-  <div class="headline">Empower your inner voice.</div>
-  <div class="subheadline">A quiet space to express what you usually keep inside.</div>
+  <div class="logo">BRK THE SILENCE</div>
 
-  <div class="search-wrapper">
-    <input 
-      type="text" 
-      class="search-input" 
-      id="userInput"
-      placeholder="What’s on your mind"
-      onkeydown="handleEnter(event)"
-    >
-  </div>
-
-  <div class="response" id="responseBox"></div>
-</div>
-
-<!-- T&C Section -->
-<div class="tc-section">
   <h1>Terms & Conditions</h1>
-  <p><em>Last Updated: February 18, 2026</em></p>
+  <div class="updated">Last Updated: February 18, 2026</div>
+
   <p>No hidden clauses. No complicated language. Just clear terms.</p>
 
   <h2>1. What This Platform Is</h2>
@@ -251,35 +163,10 @@ footer a:hover {
   <p>These terms may be updated periodically. Any changes will be reflected clearly on this page.</p>
 </div>
 
-<!-- Footer -->
 <footer>
   No Identity. No Judgement. Just Expression. |
-  <a href="#tc">T&C</a>
+  <a href="index.html">Home</a>
 </footer>
-
-<script>
-function handleEnter(event) {
-  if (event.key === "Enter") {
-    generateResponse();
-  }
-}
-
-function generateResponse() {
-  const input = document.getElementById("userInput").value;
-  const responseBox = document.getElementById("responseBox");
-
-  if (!input.trim()) {
-    responseBox.innerHTML = "Your voice matters.";
-    return;
-  }
-
-  responseBox.innerHTML = "You are heard. This space exists for expression without fear.";
-}
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
 
 </body>
 </html>
