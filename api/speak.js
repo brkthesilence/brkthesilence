@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const openaiRes = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,15 +27,20 @@ User: ${message}`,
       }),
     });
 
-    const data = await response.json();
+    const data = await openaiRes.json();
 
-    // 🔍 DEBUG (remove later if you want)
-    console.log("OPENAI RESPONSE:", JSON.stringify(data));
+    // 🔎 Extract reply safely
+    let reply = "";
 
-    const reply =
-      data.output?.[0]?.content?.[0]?.text ||
-      data.output_text ||
-      "I hear you. You are not alone in this moment.";
+    if (data.output_text) {
+      reply = data.output_text;
+    } else if (data.output?.[0]?.content?.[0]?.text) {
+      reply = data.output[0].content[0].text;
+    }
+
+    if (!reply || reply.trim().length === 0) {
+      reply = "I hear you. You are not alone in this moment.";
+    }
 
     res.status(200).json({ reply });
 
