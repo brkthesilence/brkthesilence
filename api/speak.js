@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,33 +20,22 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a calm, supportive emotional listener. Respond warmly and briefly.",
-          },
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-        max_tokens: 150,
-        temperature: 0.7,
+        input: `You are a calm and supportive emotional listener.
+Respond warmly and briefly.
+
+User: ${message}`,
       }),
     });
 
     const data = await response.json();
 
-    // ✅ handle all response formats safely
-    let reply =
-      data?.choices?.[0]?.message?.content ||
-      data?.choices?.[0]?.text ||
-      data?.output?.[0]?.content?.[0]?.text;
+    // 🔍 DEBUG (remove later if you want)
+    console.log("OPENAI RESPONSE:", JSON.stringify(data));
 
-    if (!reply || reply.trim().length === 0) {
-      reply = "I hear you. You are not alone in this moment.";
-    }
+    const reply =
+      data.output?.[0]?.content?.[0]?.text ||
+      data.output_text ||
+      "I hear you. You are not alone in this moment.";
 
     res.status(200).json({ reply });
 
@@ -54,7 +43,7 @@ export default async function handler(req, res) {
     console.error("API ERROR:", error);
 
     res.status(200).json({
-      reply: "Take a slow breath. You are safe in this moment.",
+      reply: "Take a slow breath. You are not alone.",
     });
   }
 }
