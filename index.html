@@ -4,73 +4,162 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRK THE SILENCE</title>
-  
+
 <style>
 body{
+  margin:0;
   background:#0b0b0b;
   color:white;
-  font-family:sans-serif;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+}
+
+.container{
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+header{
   text-align:center;
-  padding:40px;
+  padding:20px 10px 10px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.chat{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+}
+
+.bubble{
+  padding:10px 14px;
+  border-radius:18px;
+  margin:8px 0;
+  max-width:75%;
+  line-height:1.4;
+}
+
+.user{
+  background:#2563eb;
+  margin-left:auto;
+}
+
+.bot{
+  background:#1f1f1f;
+  margin-right:auto;
+}
+
+.input-area{
+  padding:10px;
+  border-top:1px solid #222;
+  display:flex;
+  gap:8px;
 }
 
 input{
-  width:90%;
-  max-width:400px;
+  flex:1;
   padding:12px;
   border-radius:20px;
   border:none;
-  margin-top:20px;
+  outline:none;
 }
 
 button{
-  margin-top:10px;
-  padding:10px 20px;
-  border-radius:20px;
+  padding:10px 16px;
   border:none;
+  border-radius:20px;
   cursor:pointer;
 }
 
-#response{
-  margin-top:20px;
-  color:#ddd;
+#tcPage{
+  display:none;
+  padding:20px;
+  text-align:left;
 }
 
-#tc{
-  display:none;
-  margin-top:30px;
-  font-size:14px;
+#tcPage h3{
+  text-align:center;
+}
+
+.link{
+  text-align:center;
+  font-size:13px;
+  margin-top:6px;
   color:#aaa;
+  cursor:pointer;
 }
 </style>
 </head>
 <body>
 
-<h2>BRK THE SILENCE</h2>
+<div class="container">
 
-<input id="msg" placeholder="Type anything">
-<br>
-<button onclick="send()">Send</button>
-<button onclick="toggleTC()">T&C</button>
+<header>BRK THE SILENCE</header>
 
-<div id="response"></div>
+<div id="chatPage" class="chat"></div>
 
-<div id="tc">
-<p>This platform is a quiet space for expression.</p>
-<p>Not therapy or crisis support.</p>
+<div class="input-area" id="inputArea">
+  <input id="msg" placeholder="Type anything…" autofocus>
+  <button onclick="send()">Send</button>
+</div>
+
+<div class="link" onclick="openTC()">Terms & Conditions</div>
+
+<div id="tcPage">
+  <h3>BRK THE SILENCE</h3>
+
+  <p><strong>Terms & Conditions</strong></p>
+
+  <p>This platform provides a quiet space for personal expression and reflection.</p>
+
+  <p>It is not a substitute for professional medical, psychological, or crisis support.</p>
+
+  <p>If you are experiencing emotional distress or crisis, please contact a trusted person or professional service in your area.</p>
+
+  <p>Your entries are not stored with personal identity.</p>
+
+  <p>This space exists to encourage expression without judgment.</p>
+
+  <br>
+  <button onclick="closeTC()">← Back</button>
+</div>
+
 </div>
 
 <script>
-async function send(){
-  const text = document.getElementById("msg").value;
-  const box = document.getElementById("response");
+const input = document.getElementById("msg");
+const chat = document.getElementById("chatPage");
 
-  if(!text.trim()){
-    box.innerHTML = "Please type something.";
-    return;
+input.focus();
+
+// ENTER key sends message
+input.addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    send();
   }
+});
 
-  box.innerHTML="Loading...";
+function addBubble(text, type){
+  const div = document.createElement("div");
+  div.className = "bubble " + type;
+  div.innerText = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function send(){
+  const text = input.value.trim();
+  if(!text) return;
+
+  addBubble(text,"user");
+  input.value="";
+
+  addBubble("...", "bot");
 
   try{
     const response = await fetch("/api/speak",{
@@ -81,16 +170,25 @@ async function send(){
 
     const data = await response.json();
 
-    box.innerHTML = data.reply;
+    chat.lastChild.innerText = data.reply;
 
   }catch(e){
-    box.innerHTML="Connection error. Try again.";
+    chat.lastChild.innerText = "Connection issue. Try again.";
   }
 }
 
-function toggleTC(){
-  const tc=document.getElementById("tc");
-  tc.style.display=tc.style.display==="block"?"none":"block";
+function openTC(){
+  document.getElementById("chatPage").style.display="none";
+  document.getElementById("inputArea").style.display="none";
+  document.querySelector(".link").style.display="none";
+  document.getElementById("tcPage").style.display="block";
+}
+
+function closeTC(){
+  document.getElementById("chatPage").style.display="block";
+  document.getElementById("inputArea").style.display="flex";
+  document.querySelector(".link").style.display="block";
+  document.getElementById("tcPage").style.display="none";
 }
 </script>
 
