@@ -63,7 +63,7 @@ async function send(){
   box.innerHTML="Loading...";
 
   try{
-    const res=await fetch("/api/speak",{
+    const response=await fetch("/api/speak",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({message:text})
