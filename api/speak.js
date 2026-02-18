@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   if (!message || !message.trim()) {
     return res.status(200).json({
-      reply: "Your voice matters. Speak freely.",
+      reply: "What’s on your mind?",
     });
   }
 
@@ -20,26 +20,37 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: message,
+        input: `
+You are a calm, real, human-like conversational partner.
+
+RULES:
+- Do NOT assume the user is sad.
+- Respond based on the emotion in the message.
+- If happy → respond positively.
+- If confused → respond clearly.
+- If emotional → respond gently.
+- If random text → respond normally.
+- Keep replies short and natural.
+- Sound like a real person, not a therapist.
+
+User message:
+${message}
+        `,
       }),
     });
 
     const data = await response.json();
 
-    console.log("OPENAI RESPONSE:", JSON.stringify(data));
-
     const reply =
-      data.output_text ||
       data.output?.[0]?.content?.[0]?.text ||
-      "Thank you for sharing. Tell me more.";
+      data.output_text ||
+      "I’m listening.";
 
     res.status(200).json({ reply });
 
   } catch (error) {
-    console.error(error);
-
     res.status(200).json({
-      reply: "I’m listening. Take your time.",
+      reply: "Something went wrong. Try again.",
     });
   }
 }
