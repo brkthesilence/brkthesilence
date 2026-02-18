@@ -269,18 +269,59 @@ footer a:hover {
 </footer>
 
 <script>
+// Handle Enter key in search bar
 function handleEnter(event) {
   if (event.key === "Enter") {
-    const input = document.getElementById("userInput").value;
+    const input = document.getElementById("userInput").value.trim();
     const responseBox = document.getElementById("responseBox");
-    if (!input.trim()) {
+
+    if (!input) {
       responseBox.innerHTML = "Your voice matters.";
       return;
     }
-    responseBox.innerHTML = "You are heard. This space exists for expression without fear.";
+
+    // Show a temporary "loading" message
+    responseBox.innerHTML = "Listening...";
+
+    // Call OpenAI GPT API
+    fetchAPI(input)
+      .then(responseText => {
+        responseBox.innerHTML = responseText;
+      })
+      .catch(err => {
+        console.error(err);
+        responseBox.innerHTML = "Oops! Something went wrong.";
+      });
   }
 }
 
+// Function to call GPT API
+async function fetchAPI(userText) {
+  // Replace with your actual API URL
+  const apiUrl = "https://api.openai.com/v1/chat/completions"; 
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_OPENAI_API_KEY" // Replace with your key
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: userText }],
+      temperature: 0.7
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("API request failed");
+  }
+
+  const data = await response.json();
+  return data.choices[0].message.content || "No response from API.";
+}
+
+// Show T&C, hide homepage
 function showTnC() {
   document.getElementById("homepageContent").style.display = "none";
   const tc = document.getElementById("tcSection");
@@ -288,6 +329,7 @@ function showTnC() {
   tc.scrollIntoView({ behavior: "smooth" });
 }
 
+// Show homepage, hide T&C
 function showHome() {
   document.getElementById("tcSection").style.display = "none";
   document.getElementById("homepageContent").style.display = "flex";
