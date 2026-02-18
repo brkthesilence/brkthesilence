@@ -28,6 +28,7 @@ User: ${message}`,
     });
 
     const data = await openaiRes.json();
+    console.log("FULL RESPONSE:", JSON.stringify(data));
 
     // 🔎 Extract reply safely
     let reply = "";
