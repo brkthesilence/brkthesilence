@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRK THE SILENCE</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: #0a0a0a;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 20px 30px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+header:hover {
+  opacity: 0.8;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.input-box {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 20px;
+}
+
+textarea {
+  width: 100%;
+  background: #111;
+  border: 2px solid #222;
+  border-radius: 14px;
+  padding: 18px 20px;
+  color: #fff;
+  font-size: 16px;
+  resize: none;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+textarea:focus {
+  border-color: #555;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 25px;
+  border-radius: 30px;
+  border: none;
+  background: #ffffff;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+.response {
+  margin-top: 30px;
+  max-width: 700px;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+footer {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+  border-top: 1px solid #111;
+}
+
+footer a {
+  color: #888;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  textarea {
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header onclick="goHome()">BRK THE SILENCE</header>
+
+<div class="container">
+
+  <h2>What’s on your mind?</h2>
+
+  <div class="input-box">
+    <textarea id="userInput" rows="4" placeholder="Share what you’re feeling..."></textarea>
+    <button onclick="generateResponse()">Express</button>
+  </div>
+
+  <div class="response" id="responseBox"></div>
+
+</div>
+
+<footer>
+  No Identity. No Judgement. Just Expression. |
+  <a href="terms.html">T&C</a>
+</footer>
+
+<script>
+function generateResponse() {
+  const input = document.getElementById("userInput").value;
+  const responseBox = document.getElementById("responseBox");
+
+  if (!input.trim()) {
+    responseBox.innerHTML = "Say something. Your voice matters.";
+    return;
+  }
+
+  responseBox.innerHTML = "You are heard. This is a space where your thoughts exist without fear. Keep expressing.";
+}
+
+function goHome() {
+  window.location.href = "/";
+}
+</script>
+
+</body>
+</html>
