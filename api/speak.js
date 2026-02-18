@@ -10,28 +10,33 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages: [
           {
             role: "system",
-            content: "You are a calm, non-judgmental emotional listener."
+            content:
+              "You are a calm, non-judgmental emotional listener. Respond gently and briefly.",
           },
-          {
-            role: "user",
-            content: message
-          }
+          { role: "user", content: message },
         ],
-        max_tokens: 80
-      })
+        max_tokens: 150,
+      }),
     });
 
     const data = await response.json();
-    res.status(200).json({ reply: data.choices[0].message.content });
+
+    const reply =
+      data?.choices?.[0]?.message?.content?.trim() ||
+      "I am here with you. You are not alone.";
+
+    res.status(200).json({ reply });
 
   } catch (error) {
-    res.status(500).json({ reply: "Something went wrong." });
+    res.status(500).json({
+      reply: "Take a slow breath. You are safe in this moment.",
+    });
   }
 }
