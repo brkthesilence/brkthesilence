@@ -36,7 +36,12 @@ button{
   color:#ddd;
 }
 
-#tc{display:none; margin-top:30px;}
+#tc{
+  display:none;
+  margin-top:30px;
+  font-size:14px;
+  color:#aaa;
+}
 </style>
 </head>
 <body>
@@ -57,24 +62,29 @@ button{
 
 <script>
 async function send(){
-  const text=document.getElementById("msg").value;
-  const box=document.getElementById("response");
+  const text = document.getElementById("msg").value;
+  const box = document.getElementById("response");
+
+  if(!text.trim()){
+    box.innerHTML = "Please type something.";
+    return;
+  }
 
   box.innerHTML="Loading...";
 
   try{
-    const response=await fetch("/api/speak",{
+    const response = await fetch("/api/speak",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({message:text})
+      body:JSON.stringify({ message:text })
     });
 
-    const data=await res.json();
+    const data = await response.json();
 
-    box.innerHTML=data.reply;
+    box.innerHTML = data.reply;
 
   }catch(e){
-    box.innerHTML="API call failed";
+    box.innerHTML="Connection error. Try again.";
   }
 }
 
