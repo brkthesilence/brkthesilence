@@ -1,211 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRK THE SILENCE</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+body{
+  background:#0b0b0b;
+  color:white;
+  font-family:sans-serif;
+  text-align:center;
+  padding:40px;
 }
 
-body {
-  background: #0b0b0b;
-  color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+input{
+  width:90%;
+  max-width:400px;
+  padding:12px;
+  border-radius:20px;
+  border:none;
+  margin-top:20px;
 }
 
-.logo {
-  padding-top: 60px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  cursor: pointer;
+button{
+  margin-top:10px;
+  padding:10px 20px;
+  border-radius:20px;
+  border:none;
+  cursor:pointer;
 }
 
-.logo:hover { opacity: 0.7; }
-
-.container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  padding: 20px;
+#response{
+  margin-top:20px;
+  color:#ddd;
 }
 
-.headline {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  background: linear-gradient(90deg,#ff7a18,#ff3cac,#7b2ff7,#00c6ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.subheadline {
-  font-size: 15px;
-  color: #b0b0b0;
-  margin-bottom: 35px;
-}
-
-.search-wrapper {
-  width: 100%;
-  max-width: 700px;
-  padding: 2px;
-  border-radius: 30px;
-  background: linear-gradient(90deg,#ff7a18,#ff3cac,#7b2ff7,#00c6ff);
-  margin-bottom: 25px;
-}
-
-.search-input {
-  width: 100%;
-  height: 54px;
-  border: none;
-  border-radius: 30px;
-  padding: 0 22px;
-  font-size: 16px;
-  color: #fff;
-  background: #121212;
-  outline: none;
-}
-
-.response {
-  margin-top: 12px;
-  max-width: 700px;
-  color: #d7d7d7;
-  line-height: 1.6;
-  font-size: 16px;
-  min-height: 24px;
-}
-
-.loading {
-  opacity: 0.6;
-  font-style: italic;
-}
-
-/* T&C */
-.tc-section {
-  display: none;
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
-  text-align: left;
-}
-
-.tc-section h1 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.tc-section p {
-  margin-bottom: 12px;
-  color: #ccc;
-}
-
-footer {
-  text-align: center;
-  padding: 18px;
-  font-size: 14px;
-  color: #888;
-  border-top: 1px solid #111;
-}
-
-footer a {
-  color: #888;
-  cursor: pointer;
-}
-footer a:hover { text-decoration: underline; }
+#tc{display:none; margin-top:30px;}
 </style>
 </head>
 <body>
 
-<div class="logo" onclick="showHome()">BRK THE SILENCE</div>
+<h2>BRK THE SILENCE</h2>
 
-<div class="container" id="home">
-  <div class="headline">Speak freely. No judgement.</div>
-  <div class="subheadline">A quiet space to express what’s on your mind.</div>
+<input id="msg" placeholder="Type anything">
+<br>
+<button onclick="send()">Send</button>
+<button onclick="toggleTC()">T&C</button>
 
-  <div class="search-wrapper">
-    <input
-      type="text"
-      class="search-input"
-      id="userInput"
-      placeholder="Type anything..."
-      onkeydown="handleEnter(event)"
-    >
-  </div>
+<div id="response"></div>
 
-  <div class="response" id="responseBox"></div>
+<div id="tc">
+<p>This platform is a quiet space for expression.</p>
+<p>Not therapy or crisis support.</p>
 </div>
-
-<div class="tc-section" id="tc">
-  <h1>Terms & Conditions</h1>
-  <p>This platform is a quiet space for personal expression.</p>
-  <p>It is not therapy, medical advice, or crisis support.</p>
-  <p>If you are in immediate danger, contact local emergency services.</p>
-</div>
-
-<footer>
-  No Identity. No Judgement. Just Expression.
-  | <a onclick="showTnC()">T&C</a>
-</footer>
 
 <script>
-async function handleEnter(event) {
-  if (event.key === "Enter") {
+async function send(){
+  const text=document.getElementById("msg").value;
+  const box=document.getElementById("response");
 
-    const input = document.getElementById("userInput").value.trim();
-    const box = document.getElementById("responseBox");
+  box.innerHTML="Loading...";
 
-    if (!input) {
-      box.innerHTML = "You can share anything here.";
-      return;
-    }
+  try{
+    const res=await fetch("/api/speak",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({message:text})
+    });
 
-    box.innerHTML = "Thinking...";
-    box.classList.add("loading");
+    const data=await res.json();
 
-    try {
-      const res = await fetch("https://www.brkthesilence.com/api/speak", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message: input })
-      });
+    box.innerHTML=data.reply;
 
-      const data = await res.json();
-
-      box.classList.remove("loading");
-
-      box.innerHTML = data.reply
-        ? data.reply
-        : "I didn't fully understand. Try expressing it differently.";
-
-    } catch (err) {
-      box.classList.remove("loading");
-      box.innerHTML = "Connection issue. Please try again.";
-    }
+  }catch(e){
+    box.innerHTML="API call failed";
   }
 }
 
-function showTnC() {
-  document.getElementById("home").style.display = "none";
-  document.getElementById("tc").style.display = "block";
-}
-
-function showHome() {
-  document.getElementById("tc").style.display = "none";
-  document.getElementById("home").style.display = "flex";
+function toggleTC(){
+  const tc=document.getElementById("tc");
+  tc.style.display=tc.style.display==="block"?"none":"block";
 }
 </script>
 
