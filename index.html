@@ -2,124 +2,125 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
-<!-- MOBILE STABILITY -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRK THE SILENCE</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
-html,body{
-height:100%;
-overflow:hidden;
-font-family:Arial, sans-serif;
+body{
 background:#0b0b0b;
-color:white;
+color:#fff;
+font-family:Arial, sans-serif;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
 }
 
 /* LOGO */
 .logo{
-position:fixed;
-top:18px;
-left:0;
-right:0;
-text-align:center;
+margin-top:18px;
 letter-spacing:4px;
 font-size:13px;
 cursor:pointer;
-z-index:10;
 }
 
-/* CENTER HERO */
+/* HERO CENTER */
 .heroWrap{
-height:100%;
+flex:1;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
+width:100%;
 padding:20px;
 }
 
-.hero h1{
+.heroTitle{
 font-size:28px;
 background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
+margin-bottom:8px;
 }
 
-.hero p{
-margin-top:10px;
+.heroSub{
 color:#aaa;
 font-size:14px;
+margin-bottom:30px;
 }
 
-.searchBox{
-margin-top:28px;
+/* INPUT */
+.inputWrap{
 width:100%;
-max-width:420px;
+max-width:520px;
 display:flex;
-border-radius:40px;
-padding:2px;
-background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
+align-items:center;
+border-radius:30px;
+padding:6px;
+background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
+linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
+border:2px solid transparent;
 }
 
-.searchBox input{
+.inputWrap input{
 flex:1;
+padding:14px;
+background:transparent;
 border:none;
 outline:none;
-padding:16px;
-border-radius:40px;
-background:#0b0b0b;
-color:white;
-font-size:14px;
+color:#fff;
+font-size:15px;
 }
 
-.searchBox button{
-background:none;
+.sendBtn{
+padding:10px 16px;
+border-radius:22px;
 border:none;
-color:white;
-padding:0 18px;
+background:#111;
+color:#fff;
 cursor:pointer;
-font-size:18px;
 }
 
-/* CHAT WINDOW */
-.chatWindow{
+/* FOOTER */
+.footer{
+text-align:center;
+font-size:12px;
+color:#777;
+margin-top:12px;
+}
+
+/* CHAT PAGE */
+.chatPage{
 display:none;
 flex-direction:column;
-height:100%;
-padding-top:70px;
+width:100%;
+max-width:520px;
+flex:1;
+margin-top:30px;
 }
 
 .backBtn{
-max-width:650px;
-margin:0 auto 10px;
-padding-left:10px;
-color:#ccc;
+color:#aaa;
 cursor:pointer;
-font-size:14px;
+margin-bottom:10px;
 }
 
 .messages{
 flex:1;
 overflow-y:auto;
-padding:0 14px 100px;
-max-width:650px;
-margin:auto;
-width:100%;
+padding-bottom:10px;
 }
 
 .msg{
-padding:12px 16px;
-border-radius:16px;
-margin:8px 0;
-max-width:85%;
+padding:10px 14px;
+border-radius:14px;
+margin:6px 0;
+max-width:80%;
 line-height:1.5;
 font-size:14px;
-white-space:pre-wrap;
 }
 
 .user{
@@ -132,50 +133,16 @@ background:#141414;
 border:1px solid #2a2a2a;
 }
 
-/* bottom input */
-.chatInputWrap{
-position:fixed;
+/* bottom bar */
+.bottomBar{
+position:sticky;
 bottom:0;
-left:0;
-right:0;
-padding:12px;
 background:#0b0b0b;
+padding-top:8px;
 }
 
-.chatInput{
-max-width:650px;
-margin:auto;
-display:flex;
-border-radius:40px;
-padding:2px;
-background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
-}
-
-.chatInput input{
-flex:1;
-border:none;
-outline:none;
-padding:16px;
-border-radius:40px;
-background:#0b0b0b;
-color:white;
-font-size:14px;
-}
-
-.chatInput button{
-background:none;
-border:none;
-color:white;
-padding:0 18px;
-font-size:18px;
-cursor:pointer;
-}
-
-/* footer line */
-.tagline{
-margin-top:18px;
-font-size:12px;
-color:#777;
+@media(max-width:600px){
+.heroTitle{font-size:24px}
 }
 </style>
 </head>
@@ -184,110 +151,154 @@ color:#777;
 
 <div class="logo" onclick="goHome()">BRK THE SILENCE</div>
 
-<!-- HOME -->
-<div class="heroWrap" id="home">
-  <div class="hero">
-    <h1>Empower your inner voice.</h1>
-    <p>A quiet space to express what you usually keep inside.</p>
-  </div>
+<!-- HERO -->
+<div class="heroWrap" id="hero">
+<div class="heroTitle">Empower your inner voice.</div>
+<div class="heroSub">A quiet space to express what you usually keep inside.</div>
 
-  <div class="searchBox">
-    <input id="homeInput" placeholder="What’s on your mind">
-    <button onclick="startChat()">➤</button>
-  </div>
+<div class="inputWrap">
+<input id="startInput" placeholder="What’s on your mind">
+<button class="sendBtn" onclick="startChat()">➤</button>
+</div>
 
-  <div class="tagline">
-    No Identity. No Judgement. Just Expression.
-  </div>
+<div class="footer">
+No Identity. No Judgement. Just Expression. |
+<span onclick="openTC()" style="cursor:pointer;text-decoration:underline;">T&C</span>
+</div>
 </div>
 
 <!-- CHAT -->
-<div class="chatWindow" id="chat">
-  <div class="backBtn" onclick="goHome()">← Back</div>
-  <div class="messages" id="messages"></div>
+<div class="chatPage" id="chat">
+
+<div class="backBtn" onclick="goHome()">← Back</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="bottomBar">
+<div class="inputWrap">
+<input id="chatInput" placeholder="Type your message">
+<button class="sendBtn" onclick="send()">➤</button>
+</div>
 </div>
 
-<div class="chatInputWrap" id="chatBar" style="display:none">
-  <div class="chatInput">
-    <input id="chatInput" placeholder="Type your message">
-    <button onclick="send()">➤</button>
-  </div>
+</div>
+
+<!-- T&C PAGE -->
+<div id="tcPage" style="display:none;max-width:700px;padding:25px;line-height:1.7">
+
+<h2>BRK The Silence — Terms & Conditions</h2>
+
+<p>Welcome to BRK The Silence. This space exists for expression, connection, and self-growth.</p>
+
+<p><strong>This platform is not medical, legal, or therapy advice.</strong></p>
+
+<h3>Purpose</h3>
+<p>• A safe space for expression<br>
+• Sharing thoughts & emotions<br>
+• Encouraging awareness & connection</p>
+
+<h3>Emotional Content</h3>
+<p>Shared experiences are for connection and awareness. If you are in severe distress, please seek professional support.</p>
+
+<h3>User Respect</h3>
+<p>Use this space with empathy and honesty. Harmful or abusive content may be removed.</p>
+
+<h3>Privacy</h3>
+<p>Your privacy matters. Avoid sharing sensitive personal details.</p>
+
+<h3>Intellectual Property</h3>
+<p>Content belongs to BRK The Silence. You may share with credit.</p>
+
+<h3>Philosophy</h3>
+<p>Authenticity over perfection.<br>
+Expression over suppression.<br>
+Connection over judgment.</p>
+
+<p><strong>Speak. Feel. Heal. Grow.</strong></p>
+
+<p style="margin-top:20px;cursor:pointer;color:#aaa" onclick="closeTC()">← Back</p>
 </div>
 
 <script>
-const home = document.getElementById("home");
-const chat = document.getElementById("chat");
-const chatBar = document.getElementById("chatBar");
-const messages = document.getElementById("messages");
+const hero=document.getElementById("hero");
+const chat=document.getElementById("chat");
+const tc=document.getElementById("tcPage");
 
-/* ENTER KEY SEND */
-document.getElementById("homeInput").addEventListener("keydown", e=>{
- if(e.key==="Enter"){ startChat(); }
-});
+const startInput=document.getElementById("startInput");
+const chatInput=document.getElementById("chatInput");
+const messages=document.getElementById("messages");
 
-document.getElementById("chatInput").addEventListener("keydown", e=>{
- if(e.key==="Enter"){ send(); }
-});
+/* ENTER works everywhere */
+startInput.addEventListener("keydown",e=>{ if(e.key==="Enter") startChat(); });
+chatInput.addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
 
-/* START CHAT */
 function startChat(){
- const text = homeInput.value.trim();
- if(!text) return;
+if(!startInput.value.trim()) return;
 
- home.style.display="none";
- chat.style.display="flex";
- chatBar.style.display="block";
+hero.style.display="none";
+chat.style.display="flex";
 
- addMessage(text,"user");
- homeInput.value="";
+addMessage(startInput.value,"user");
+chatInput.focus();
+getReply(startInput.value);
 
- sendToAPI(text);
-
- setTimeout(()=>chatInput.focus(),300);
+startInput.value="";
 }
 
-/* SEND MESSAGE */
 function send(){
- const input=document.getElementById("chatInput");
- const text=input.value.trim();
- if(!text) return;
+const text=chatInput.value.trim();
+if(!text) return;
 
- addMessage(text,"user");
- input.value="";
- sendToAPI(text);
+addMessage(text,"user");
+chatInput.value="";
+getReply(text);
 }
 
-/* ADD MESSAGE */
 function addMessage(text,type){
- const div=document.createElement("div");
- div.className="msg "+type;
- div.textContent=text;
- messages.appendChild(div);
- messages.scrollTop=messages.scrollHeight;
+const div=document.createElement("div");
+div.className="msg "+type;
+div.textContent=text;
+messages.appendChild(div);
+messages.scrollTop=messages.scrollHeight;
 }
 
-/* API CALL */
-async function sendToAPI(text){
- addMessage("Thinking...","bot");
+async function getReply(text){
+addMessage("...","bot");
 
- const res = await fetch("/api/speak",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({message:text})
- });
+try{
+const res=await fetch("/api/speak",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
 
- const data = await res.json();
- messages.lastChild.remove();
- addMessage(data.reply,"bot");
+const data=await res.json();
+messages.lastChild.remove();
+addMessage(data.reply,"bot");
+
+}catch{
+messages.lastChild.textContent="Connection issue. Try again.";
+}
 }
 
-/* BACK HOME */
 function goHome(){
- home.style.display="flex";
- chat.style.display="none";
- chatBar.style.display="none";
- messages.innerHTML="";
+chat.style.display="none";
+tc.style.display="none";
+hero.style.display="flex";
+startInput.focus();
+}
+
+function openTC(){
+hero.style.display="none";
+chat.style.display="none";
+tc.style.display="block";
+}
+
+function closeTC(){
+tc.style.display="none";
+hero.style.display="flex";
 }
 </script>
+
 </body>
 </html>
