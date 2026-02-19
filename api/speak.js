@@ -5,9 +5,9 @@ export default async function handler(req, res) {
 
   const { message } = req.body;
 
-  if (!message) {
+  if (!message || !message.trim()) {
     return res.status(200).json({
-      reply: "Type something to begin.",
+      reply: "I'm listening. Share whatever is on your mind.",
     });
   }
 
@@ -20,22 +20,36 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: message
+        input: `
+You are a thoughtful and intelligent conversational assistant.
+
+Respond naturally based on the user's message.
+
+IMPORTANT:
+• If user is happy → respond positively.
+• If user asks questions → give helpful answers.
+• If user shares problems → respond supportively.
+• If user asks for advice → give structured guidance.
+• Use headings and bullet points when useful.
+• Keep responses clear and easy to read.
+• Do NOT assume the user is sad.
+• Do NOT repeat generic emotional lines.
+`,
       }),
     });
 
     const data = await response.json();
 
     const reply =
-      data.output?.[0]?.content?.[0]?.text ||
       data.output_text ||
-      "I understand. Tell me more.";
+      data.output?.[0]?.content?.[0]?.text ||
+      "I’m here with you. Tell me more.";
 
     res.status(200).json({ reply });
 
-  } catch (err) {
+  } catch (error) {
     res.status(200).json({
-      reply: "Connection issue. Please try again.",
+      reply: "Something went wrong. Please try again.",
     });
   }
 }
