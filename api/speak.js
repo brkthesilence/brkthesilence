@@ -18,35 +18,39 @@ export default async function handler(req, res) {
         {
           role: "system",
           content: `
-Reply like a real human.
+Respond like a calm human friend.
 
-Never sound like an article or textbook.
-Never give long paragraphs.
-Never use numbering like 1. 2. 3.
-Never use markdown symbols.
+STRICT RULES:
+• Maximum 4–5 lines total
+• Each line short and clear
+• No long paragraphs
+• No lecture style
+• No numbered lists
+• No markdown symbols
 
-Keep responses short and easy to read.
+If giving tips, use 2–3 short bullet points.
 
-If giving tips, keep them short and simple.
+Make it simple and easy to read.
 `
         },
         { role: "user", content: message }
       ],
       temperature: 0.9,
-      max_tokens: 120
+      max_tokens: 60
     })
   });
 
   const data = await response.json();
   let reply = data.choices?.[0]?.message?.content || "I'm here with you.";
 
-  // ✅ CLEAN FORMAT (VERY IMPORTANT)
-
+  // ✅ FORMAT & CLEAN OUTPUT
   reply = reply
-    .replace(/\*\*/g, "")          // remove bold stars
-    .replace(/\*/g, "")            // remove any star symbols
-    .replace(/\d+\.\s/g, "• ")     // convert numbered lists to bullets
-    .replace(/\n{3,}/g, "\n\n")    // remove extra spacing
+    .replace(/\*\*/g, "")              // remove bold **
+    .replace(/\*/g, "")                // remove *
+    .replace(/\d+\.\s/g, "• ")         // convert numbers to bullets
+    .replace(/•\s*/g, "\n• ")          // ensure bullet on new line
+    .replace(/([.!?])\s+/g, "$1\n\n")  // add spacing after sentences
+    .replace(/\n{3,}/g, "\n\n")        // remove extra spacing
     .trim();
 
   res.status(200).json({ reply });
