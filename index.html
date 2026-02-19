@@ -1,194 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRK THE SILENCE</title>
 
 <style>
-body{
+*{
   margin:0;
-  background:#0b0b0b;
-  color:white;
-  font-family:Arial, sans-serif;
-  display:flex;
-  justify-content:center;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 
-.container{
+body{
+  background:#0b0b0b;
+  color:white;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* container */
+.wrapper{
   width:100%;
-  max-width:420px;
+  max-width:600px;
   height:100vh;
   display:flex;
   flex-direction:column;
+  justify-content:space-between;
+  padding:20px;
 }
 
-header{
+/* logo */
+.logo{
   text-align:center;
-  padding:20px 10px 10px;
-  font-weight:bold;
+  font-weight:600;
   letter-spacing:2px;
+  margin-top:10px;
+  cursor:pointer;
 }
 
+/* chat area */
 .chat{
   flex:1;
-  padding:15px;
   overflow-y:auto;
+  padding:20px 0;
 }
 
-.bubble{
-  padding:10px 14px;
+/* message bubbles */
+.msg{
+  max-width:80%;
+  padding:12px 16px;
   border-radius:18px;
   margin:8px 0;
-  max-width:75%;
   line-height:1.4;
+  font-size:15px;
 }
 
 .user{
-  background:#2563eb;
+  background:#1f1f1f;
   margin-left:auto;
 }
 
 .bot{
-  background:#1f1f1f;
-  margin-right:auto;
+  background:#151515;
+  border:1px solid #222;
 }
 
+/* input area */
 .input-area{
-  padding:10px;
-  border-top:1px solid #222;
   display:flex;
-  gap:8px;
+  gap:10px;
+  align-items:center;
 }
 
 input{
   flex:1;
-  padding:12px;
-  border-radius:20px;
+  padding:14px 18px;
+  border-radius:30px;
   border:none;
   outline:none;
+  background:#121212;
+  color:white;
+  font-size:16px;
 }
 
 button{
-  padding:10px 16px;
+  padding:12px 18px;
   border:none;
-  border-radius:20px;
+  border-radius:30px;
   cursor:pointer;
+  background:white;
+  color:black;
+  font-weight:500;
 }
 
-#tcPage{
-  display:none;
-  padding:20px;
-  text-align:left;
-}
-
-#tcPage h3{
-  text-align:center;
-}
-
-.link{
+/* footer */
+.footer{
   text-align:center;
   font-size:13px;
-  margin-top:6px;
-  color:#aaa;
+  color:#777;
+  margin-top:10px;
   cursor:pointer;
+}
+
+/* T&C page */
+.tc-page{
+  display:none;
+  height:100vh;
+  overflow:auto;
+}
+
+.tc-content{
+  max-width:700px;
+  margin:auto;
+  padding:30px 20px;
+  line-height:1.6;
+}
+
+.back-btn{
+  margin-bottom:20px;
+  cursor:pointer;
+  color:#aaa;
+}
+
+@media(max-width:600px){
+  .wrapper{
+    padding:15px;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<div class="container">
+<div class="wrapper" id="mainPage">
 
-<header>BRK THE SILENCE</header>
+  <div class="logo">BRK THE SILENCE</div>
 
-<div id="chatPage" class="chat"></div>
+  <div class="chat" id="chat"></div>
 
-<div class="input-area" id="inputArea">
-  <input id="msg" placeholder="Type anything…" autofocus>
-  <button onclick="send()">Send</button>
+  <div class="input-area">
+    <input id="msg" placeholder="What’s on your mind" autofocus>
+    <button onclick="send()">Send</button>
+  </div>
+
+  <div class="footer" onclick="showTC()">
+    No Identity. No Judgement. Just Expression. | T&C
+  </div>
+
 </div>
 
-<div class="link" onclick="openTC()">Terms & Conditions</div>
+<!-- T&C PAGE -->
+<div class="tc-page" id="tcPage">
+  <div class="tc-content">
+    <div class="back-btn" onclick="showHome()">← Back</div>
 
-<div id="tcPage">
-  <h3>BRK THE SILENCE</h3>
+    <h2>BRK THE SILENCE</h2>
+    <br>
 
-  <p><strong>Terms & Conditions</strong></p>
+    <p>This platform is a quiet space for expression.</p>
+    <p>It is not therapy or crisis support.</p>
+    <p>No identity is required. No data is sold.</p>
+    <p>Please use respectfully and responsibly.</p>
 
-  <p>This platform provides a quiet space for personal expression and reflection.</p>
-
-  <p>It is not a substitute for professional medical, psychological, or crisis support.</p>
-
-  <p>If you are experiencing emotional distress or crisis, please contact a trusted person or professional service in your area.</p>
-
-  <p>Your entries are not stored with personal identity.</p>
-
-  <p>This space exists to encourage expression without judgment.</p>
-
-  <br>
-  <button onclick="closeTC()">← Back</button>
-</div>
-
+  </div>
 </div>
 
 <script>
 const input = document.getElementById("msg");
-const chat = document.getElementById("chatPage");
+const chat = document.getElementById("chat");
 
-input.focus();
-
-// ENTER key sends message
+/* send on ENTER */
 input.addEventListener("keypress", function(e){
   if(e.key === "Enter"){
     send();
   }
 });
 
-function addBubble(text, type){
-  const div = document.createElement("div");
-  div.className = "bubble " + type;
-  div.innerText = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
 async function send(){
   const text = input.value.trim();
   if(!text) return;
 
-  addBubble(text,"user");
+  addMessage(text,"user");
   input.value="";
 
-  addBubble("...", "bot");
+  const loading = addMessage("...", "bot");
 
   try{
-    const response = await fetch("/api/speak",{
+    const response = await fetch("/api/speak", {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({ message:text })
     });
 
     const data = await response.json();
+    loading.textContent = data.reply;
 
-    chat.lastChild.innerText = data.reply;
-
-  }catch(e){
-    chat.lastChild.innerText = "Connection issue. Try again.";
+  }catch{
+    loading.textContent = "Connection issue. Please try again.";
   }
 }
 
-function openTC(){
-  document.getElementById("chatPage").style.display="none";
-  document.getElementById("inputArea").style.display="none";
-  document.querySelector(".link").style.display="none";
+/* add chat bubble */
+function addMessage(text,type){
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.textContent=text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+/* T&C toggle */
+function showTC(){
+  document.getElementById("mainPage").style.display="none";
   document.getElementById("tcPage").style.display="block";
 }
 
-function closeTC(){
-  document.getElementById("chatPage").style.display="block";
-  document.getElementById("inputArea").style.display="flex";
-  document.querySelector(".link").style.display="block";
+function showHome(){
   document.getElementById("tcPage").style.display="none";
+  document.getElementById("mainPage").style.display="flex";
 }
 </script>
 
