@@ -1,42 +1,42 @@
 export default async function handler(req, res) {
 
-if (req.method !== "POST") {
-  return res.status(405).json({ reply: "Method not allowed" });
-}
+  if (req.method !== "POST") {
+    return res.status(405).json({ reply: "Method not allowed" });
+  }
 
-try {
+  const { message } = req.body;
 
-const { message } = req.body;
-
-const response = await fetch("https://api.openai.com/v1/chat/completions", {
-method: "POST",
-headers: {
-  "Content-Type": "application/json",
-  "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-},
-body: JSON.stringify({
-  model: "gpt-4o-mini",
-  messages: [
-    {
-      role: "system",
-      content:
-        "Respond like a calm, supportive human. Clear paragraphs. Bullet points when useful. No markdown symbols. No bold stars. Keep it natural and easy to read."
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
     },
-    { role: "user", content: message }
-  ],
-  temperature: 0.7
-})
-});
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `
+Respond like a calm, emotionally intelligent human.
 
-const data = await response.json();
+• Use short paragraphs
+• Use spacing between ideas
+• Use bullet points when helpful
+• Keep sentences clear & simple
+• Avoid markdown symbols
+• Do not use stars or bold formatting
+• Make responses easy to read on mobile
+`
+        },
+        { role: "user", content: message }
+      ],
+      temperature: 0.7
+    })
+  });
 
-res.status(200).json({
-  reply: data.choices[0].message.content
-});
+  const data = await response.json();
+  const reply = data.choices?.[0]?.message?.content || "I'm here with you.";
 
-} catch (error) {
-res.status(200).json({
-  reply: "I’m here with you. Tell me more."
-});
-}
+  res.status(200).json({ reply });
 }
