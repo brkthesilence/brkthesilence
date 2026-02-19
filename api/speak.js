@@ -1,13 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    return res.status(405).json({ reply: "Method not allowed" });
   }
 
   const { message } = req.body;
 
-  if (!message || !message.trim()) {
+  if (!message) {
     return res.status(200).json({
-      reply: "What's on your mind?",
+      reply: "Type something to begin.",
     });
   }
 
@@ -20,22 +20,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `
-You are a real human-like chat companion.
-
-Rules:
-- Do NOT assume the user is sad.
-- Respond naturally like a friend chatting.
-- If user is happy → match their energy.
-- If user is curious → be engaging.
-- If user shares feelings → respond warmly.
-- Keep replies short, human, and real.
-- Avoid therapy-style responses.
-- Avoid repeating phrases.
-
-User message:
-${message}
-        `,
+        input: message
       }),
     });
 
@@ -44,13 +29,13 @@ ${message}
     const reply =
       data.output?.[0]?.content?.[0]?.text ||
       data.output_text ||
-      "Tell me more.";
+      "I understand. Tell me more.";
 
     res.status(200).json({ reply });
 
-  } catch (error) {
+  } catch (err) {
     res.status(200).json({
-      reply: "Hmm… try saying that again 🙂",
+      reply: "Connection issue. Please try again.",
     });
   }
 }
