@@ -12,10 +12,10 @@ body{
   background:#0b0b0b;
   color:white;
   font-family:Arial, sans-serif;
+  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
-  min-height:100vh;
 }
 
 /* LOGO */
@@ -26,10 +26,20 @@ body{
   cursor:pointer;
 }
 
+/* CENTER AREA */
+.center{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+}
+
 /* HERO */
 .hero{
   text-align:center;
-  margin-top:40px;
+  margin-bottom:25px;
 }
 
 .hero h1{
@@ -45,44 +55,10 @@ body{
   font-size:14px;
 }
 
-/* CHAT WINDOW */
-.chat-popup{
-  width:100%;
-  max-width:520px;
-  margin-top:25px;
-}
-
-.messages{
-  display:none;
-  background:#111;
-  border-radius:18px;
-  padding:15px;
-  margin-bottom:15px;
-  max-height:300px;
-  overflow-y:auto;
-  border:1px solid #2a2a2a;
-}
-
-.msg{
-  padding:10px 14px;
-  border-radius:16px;
-  margin:6px 0;
-  max-width:80%;
-  font-size:14px;
-}
-
-.user{
-  background:#1f1f1f;
-  margin-left:auto;
-}
-
-.bot{
-  background:#141414;
-  border:1px solid #2a2a2a;
-}
-
 /* INPUT */
 .input-box{
+  width:90%;
+  max-width:520px;
   display:flex;
   border-radius:30px;
   border:2px solid transparent;
@@ -109,36 +85,44 @@ body{
   font-size:18px;
 }
 
+/* CHAT WINDOW */
+.chat-window{
+  display:none;
+  width:90%;
+  max-width:520px;
+  margin-top:25px;
+  background:#111;
+  border-radius:18px;
+  padding:15px;
+  border:1px solid #2a2a2a;
+  max-height:320px;
+  overflow-y:auto;
+}
+
+.msg{
+  padding:10px 14px;
+  border-radius:16px;
+  margin:6px 0;
+  max-width:80%;
+  font-size:14px;
+}
+
+.user{
+  background:#1f1f1f;
+  margin-left:auto;
+}
+
+.bot{
+  background:#141414;
+  border:1px solid #2a2a2a;
+}
+
 /* FOOTER */
 .footer{
-  margin-top:25px;
+  margin-bottom:18px;
   font-size:12px;
   color:#777;
   text-align:center;
-}
-
-/* T&C PAGE */
-#tcPage{
-  display:none;
-  max-width:650px;
-  padding:20px;
-  text-align:left;
-}
-
-#tcPage h2{
-  margin-bottom:15px;
-}
-
-.backBtn{
-  margin-top:25px;
-  padding:8px 16px;
-  border:none;
-  border-radius:20px;
-  cursor:pointer;
-}
-
-@media(max-width:480px){
-  .hero h1{font-size:22px;}
 }
 </style>
 </head>
@@ -147,63 +131,53 @@ body{
 
 <div class="logo" onclick="goHome()">BRK THE SILENCE</div>
 
-<div class="hero" id="hero">
-  <h1>Empower your inner voice.</h1>
-  <p>A quiet space to express what you usually keep inside.</p>
-</div>
+<div class="center">
 
-<div class="chat-popup">
-
-  <div class="messages" id="messages"></div>
+  <div class="hero" id="hero">
+    <h1>Empower your inner voice.</h1>
+    <p>A quiet space to express what you usually keep inside.</p>
+  </div>
 
   <div class="input-box">
     <input id="msg" placeholder="What’s on your mind">
     <button onclick="send()">➤</button>
   </div>
 
+  <div class="chat-window" id="chat"></div>
+
 </div>
 
 <div class="footer">
   No Identity. No Judgement. Just Expression. |
-  <a href="#" onclick="openTC()" style="color:#aaa;">T&C</a>
-</div>
-
-<!-- T&C PAGE -->
-<div id="tcPage">
-  <h2>Terms & Conditions</h2>
-
-  <p>This platform provides a quiet space for personal expression.</p>
-  <p>It is not therapy, medical advice, or crisis support.</p>
-  <p>If you are in immediate danger or require urgent help, please contact local emergency services.</p>
-  <p>Your messages are processed to generate responses but are not intended for diagnosis or treatment.</p>
-  <p>Use of this platform indicates acceptance of these terms.</p>
-
-  <button class="backBtn" onclick="goHome()">⬅ Back</button>
+  <a href="#" style="color:#aaa;">T&C</a>
 </div>
 
 <script>
 const input=document.getElementById("msg");
-const messages=document.getElementById("messages");
+const chat=document.getElementById("chat");
+const hero=document.getElementById("hero");
 
 input.focus();
 
-/* ENTER KEY SEND */
-input.addEventListener("keydown", e=>{
+input.addEventListener("keydown",e=>{
   if(e.key==="Enter") send();
 });
 
 function addMessage(text,type){
-  messages.style.display="block";
   const div=document.createElement("div");
   div.className="msg "+type;
   div.textContent=text;
-  messages.appendChild(div);
-  messages.scrollTop=messages.scrollHeight;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
 }
 
 async function send(){
   const text=input.value.trim();
   if(!text) return;
+
+  // first message → switch to chat mode
+  hero.style.display="none";
+  chat.style.display="block";
 
   addMessage(text,"user");
   input.value="";
@@ -223,18 +197,10 @@ async function send(){
   }
 }
 
-function openTC(){
-  document.getElementById("hero").style.display="none";
-  document.querySelector(".chat-popup").style.display="none";
-  document.querySelector(".footer").style.display="none";
-  document.getElementById("tcPage").style.display="block";
-}
-
 function goHome(){
-  document.getElementById("hero").style.display="block";
-  document.querySelector(".chat-popup").style.display="block";
-  document.querySelector(".footer").style.display="block";
-  document.getElementById("tcPage").style.display="none";
+  chat.style.display="none";
+  hero.style.display="block";
+  chat.innerHTML="";
 }
 </script>
 
