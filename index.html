@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,102 +11,116 @@
 body{
   background:#0b0b0b;
   color:#fff;
-  font-family:Arial, sans-serif;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
 
 /* LOGO */
 .logo{
   text-align:center;
-  padding:18px 0 6px;
   letter-spacing:3px;
-  font-size:14px;
+  font-size:13px;
+  margin-top:14px;
   cursor:pointer;
 }
 
-/* CENTER CONTENT */
-.center{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
+/* HERO CENTER */
+.hero{
   text-align:center;
+  margin-top:70px;
 }
 
-/* HERO */
 .hero h1{
-  font-size:26px;
+  font-size:28px;
   background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
 .hero p{
-  color:#bbb;
-  margin-top:8px;
+  margin-top:10px;
+  color:#aaa;
   font-size:14px;
 }
 
-/* SEARCH BAR */
-.search-box{
+/* SEARCH */
+.search-wrap{
+  display:flex;
+  justify-content:center;
   margin-top:28px;
-  width:100%;
-  max-width:560px;
 }
 
-.search-input{
-  width:100%;
-  border-radius:30px;
-  padding:16px 22px;
+.search{
+  width:90%;
+  max-width:520px;
+  display:flex;
+  border-radius:40px;
   border:2px solid transparent;
-  outline:none;
-  color:#fff;
-  font-size:15px;
-  background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
+  background:
+  linear-gradient(#0b0b0b,#0b0b0b) padding-box,
   linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
 }
 
-/* FOOTER */
+.search input{
+  flex:1;
+  padding:16px;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:white;
+  font-size:15px;
+}
+
+.search button{
+  border:none;
+  background:none;
+  color:white;
+  padding:0 18px;
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* footer */
 .footer{
-  margin-top:16px;
-  color:#777;
+  text-align:center;
+  margin-top:12px;
   font-size:12px;
+  color:#777;
 }
 
 /* CHAT AREA */
 .chat-wrap{
   display:none;
-  width:100%;
   max-width:680px;
   margin:10px auto 0;
-  padding:0 16px 90px;
+  padding:0 16px 140px;
 }
 
 .back{
-  max-width:680px;
-  margin:10px auto 6px;
+  padding-left:16px;
+  margin-bottom:10px;
   color:#bbb;
   cursor:pointer;
   font-size:14px;
 }
 
-/* messages */
+.messages{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
 .msg{
-  max-width:80%;
   padding:12px 16px;
-  border-radius:16px;
-  margin:10px 0;
-  font-size:14px;
+  border-radius:18px;
+  max-width:80%;
   line-height:1.5;
+  font-size:14px;
+  white-space:pre-wrap;
 }
 
 .user{
-  margin-left:auto;
   background:#1f1f1f;
+  margin-left:auto;
 }
 
 .bot{
@@ -117,29 +131,41 @@ body{
 /* bottom input */
 .chat-input-wrap{
   position:fixed;
-  bottom:18px;
+  bottom:22px;
   left:0;
   right:0;
-  display:none;
+  display:flex;
   justify-content:center;
-  padding:0 14px;
 }
 
 .chat-input{
-  width:100%;
+  width:90%;
   max-width:680px;
-  border-radius:30px;
-  padding:16px 22px;
+  display:flex;
+  border-radius:40px;
   border:2px solid transparent;
-  outline:none;
-  color:#fff;
-  font-size:15px;
-  background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
+  background:
+  linear-gradient(#0b0b0b,#0b0b0b) padding-box,
   linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
 }
 
-@media(max-width:480px){
-.hero h1{font-size:22px}
+.chat-input input{
+  flex:1;
+  padding:16px;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:white;
+  font-size:15px;
+}
+
+.chat-input button{
+  border:none;
+  background:none;
+  color:white;
+  padding:0 18px;
+  cursor:pointer;
+  font-size:18px;
 }
 </style>
 </head>
@@ -148,118 +174,115 @@ body{
 
 <div class="logo" onclick="goHome()">BRK THE SILENCE</div>
 
-<div class="center" id="home">
+<div id="home">
+
   <div class="hero">
     <h1>Empower your inner voice.</h1>
     <p>A quiet space to express what you usually keep inside.</p>
   </div>
 
-  <div class="search-box">
-    <input class="search-input" id="homeInput" placeholder="What’s on your mind">
+  <div class="search-wrap">
+    <div class="search">
+      <input id="homeInput" placeholder="What’s on your mind" autofocus>
+      <button onclick="startChat()">➤</button>
+    </div>
   </div>
 
   <div class="footer">
     No Identity. No Judgement. Just Expression. |
-    <a href="#" onclick="alert('Terms & Conditions apply.')" style="color:#aaa">T&C</a>
+    <span onclick="openTC()" style="cursor:pointer">T&C</span>
   </div>
+
 </div>
 
-<div class="back" id="backBtn" onclick="goHome()">← Back</div>
+<div id="chat" class="chat-wrap">
 
-<div class="chat-wrap" id="chat"></div>
+  <div class="back" onclick="goHome()">← Back</div>
 
-<div class="chat-input-wrap" id="chatInputWrap">
-  <input class="chat-input" id="chatInput" placeholder="Type your message">
+  <div class="messages" id="messages"></div>
+
+</div>
+
+<div class="chat-input-wrap" id="chatInputWrap" style="display:none;">
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Type your message">
+    <button onclick="send()">➤</button>
+  </div>
 </div>
 
 <script>
 const home=document.getElementById("home");
 const chat=document.getElementById("chat");
-const chatWrap=document.getElementById("chatInputWrap");
-const backBtn=document.getElementById("backBtn");
+const chatInputWrap=document.getElementById("chatInputWrap");
+const messages=document.getElementById("messages");
 
-const homeInput=document.getElementById("homeInput");
-const chatInput=document.getElementById("chatInput");
+function startChat(){
+  const text=document.getElementById("homeInput").value.trim();
+  if(!text) return;
 
-homeInput.focus();
+  home.style.display="none";
+  chat.style.display="block";
+  chatInputWrap.style.display="flex";
 
-/* ENTER key */
-homeInput.addEventListener("keypress",e=>{
- if(e.key==="Enter") startChat(homeInput.value);
-});
-
-chatInput.addEventListener("keypress",e=>{
- if(e.key==="Enter") send(chatInput.value);
-});
-
-function startChat(text){
- if(!text.trim()) return;
-
- home.style.display="none";
- chat.style.display="block";
- chatWrap.style.display="flex";
- backBtn.style.display="block";
-
- addMessage(text,"user");
- homeInput.value="";
- chatInput.focus();
- reply(text);
-}
-
-function send(text){
- if(!text.trim()) return;
- addMessage(text,"user");
- chatInput.value="";
- reply(text);
-}
-
-function addMessage(text,type){
- const div=document.createElement("div");
- div.className="msg "+type;
- div.innerHTML=formatText(text);
- chat.appendChild(div);
- chat.scrollTop=chat.scrollHeight;
-}
-
-/* format response like GPT */
-function formatText(text){
- return text
-   .replace(/### (.*?)/g,"<br><strong>$1</strong>")
-   .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
-   .replace(/- /g,"• ")
-   .replace(/\n/g,"<br>");
-}
-
-async function reply(text){
- const loading=document.createElement("div");
- loading.className="msg bot";
- loading.innerText="...";
- chat.appendChild(loading);
-
- try{
-   const res=await fetch("/api/speak",{
-     method:"POST",
-     headers:{"Content-Type":"application/json"},
-     body:JSON.stringify({message:text})
-   });
-
-   const data=await res.json();
-   loading.remove();
-   addMessage(data.reply,"bot");
-
- }catch{
-   loading.remove();
-   addMessage("Connection issue. Try again.","bot");
- }
+  addMessage(text,"user");
+  fetchReply(text);
 }
 
 function goHome(){
- chat.innerHTML="";
- home.style.display="flex";
- chat.style.display="none";
- chatWrap.style.display="none";
- backBtn.style.display="none";
- homeInput.focus();
+  chat.style.display="none";
+  chatInputWrap.style.display="none";
+  home.style.display="block";
+  messages.innerHTML="";
+}
+
+function addMessage(text,type){
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.textContent=text;
+  messages.appendChild(div);
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+async function send(){
+  const input=document.getElementById("chatInput");
+  const text=input.value.trim();
+  if(!text) return;
+
+  addMessage(text,"user");
+  input.value="";
+  fetchReply(text);
+}
+
+async function fetchReply(text){
+  const res=await fetch("/api/speak",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:text})
+  });
+
+  const data=await res.json();
+  addMessage(data.reply,"bot");
+}
+
+// ENTER key
+document.addEventListener("keypress",e=>{
+ if(e.key==="Enter"){
+   if(chat.style.display==="block") send();
+   else startChat();
+ }
+});
+
+function openTC(){
+ alert(`TERMS & CONDITIONS
+
+This space is here for expression.
+
+• You can share thoughts freely.
+• No identity is stored.
+• This is not therapy or medical advice.
+• If you are in danger, please contact local help services.
+
+Use this space gently and respectfully.`);
 }
 </script>
 
