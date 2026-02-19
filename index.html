@@ -23,16 +23,18 @@ body{
   margin-top:18px;
   letter-spacing:3px;
   font-size:13px;
+  text-align:center;
 }
 
-/* HERO */
-.hero{
+/* HOME SECTION */
+#home{
   text-align:center;
-  margin-top:70px;
+  margin-top:80px;
+  width:100%;
 }
 
 .hero h1{
-  font-size:28px;
+  font-size:26px;
   background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -44,11 +46,10 @@ body{
   font-size:14px;
 }
 
-/* INPUT */
 .search{
-  margin-top:28px;
+  margin:28px auto;
   width:90%;
-  max-width:480px;
+  max-width:420px;
   border-radius:30px;
   border:2px solid transparent;
   background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
@@ -58,7 +59,7 @@ body{
 
 .search input{
   flex:1;
-  padding:15px;
+  padding:14px;
   border:none;
   outline:none;
   background:transparent;
@@ -74,27 +75,26 @@ body{
   cursor:pointer;
 }
 
-/* CHAT PANEL */
-.chatPanel{
+/* FOOTER */
+.footer{
+  font-size:12px;
+  color:#777;
+  text-align:center;
+}
+
+/* CHAT FULL SCREEN */
+#chatScreen{
   position:fixed;
-  bottom:-100%;
+  top:0;
   left:0;
   width:100%;
-  height:65%;
+  height:100%;
   background:#0b0b0b;
-  border-top-left-radius:20px;
-  border-top-right-radius:20px;
-  border-top:1px solid #222;
-  transition:0.4s ease;
-  display:flex;
+  display:none;
   flex-direction:column;
 }
 
-.chatPanel.open{
-  bottom:0;
-}
-
-/* chat header */
+/* header */
 .chatHeader{
   padding:12px;
   border-bottom:1px solid #222;
@@ -139,44 +139,45 @@ body{
   border:1px solid #2a2a2a;
 }
 
-/* footer */
-.footer{
-  margin-top:20px;
-  font-size:12px;
-  color:#777;
-  text-align:center;
+/* bottom input */
+.chatInput{
+  border-top:1px solid #222;
+  padding:10px;
 }
 
-.footer a{color:#aaa}
-
-/* T&C PAGE */
-#tcPage{
-  display:none;
-  max-width:650px;
-  padding:20px;
+.chatInputBox{
+  border-radius:30px;
+  border:2px solid transparent;
+  background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
+  linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
+  display:flex;
 }
 
-#tcPage h2{margin-bottom:15px}
-
-.backBtn{
-  margin-top:20px;
-  padding:8px 18px;
+.chatInputBox input{
+  flex:1;
+  padding:14px;
   border:none;
-  border-radius:20px;
+  outline:none;
+  background:transparent;
+  color:#fff;
+}
+
+.chatInputBox button{
+  border:none;
+  background:none;
+  color:#fff;
+  padding:0 18px;
   cursor:pointer;
 }
 
-@media(max-width:480px){
-.hero{margin-top:60px}
-.hero h1{font-size:24px}
-}
 </style>
 </head>
 
 <body>
 
-<div class="logo" onclick="goHome()" style="cursor:pointer">BRK THE SILENCE</div>
+<div class="logo">BRK THE SILENCE</div>
 
+<!-- HOME -->
 <div id="home">
   <div class="hero">
     <h1>Empower your inner voice.</h1>
@@ -189,55 +190,55 @@ body{
   </div>
 
   <div class="footer">
-    No Identity. No Judgement. Just Expression. |
-    <a href="#" onclick="openTC()">T&C</a>
+    No Identity. No Judgement. Just Expression.
   </div>
 </div>
 
-<!-- CHAT PANEL -->
-<div class="chatPanel" id="chatPanel">
+<!-- CHAT SCREEN -->
+<div id="chatScreen">
+
   <div class="chatHeader">
-    <button onclick="closeChat()">← Back</button>
+    <button onclick="goHome()">← Back</button>
   </div>
-  <div class="messages" id="messages"></div>
-</div>
 
-<!-- T&C -->
-<div id="tcPage">
-  <h2>Terms & Conditions</h2>
-  <p>This platform provides a quiet space for personal expression.</p>
-  <p>It is not therapy, medical advice, or crisis support.</p>
-  <p>If you are in immediate danger, contact local support services.</p>
-  <p>Your messages may be processed to generate responses.</p>
-  <button class="backBtn" onclick="goHome()">Back</button>
+  <div class="messages" id="messages"></div>
+
+  <div class="chatInput">
+    <div class="chatInputBox">
+      <input id="chatInput" placeholder="Type your message">
+      <button onclick="sendFromChat()">➤</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
 const input=document.getElementById("msg");
+const chatInput=document.getElementById("chatInput");
 const messages=document.getElementById("messages");
-const panel=document.getElementById("chatPanel");
 
 input.addEventListener("keypress",e=>{
   if(e.key==="Enter") send();
 });
 
+chatInput.addEventListener("keypress",e=>{
+  if(e.key==="Enter") sendFromChat();
+});
+
 function openChat(){
-  panel.classList.add("open");
+  document.getElementById("home").style.display="none";
+  document.getElementById("chatScreen").style.display="flex";
 }
 
-function closeChat(){
-  panel.classList.remove("open");
+function goHome(){
+  document.getElementById("chatScreen").style.display="none";
+  document.getElementById("home").style.display="block";
 }
 
 function addMessage(text,type){
   const div=document.createElement("div");
   div.className="msg "+type;
-
-  div.innerHTML=text
-    .replace(/\n/g,"<br>")
-    .replace(/### (.*?)<br>/g,"<b>$1</b><br>")
-    .replace(/\*\*(.*?)\*\*/g,"<b>$1</b>");
-
+  div.innerHTML=text.replace(/\n/g,"<br>");
   messages.appendChild(div);
   messages.scrollTop=messages.scrollHeight;
 }
@@ -245,11 +246,21 @@ function addMessage(text,type){
 async function send(){
   const text=input.value.trim();
   if(!text) return;
-
   openChat();
   addMessage(text,"user");
   input.value="";
+  await botReply(text);
+}
 
+async function sendFromChat(){
+  const text=chatInput.value.trim();
+  if(!text) return;
+  addMessage(text,"user");
+  chatInput.value="";
+  await botReply(text);
+}
+
+async function botReply(text){
   try{
     const res=await fetch("/api/speak",{
       method:"POST",
@@ -263,16 +274,6 @@ async function send(){
   }catch{
     addMessage("Connection issue. Try again.","bot");
   }
-}
-
-function openTC(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("tcPage").style.display="block";
-}
-
-function goHome(){
-  document.getElementById("home").style.display="block";
-  document.getElementById("tcPage").style.display="none";
 }
 </script>
 
