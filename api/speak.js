@@ -14,35 +14,30 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `
-You are a calm, intelligent conversational guide.
+        input: `Reply in clean simple text.
+Do not use stars, markdown, bold, symbols, or formatting.
+Use short paragraphs or simple bullet points using hyphen (-).
 
-Rules:
-• respond naturally based on user input
-• not overly emotional
-• not assuming sadness
-• use clear formatting
-• use bullets when helpful
-• keep language simple and human
-
-User: ${message}
-        `,
-        max_output_tokens: 200,
+User message: ${message}`
       }),
     });
 
     const data = await response.json();
 
-    const reply =
-      data.output_text ||
+    let reply =
       data.output?.[0]?.content?.[0]?.text ||
-      "Tell me more.";
+      "I'm here with you.";
+
+    // ✅ remove markdown symbols just in case
+    reply = reply
+      .replace(/\*\*/g, "")
+      .replace(/\*/g, "")
+      .replace(/###/g, "")
+      .replace(/__/g, "");
 
     res.status(200).json({ reply });
 
   } catch (error) {
-    res.status(200).json({
-      reply: "I’m here. Try again in a moment.",
-    });
+    res.status(500).json({ reply: "Connection issue. Try again." });
   }
 }
