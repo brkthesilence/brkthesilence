@@ -1,31 +1,48 @@
 export default async function handler(req, res) {
-  try {
-    const { message } = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ reply: "Method not allowed" });
+  }
 
+  const { message } = req.body;
+
+  try {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: message
-      })
+        input: `
+You are a calm, intelligent conversational guide.
+
+Rules:
+• respond naturally based on user input
+• not overly emotional
+• not assuming sadness
+• use clear formatting
+• use bullets when helpful
+• keep language simple and human
+
+User: ${message}
+        `,
+        max_output_tokens: 200,
+      }),
     });
 
     const data = await response.json();
 
     const reply =
+      data.output_text ||
       data.output?.[0]?.content?.[0]?.text ||
-      "I'm here with you. Tell me more.";
+      "Tell me more.";
 
     res.status(200).json({ reply });
 
   } catch (error) {
-    console.error(error);
     res.status(200).json({
-      reply: "I’m here with you. Tell me what’s on your mind."
+      reply: "I’m here. Try again in a moment.",
     });
   }
 }
