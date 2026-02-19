@@ -16,20 +16,20 @@ body{
   flex-direction:column;
   align-items:center;
   min-height:100vh;
-  padding:20px;
 }
 
-/* logo */
+/* LOGO */
 .logo{
-  margin-top:10px;
+  margin-top:18px;
   letter-spacing:3px;
-  font-size:14px;
+  font-size:13px;
+  cursor:pointer;
 }
 
-/* hero */
+/* HERO */
 .hero{
-  margin-top:40px;
   text-align:center;
+  margin-top:40px;
 }
 
 .hero h1{
@@ -45,27 +45,29 @@ body{
   font-size:14px;
 }
 
-/* chat */
-.chat-container{
+/* CHAT WINDOW */
+.chat-popup{
   width:100%;
   max-width:520px;
-  margin-top:30px;
+  margin-top:25px;
 }
 
 .messages{
-  min-height:160px;
-  max-height:320px;
-  overflow-y:auto;
+  display:none;
+  background:#111;
+  border-radius:18px;
+  padding:15px;
   margin-bottom:15px;
+  max-height:300px;
+  overflow-y:auto;
+  border:1px solid #2a2a2a;
 }
 
-/* bubbles */
 .msg{
   padding:10px 14px;
   border-radius:16px;
   margin:6px 0;
   max-width:80%;
-  word-wrap:break-word;
   font-size:14px;
 }
 
@@ -79,7 +81,7 @@ body{
   border:1px solid #2a2a2a;
 }
 
-/* input */
+/* INPUT */
 .input-box{
   display:flex;
   border-radius:30px;
@@ -90,7 +92,7 @@ body{
 
 .input-box input{
   flex:1;
-  padding:14px;
+  padding:16px;
   border:none;
   outline:none;
   background:transparent;
@@ -107,33 +109,29 @@ body{
   font-size:18px;
 }
 
-/* footer */
+/* FOOTER */
 .footer{
-  margin-top:40px;
+  margin-top:25px;
   font-size:12px;
   color:#777;
   text-align:center;
 }
 
-.footer a{
-  color:#aaa;
-  text-decoration:none;
-}
-
-.footer a:hover{color:#fff}
-
-/* T&C page */
+/* T&C PAGE */
 #tcPage{
   display:none;
-  max-width:600px;
-  margin-top:40px;
+  max-width:650px;
+  padding:20px;
   text-align:left;
-  line-height:1.6;
+}
+
+#tcPage h2{
+  margin-bottom:15px;
 }
 
 .backBtn{
   margin-top:25px;
-  padding:10px 18px;
+  padding:8px 16px;
   border:none;
   border-radius:20px;
   cursor:pointer;
@@ -147,37 +145,40 @@ body{
 
 <body>
 
-<div class="logo">BRK THE SILENCE</div>
+<div class="logo" onclick="goHome()">BRK THE SILENCE</div>
 
 <div class="hero" id="hero">
   <h1>Empower your inner voice.</h1>
   <p>A quiet space to express what you usually keep inside.</p>
 </div>
 
-<div class="chat-container" id="chatUI">
+<div class="chat-popup">
+
   <div class="messages" id="messages"></div>
 
   <div class="input-box">
     <input id="msg" placeholder="What’s on your mind">
     <button onclick="send()">➤</button>
   </div>
+
 </div>
 
 <div class="footer">
-  No Identity. No Judgement. Just Expression.
-  <span style="opacity:.4;"> | </span>
-  <a href="#" onclick="openTC()">T&C</a>
+  No Identity. No Judgement. Just Expression. |
+  <a href="#" onclick="openTC()" style="color:#aaa;">T&C</a>
 </div>
 
 <!-- T&C PAGE -->
 <div id="tcPage">
   <h2>Terms & Conditions</h2>
+
   <p>This platform provides a quiet space for personal expression.</p>
   <p>It is not therapy, medical advice, or crisis support.</p>
-  <p>If you need urgent help, please contact local support services.</p>
-  <p>Your messages are processed to generate responses.</p>
+  <p>If you are in immediate danger or require urgent help, please contact local emergency services.</p>
+  <p>Your messages are processed to generate responses but are not intended for diagnosis or treatment.</p>
+  <p>Use of this platform indicates acceptance of these terms.</p>
 
-  <button class="backBtn" onclick="closeTC()">⬅ Back</button>
+  <button class="backBtn" onclick="goHome()">⬅ Back</button>
 </div>
 
 <script>
@@ -186,11 +187,13 @@ const messages=document.getElementById("messages");
 
 input.focus();
 
-input.addEventListener("keypress",e=>{
+/* ENTER KEY SEND */
+input.addEventListener("keydown", e=>{
   if(e.key==="Enter") send();
 });
 
 function addMessage(text,type){
+  messages.style.display="block";
   const div=document.createElement("div");
   div.className="msg "+type;
   div.textContent=text;
@@ -221,14 +224,16 @@ async function send(){
 }
 
 function openTC(){
-  document.getElementById("chatUI").style.display="none";
   document.getElementById("hero").style.display="none";
+  document.querySelector(".chat-popup").style.display="none";
+  document.querySelector(".footer").style.display="none";
   document.getElementById("tcPage").style.display="block";
 }
 
-function closeTC(){
-  document.getElementById("chatUI").style.display="block";
+function goHome(){
   document.getElementById("hero").style.display="block";
+  document.querySelector(".chat-popup").style.display="block";
+  document.querySelector(".footer").style.display="block";
   document.getElementById("tcPage").style.display="none";
 }
 </script>
