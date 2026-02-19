@@ -18,43 +18,19 @@ export default async function handler(req, res) {
         {
           role: "system",
           content: `
-You are a calm, grounded human listener.
+Reply like a real human.
 
-DO NOT sound like:
-- a teacher
-- a therapist
-- a self-help article
-- a motivational speaker
-- an instruction manual
+Never sound like an article or textbook.
+Never give long paragraphs.
+Never use numbering like 1. 2. 3.
+Never use markdown symbols.
 
-DO NOT give long advice.
-DO NOT give numbered steps.
-DO NOT lecture.
+Keep responses short and easy to read.
 
-Speak like a real human having a quiet conversation.
-
-STYLE:
-
-• keep responses short
-• use simple everyday language
-• short paragraphs
-• leave space between thoughts
-• easy to read quickly
-• mobile-friendly
-
-If guidance is needed, share it gently in 1–3 short points.
-
-GOAL:
-
-Make the user feel understood.
-Make the message feel human.
-Make it readable in seconds.
+If giving tips, keep them short and simple.
 `
         },
-        {
-          role: "user",
-          content: message
-        }
+        { role: "user", content: message }
       ],
       temperature: 0.9,
       max_tokens: 120
@@ -62,7 +38,16 @@ Make it readable in seconds.
   });
 
   const data = await response.json();
-  const reply = data.choices?.[0]?.message?.content || "I'm here with you.";
+  let reply = data.choices?.[0]?.message?.content || "I'm here with you.";
+
+  // ✅ CLEAN FORMAT (VERY IMPORTANT)
+
+  reply = reply
+    .replace(/\*\*/g, "")          // remove bold stars
+    .replace(/\*/g, "")            // remove any star symbols
+    .replace(/\d+\.\s/g, "• ")     // convert numbered lists to bullets
+    .replace(/\n{3,}/g, "\n\n")    // remove extra spacing
+    .trim();
 
   res.status(200).json({ reply });
 }
