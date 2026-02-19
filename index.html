@@ -17,15 +17,16 @@ body{
   flex-direction:column;
 }
 
-/* LOGO TOP */
+/* LOGO */
 .logo{
   text-align:center;
   margin-top:18px;
   letter-spacing:3px;
   font-size:13px;
+  cursor:pointer;
 }
 
-/* CENTER AREA */
+/* CENTER HOME */
 .centerWrap{
   flex:1;
   display:flex;
@@ -98,7 +99,7 @@ body{
   display:none;
   width:100%;
   max-width:680px;
-  margin:20px auto 0;
+  margin:10px auto;
   padding:0 16px;
 }
 
@@ -121,7 +122,16 @@ body{
   border:1px solid #2a2a2a;
 }
 
-/* INPUT BOTTOM */
+/* BACK BUTTON */
+.back{
+  display:none;
+  margin:10px 16px;
+  cursor:pointer;
+  color:#bbb;
+  font-size:14px;
+}
+
+/* BOTTOM INPUT */
 .bottomInput{
   display:none;
   position:fixed;
@@ -144,7 +154,7 @@ body{
 
 <body>
 
-<div class="logo">BRK THE SILENCE</div>
+<div class="logo" onclick="goHome()">BRK THE SILENCE</div>
 
 <div class="centerWrap" id="home">
   <div class="hero" id="hero">
@@ -152,7 +162,7 @@ body{
     <p>A quiet space to express what you usually keep inside.</p>
   </div>
 
-  <div class="searchBox">
+  <div class="searchBox" id="topSearch">
     <div class="searchInner">
       <input id="msg" placeholder="What’s on your mind">
       <button onclick="send()">➤</button>
@@ -164,6 +174,8 @@ body{
     <a href="#" style="color:#aaa;">T&C</a>
   </div>
 </div>
+
+<div class="back" id="backBtn" onclick="goHome()">← Back</div>
 
 <div class="chatArea" id="chat"></div>
 
@@ -192,26 +204,24 @@ function addMessage(text,type){
   window.scrollTo(0,document.body.scrollHeight);
 }
 
+function openChat(){
+  document.getElementById("hero").style.display="none";
+  document.getElementById("topSearch").style.display="none"; // remove top bar
+  document.getElementById("home").style.display="none";
+  document.getElementById("backBtn").style.display="block";
+  chat.style.display="block";
+  document.getElementById("bottomBox").style.display="block";
+}
+
 async function send(){
   const text=input.value.trim();
   if(!text) return;
 
-  document.getElementById("hero").style.display="none";
-  document.getElementById("home").style.justifyContent="flex-start";
-  chat.style.display="block";
-  document.getElementById("bottomBox").style.display="block";
-
+  openChat();
   addMessage(text,"user");
   input.value="";
 
-  const res=await fetch("/api/speak",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({message:text})
-  });
-
-  const data=await res.json();
-  addMessage(data.reply,"bot");
+  getReply(text);
 }
 
 async function sendBottom(){
@@ -221,14 +231,34 @@ async function sendBottom(){
   addMessage(text,"user");
   document.getElementById("msg2").value="";
 
-  const res=await fetch("/api/speak",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({message:text})
-  });
+  getReply(text);
+}
 
-  const data=await res.json();
-  addMessage(data.reply,"bot");
+async function getReply(text){
+  try{
+    const res=await fetch("/api/speak",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:text})
+    });
+
+    const data=await res.json();
+
+    addMessage(data.reply || "I'm here with you.","bot");
+
+  }catch{
+    addMessage("Connection issue. Try again.","bot");
+  }
+}
+
+function goHome(){
+  chat.innerHTML="";
+  document.getElementById("home").style.display="flex";
+  document.getElementById("hero").style.display="block";
+  document.getElementById("topSearch").style.display="block";
+  document.getElementById("bottomBox").style.display="none";
+  document.getElementById("backBtn").style.display="none";
+  chat.style.display="none";
 }
 </script>
 
