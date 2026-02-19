@@ -9,141 +9,137 @@
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
-background:#0b0b0b;
-color:#fff;
-font-family:Arial, sans-serif;
-min-height:100vh;
-display:flex;
-flex-direction:column;
-align-items:center;
+  background:#000;
+  color:#fff;
+  font-family:Arial, sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
 }
 
 /* LOGO */
 .logo{
-margin-top:18px;
-letter-spacing:4px;
-font-size:13px;
-cursor:pointer;
+  margin-top:18px;
+  letter-spacing:3px;
+  font-size:14px;
+  cursor:pointer;
 }
 
-/* HERO CENTER */
-.heroWrap{
-flex:1;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-width:100%;
-padding:20px;
+/* CENTER HERO */
+.hero{
+  text-align:center;
+  margin-top:12vh;
+  max-width:500px;
+  padding:0 20px;
 }
 
-.heroTitle{
-font-size:28px;
-background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-margin-bottom:8px;
+.hero h1{
+  font-size:26px;
+  background:linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-.heroSub{
-color:#aaa;
-font-size:14px;
-margin-bottom:30px;
+.hero p{
+  margin-top:10px;
+  color:#bbb;
+  font-size:14px;
 }
 
 /* INPUT */
-.inputWrap{
-width:100%;
-max-width:520px;
-display:flex;
-align-items:center;
-border-radius:30px;
-padding:6px;
-background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
-linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
-border:2px solid transparent;
+.search-box{
+  margin-top:28px;
+  width:100%;
 }
 
-.inputWrap input{
-flex:1;
-padding:14px;
-background:transparent;
-border:none;
-outline:none;
-color:#fff;
-font-size:15px;
-}
-
-.sendBtn{
-padding:10px 16px;
-border-radius:22px;
-border:none;
-background:#111;
-color:#fff;
-cursor:pointer;
+.search-box input{
+  width:100%;
+  padding:16px;
+  border-radius:30px;
+  border:2px solid transparent;
+  outline:none;
+  color:#fff;
+  background:
+  linear-gradient(#000,#000) padding-box,
+  linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
+  font-size:14px;
 }
 
 /* FOOTER */
 .footer{
-text-align:center;
-font-size:12px;
-color:#777;
-margin-top:12px;
+  margin-top:12px;
+  font-size:12px;
+  color:#777;
 }
 
-/* CHAT PAGE */
-.chatPage{
-display:none;
-flex-direction:column;
-width:100%;
-max-width:520px;
-flex:1;
-margin-top:30px;
+/* CHAT SCREEN */
+.chatScreen{
+  display:none;
+  width:100%;
+  max-width:520px;
+  height:100vh;
+  flex-direction:column;
 }
 
 .backBtn{
-color:#aaa;
-cursor:pointer;
-margin-bottom:10px;
+  color:#aaa;
+  cursor:pointer;
+  margin:10px 0 0 6px;
 }
 
 .messages{
-flex:1;
-overflow-y:auto;
-padding-bottom:10px;
+  flex:1;
+  overflow-y:auto;
+  padding:10px;
 }
 
 .msg{
-padding:10px 14px;
-border-radius:14px;
-margin:6px 0;
-max-width:80%;
-line-height:1.5;
-font-size:14px;
+  max-width:80%;
+  padding:10px 14px;
+  border-radius:14px;
+  margin:8px 0;
+  line-height:1.5;
+  font-size:14px;
 }
 
 .user{
-background:#1f1f1f;
-margin-left:auto;
+  background:#1e1e1e;
+  margin-left:auto;
 }
 
 .bot{
-background:#141414;
-border:1px solid #2a2a2a;
+  background:#111;
+  border:1px solid #2a2a2a;
 }
 
-/* bottom bar */
-.bottomBar{
-position:sticky;
-bottom:0;
-background:#0b0b0b;
-padding-top:8px;
+/* bottom input */
+.chatInput{
+  padding:10px;
 }
 
-@media(max-width:600px){
-.heroTitle{font-size:24px}
+.chatInput input{
+  width:100%;
+  padding:14px;
+  border-radius:30px;
+  border:2px solid transparent;
+  outline:none;
+  color:#fff;
+  background:
+  linear-gradient(#000,#000) padding-box,
+  linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
 }
+
+/* T&C PAGE */
+#tcPage{
+  display:none;
+  max-width:720px;
+  padding:25px;
+  line-height:1.8;
+  font-size:14px;
+}
+
+h3{margin-top:20px}
 </style>
 </head>
 
@@ -151,46 +147,42 @@ padding-top:8px;
 
 <div class="logo" onclick="goHome()">BRK THE SILENCE</div>
 
-<!-- HERO -->
-<div class="heroWrap" id="hero">
-<div class="heroTitle">Empower your inner voice.</div>
-<div class="heroSub">A quiet space to express what you usually keep inside.</div>
+<!-- HOME -->
+<div class="hero" id="home">
+  <h1>Empower your inner voice.</h1>
+  <p>A quiet space to express what you usually keep inside.</p>
 
-<div class="inputWrap">
-<input id="startInput" placeholder="What’s on your mind">
-<button class="sendBtn" onclick="startChat()">➤</button>
-</div>
+  <div class="search-box">
+    <input id="homeInput" placeholder="What’s on your mind">
+  </div>
 
-<div class="footer">
-No Identity. No Judgement. Just Expression. |
-<span onclick="openTC()" style="cursor:pointer;text-decoration:underline;">T&C</span>
-</div>
+  <div class="footer">
+    No Identity. No Judgement. Just Expression.
+    |
+    <span onclick="openTC()" style="cursor:pointer">T&C</span>
+  </div>
 </div>
 
 <!-- CHAT -->
-<div class="chatPage" id="chat">
+<div class="chatScreen" id="chat">
 
-<div class="backBtn" onclick="goHome()">← Back</div>
+  <div class="backBtn" onclick="goHome()">← Back</div>
 
-<div class="messages" id="messages"></div>
+  <div class="messages" id="messages"></div>
 
-<div class="bottomBar">
-<div class="inputWrap">
-<input id="chatInput" placeholder="Type your message">
-<button class="sendBtn" onclick="send()">➤</button>
-</div>
-</div>
+  <div class="chatInput">
+    <input id="chatInput" placeholder="Type your message">
+  </div>
 
 </div>
 
-<!-- T&C PAGE -->
-<div id="tcPage" style="display:none;max-width:700px;padding:25px;line-height:1.7">
-
+<!-- T&C -->
+<div id="tcPage">
 <h2>BRK The Silence — Terms & Conditions</h2>
 
-<p>Welcome to BRK The Silence. This space exists for expression, connection, and self-growth.</p>
-
-<p><strong>This platform is not medical, legal, or therapy advice.</strong></p>
+<p>Welcome to BRK The Silence.</p>
+<p>This space exists for expression, connection, and self-growth.</p>
+<p>This platform is not a medical, legal, or therapeutic service.</p>
 
 <h3>Purpose</h3>
 <p>• A safe space for expression<br>
@@ -198,107 +190,95 @@ No Identity. No Judgement. Just Expression. |
 • Encouraging awareness & connection</p>
 
 <h3>Emotional Content</h3>
-<p>Shared experiences are for connection and awareness. If you are in severe distress, please seek professional support.</p>
+<p>Shared experiences are for connection and awareness.
+If you are in severe distress, please seek professional support.</p>
 
 <h3>User Respect</h3>
-<p>Use this space with empathy and honesty. Harmful or abusive content may be removed.</p>
+<p>Use this space with empathy and honesty.
+Harmful or abusive content may be removed.</p>
 
 <h3>Privacy</h3>
-<p>Your privacy matters. Avoid sharing sensitive personal details.</p>
+<p>Your privacy matters.
+Avoid sharing sensitive personal details.</p>
 
 <h3>Intellectual Property</h3>
-<p>Content belongs to BRK The Silence. You may share with credit.</p>
+<p>Content belongs to BRK The Silence.
+You may share with credit.</p>
 
 <h3>Philosophy</h3>
 <p>Authenticity over perfection.<br>
 Expression over suppression.<br>
 Connection over judgment.</p>
 
-<p><strong>Speak. Feel. Heal. Grow.</strong></p>
+<p><b>Speak. Feel. Heal. Grow.</b></p>
 
-<p style="margin-top:20px;cursor:pointer;color:#aaa" onclick="closeTC()">← Back</p>
+<p style="margin-top:20px;color:#aaa;cursor:pointer" onclick="goHome()">← Back</p>
 </div>
 
 <script>
-const hero=document.getElementById("hero");
-const chat=document.getElementById("chat");
-const tc=document.getElementById("tcPage");
-
-const startInput=document.getElementById("startInput");
+const homeInput=document.getElementById("homeInput");
 const chatInput=document.getElementById("chatInput");
 const messages=document.getElementById("messages");
 
-/* ENTER works everywhere */
-startInput.addEventListener("keydown",e=>{ if(e.key==="Enter") startChat(); });
-chatInput.addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
+homeInput.focus();
 
-function startChat(){
-if(!startInput.value.trim()) return;
-
-hero.style.display="none";
-chat.style.display="flex";
-
-addMessage(startInput.value,"user");
-chatInput.focus();
-getReply(startInput.value);
-
-startInput.value="";
-}
-
-function send(){
-const text=chatInput.value.trim();
-if(!text) return;
-
-addMessage(text,"user");
-chatInput.value="";
-getReply(text);
-}
-
-function addMessage(text,type){
-const div=document.createElement("div");
-div.className="msg "+type;
-div.textContent=text;
-messages.appendChild(div);
-messages.scrollTop=messages.scrollHeight;
-}
-
-async function getReply(text){
-addMessage("...","bot");
-
-try{
-const res=await fetch("/api/speak",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:text})
+homeInput.addEventListener("keydown",e=>{
+ if(e.key==="Enter" && homeInput.value.trim()){
+   openChat(homeInput.value);
+ }
 });
 
-const data=await res.json();
-messages.lastChild.remove();
-addMessage(data.reply,"bot");
+chatInput.addEventListener("keydown",e=>{
+ if(e.key==="Enter" && chatInput.value.trim()){
+   send(chatInput.value);
+ }
+});
 
-}catch{
-messages.lastChild.textContent="Connection issue. Try again.";
-}
+function openChat(text){
+ document.getElementById("home").style.display="none";
+ document.getElementById("chat").style.display="flex";
+ send(text);
 }
 
 function goHome(){
-chat.style.display="none";
-tc.style.display="none";
-hero.style.display="flex";
-startInput.focus();
+ document.getElementById("home").style.display="block";
+ document.getElementById("chat").style.display="none";
+ document.getElementById("tcPage").style.display="none";
+ messages.innerHTML="";
+ homeInput.focus();
 }
 
 function openTC(){
-hero.style.display="none";
-chat.style.display="none";
-tc.style.display="block";
+ document.getElementById("home").style.display="none";
+ document.getElementById("tcPage").style.display="block";
 }
 
-function closeTC(){
-tc.style.display="none";
-hero.style.display="flex";
+function addMessage(text,type){
+ const div=document.createElement("div");
+ div.className="msg "+type;
+ div.textContent=text;
+ messages.appendChild(div);
+ messages.scrollTop=messages.scrollHeight;
+}
+
+async function send(text){
+ addMessage(text,"user");
+ chatInput.value="";
+
+ try{
+  const res=await fetch("/api/speak",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({message:text})
+  });
+
+  const data=await res.json();
+  addMessage(data.reply,"bot");
+
+ }catch{
+  addMessage("Connection issue. Try again.","bot");
+ }
 }
 </script>
-
 </body>
 </html>
