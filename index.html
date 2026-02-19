@@ -10,12 +10,12 @@
 
 body{
   background:#0b0b0b;
-  color:#fff;
+  color:white;
   font-family:Arial, sans-serif;
-  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
+  min-height:100vh;
 }
 
 /* LOGO */
@@ -23,14 +23,12 @@ body{
   margin-top:18px;
   letter-spacing:3px;
   font-size:13px;
-  text-align:center;
 }
 
-/* HOME SECTION */
-#home{
+/* HERO */
+.hero{
   text-align:center;
-  margin-top:80px;
-  width:100%;
+  margin-top:70px;
 }
 
 .hero h1{
@@ -46,8 +44,9 @@ body{
   font-size:14px;
 }
 
+/* INPUT BAR */
 .search{
-  margin:28px auto;
+  margin-top:28px;
   width:90%;
   max-width:420px;
   border-radius:30px;
@@ -70,57 +69,20 @@ body{
 .search button{
   border:none;
   background:none;
-  color:#fff;
+  color:white;
   padding:0 18px;
   cursor:pointer;
 }
 
-/* FOOTER */
-.footer{
-  font-size:12px;
-  color:#777;
-  text-align:center;
-}
-
-/* CHAT FULL SCREEN */
-#chatScreen{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#0b0b0b;
-  display:none;
-  flex-direction:column;
-}
-
-/* header */
-.chatHeader{
-  padding:12px;
-  border-bottom:1px solid #222;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.chatHeader button{
-  background:none;
-  border:none;
-  color:#aaa;
-  font-size:14px;
-  cursor:pointer;
-}
-
-/* messages */
+/* CHAT AREA */
 .messages{
-  flex:1;
-  overflow-y:auto;
-  padding:15px;
+  width:90%;
+  max-width:420px;
+  margin-top:20px;
 }
 
-/* bubbles */
+/* BUBBLES */
 .msg{
-  max-width:85%;
   margin-bottom:10px;
   padding:10px 14px;
   border-radius:14px;
@@ -130,8 +92,8 @@ body{
 }
 
 .user{
-  margin-left:auto;
   background:#1f1f1f;
+  text-align:right;
 }
 
 .bot{
@@ -139,37 +101,13 @@ body{
   border:1px solid #2a2a2a;
 }
 
-/* bottom input */
-.chatInput{
-  border-top:1px solid #222;
-  padding:10px;
+/* FOOTER */
+.footer{
+  margin-top:30px;
+  font-size:12px;
+  color:#777;
+  text-align:center;
 }
-
-.chatInputBox{
-  border-radius:30px;
-  border:2px solid transparent;
-  background:linear-gradient(#0b0b0b,#0b0b0b) padding-box,
-  linear-gradient(90deg,#ff7a18,#ff00c8,#00c6ff) border-box;
-  display:flex;
-}
-
-.chatInputBox input{
-  flex:1;
-  padding:14px;
-  border:none;
-  outline:none;
-  background:transparent;
-  color:#fff;
-}
-
-.chatInputBox button{
-  border:none;
-  background:none;
-  color:#fff;
-  padding:0 18px;
-  cursor:pointer;
-}
-
 </style>
 </head>
 
@@ -177,90 +115,45 @@ body{
 
 <div class="logo">BRK THE SILENCE</div>
 
-<!-- HOME -->
-<div id="home">
-  <div class="hero">
-    <h1>Empower your inner voice.</h1>
-    <p>A quiet space to express what you usually keep inside.</p>
-  </div>
-
-  <div class="search">
-    <input id="msg" placeholder="What’s on your mind" autofocus>
-    <button onclick="send()">➤</button>
-  </div>
-
-  <div class="footer">
-    No Identity. No Judgement. Just Expression.
-  </div>
+<div class="hero">
+  <h1>Empower your inner voice.</h1>
+  <p>A quiet space to express what you usually keep inside.</p>
 </div>
 
-<!-- CHAT SCREEN -->
-<div id="chatScreen">
+<div class="search">
+  <input id="msg" placeholder="What’s on your mind" autofocus>
+  <button onclick="send()">➤</button>
+</div>
 
-  <div class="chatHeader">
-    <button onclick="goHome()">← Back</button>
-  </div>
+<div class="messages" id="messages"></div>
 
-  <div class="messages" id="messages"></div>
-
-  <div class="chatInput">
-    <div class="chatInputBox">
-      <input id="chatInput" placeholder="Type your message">
-      <button onclick="sendFromChat()">➤</button>
-    </div>
-  </div>
-
+<div class="footer">
+  No Identity. No Judgement. Just Expression.
 </div>
 
 <script>
 const input=document.getElementById("msg");
-const chatInput=document.getElementById("chatInput");
 const messages=document.getElementById("messages");
 
 input.addEventListener("keypress",e=>{
   if(e.key==="Enter") send();
 });
 
-chatInput.addEventListener("keypress",e=>{
-  if(e.key==="Enter") sendFromChat();
-});
-
-function openChat(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("chatScreen").style.display="flex";
-}
-
-function goHome(){
-  document.getElementById("chatScreen").style.display="none";
-  document.getElementById("home").style.display="block";
-}
-
 function addMessage(text,type){
   const div=document.createElement("div");
   div.className="msg "+type;
-  div.innerHTML=text.replace(/\n/g,"<br>");
+  div.innerHTML=text.replace(/\\n/g,"<br>");
   messages.appendChild(div);
-  messages.scrollTop=messages.scrollHeight;
+  window.scrollTo(0,document.body.scrollHeight);
 }
 
 async function send(){
   const text=input.value.trim();
   if(!text) return;
-  openChat();
+
   addMessage(text,"user");
   input.value="";
-  await botReply(text);
-}
 
-async function sendFromChat(){
-  const text=chatInput.value.trim();
-  if(!text) return;
-  addMessage(text,"user");
-  chatInput.value="";
-  await botReply(text);
-}
-
-async function botReply(text){
   try{
     const res=await fetch("/api/speak",{
       method:"POST",
