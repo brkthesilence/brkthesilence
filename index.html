@@ -1,52 +1,120 @@
-<script>
-function checkEnter(e){
-  if(e.key === "Enter"){
-    respond();
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRK THE SILENCE</title>
+
+<style>
+body{
+  margin:0;
+  background:#0b0b0b;
+  color:#fff;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  text-align:center;
 }
 
-function respond(){
-  const inputField = document.getElementById("userInput");
-  const text = inputField.value.trim().toLowerCase();
-  const box = document.getElementById("responseBox");
+.container{
+  width:90%;
+  max-width:600px;
+}
+
+.headline{
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+.subheadline{
+  color:#aaa;
+  margin-bottom:30px;
+}
+
+.search-input{
+  width:100%;
+  padding:15px 20px;
+  border-radius:30px;
+  border:none;
+  outline:none;
+  font-size:16px;
+  background:#121212;
+  color:#fff;
+}
+
+.response{
+  margin-top:25px;
+  color:#ccc;
+  font-size:16px;
+  line-height:1.6;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="headline">Empower your inner voice.</div>
+  <div class="subheadline">A quiet space to express what you keep inside.</div>
+
+  <input
+    type="text"
+    id="userInput"
+    class="search-input"
+    placeholder="What’s on your mind"
+  >
+
+  <div id="responseBox" class="response"></div>
+</div>
+
+<script>
+const input = document.getElementById("userInput");
+const responseBox = document.getElementById("responseBox");
+
+input.addEventListener("keydown", function(event) {
+  if(event.key === "Enter") {
+    respond();
+  }
+});
+
+function respond() {
+  const text = input.value.trim().toLowerCase();
 
   if(text === ""){
-    box.innerHTML = "Your voice matters.";
+    responseBox.innerHTML = "Your voice matters.";
     return;
   }
 
   let reply;
 
-  // keyword based responses
-  if(text.includes("sad") || text.includes("cry") || text.includes("hurt")){
-    reply = "It's okay to feel this way. You don’t have to carry it alone.";
+  if(text.includes("sad") || text.includes("cry")){
+    reply = "It's okay to feel this way. You are not alone.";
   }
-  else if(text.includes("stress") || text.includes("pressure") || text.includes("tired")){
-    reply = "Pause. Breathe. You have survived every difficult day so far.";
+  else if(text.includes("stress") || text.includes("tired")){
+    reply = "Pause. Breathe. One step at a time.";
   }
-  else if(text.includes("alone") || text.includes("lonely")){
+  else if(text.includes("alone")){
     reply = "Even in silence, you are not alone.";
   }
-  else if(text.includes("happy") || text.includes("good")){
-    reply = "Hold onto this feeling. You deserve moments like this.";
+  else if(text.includes("happy")){
+    reply = "Hold onto this feeling. You deserve it.";
   }
-  else if(text.includes("angry") || text.includes("frustrated")){
-    reply = "Anger is a signal, not your identity. Let it pass.";
-  }
-  else {
+  else{
     const responses = [
       "You are heard.",
-      "This space is safe for your thoughts.",
-      "Let it out. You don’t have to hold it inside.",
       "Your feelings are valid.",
-      "Take a slow breath. You're okay.",
-      "Expression is strength.",
-      "Whatever you're carrying, you can set it down here."
+      "Let it out. This space is safe.",
+      "Take a slow breath.",
+      "Expression is strength."
     ];
     reply = responses[Math.floor(Math.random()*responses.length)];
   }
 
-  box.innerHTML = reply;
-  inputField.value = "";
+  responseBox.innerHTML = reply;
+  input.value = "";
 }
 </script>
+
+</body>
+</html>
