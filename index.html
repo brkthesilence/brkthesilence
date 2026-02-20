@@ -6,113 +6,199 @@
 <title>BRK THE SILENCE</title>
 
 <style>
-body{
-  margin:0;
-  background:#0b0b0b;
-  color:#fff;
-  font-family:Arial, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  text-align:center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.container{
-  width:90%;
-  max-width:600px;
+body {
+  background: #0b0b0b;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.headline{
-  font-size:26px;
-  margin-bottom:10px;
+.logo {
+  padding-top: 60px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
 }
 
-.subheadline{
-  color:#aaa;
-  margin-bottom:30px;
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
 }
 
-.search-input{
-  width:100%;
-  padding:15px 20px;
-  border-radius:30px;
-  border:none;
-  outline:none;
-  font-size:16px;
-  background:#121212;
-  color:#fff;
+.headline {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.response{
-  margin-top:25px;
-  color:#ccc;
-  font-size:16px;
-  line-height:1.6;
+.subheadline {
+  font-size: 15px;
+  color: #b0b0b0;
+  margin-bottom: 35px;
+}
+
+.search-wrapper {
+  width: 100%;
+  max-width: 700px;
+  padding: 2px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
+  margin-bottom: 30px;
+}
+
+.search-input {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 30px;
+  padding: 0 22px;
+  font-size: 16px;
+  color: #ffffff;
+  background: #121212;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #777;
+}
+
+.response {
+  margin-top: 20px;
+  max-width: 700px;
+  color: #cfcfcf;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.tc-section {
+  display: none;
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+  text-align: left;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  color: #888;
+  border-top: 1px solid #111;
+}
+
+footer a {
+  color: #888;
+  text-decoration: none;
+  cursor: pointer;
 }
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="logo" onclick="showHome()">BRK THE SILENCE</div>
+
+<div class="container" id="homepageContent">
   <div class="headline">Empower your inner voice.</div>
-  <div class="subheadline">A quiet space to express what you keep inside.</div>
+  <div class="subheadline">A quiet space to express what you usually keep inside.</div>
 
-  <input
-    type="text"
-    id="userInput"
-    class="search-input"
-    placeholder="What’s on your mind"
-  >
+  <div class="search-wrapper">
+    <input 
+      type="text"
+      class="search-input"
+      id="userInput"
+      placeholder="What’s on your mind"
+    >
+  </div>
 
-  <div id="responseBox" class="response"></div>
+  <div class="response" id="responseBox"></div>
 </div>
 
-<script>
-const input = document.getElementById("userInput");
-const responseBox = document.getElementById("responseBox");
+<div class="tc-section" id="tcSection">
+  <h2>Terms & Conditions</h2>
+  <p>This platform is a quiet space for expression.</p>
+</div>
 
-input.addEventListener("keydown", function(event) {
-  if(event.key === "Enter") {
+<footer>
+  No Identity. No Judgement. Just Expression. |
+  <a onclick="showTnC()">T&C</a>
+</footer>
+
+<script>
+// ENTER KEY LISTENER
+document.getElementById("userInput").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
     respond();
   }
 });
 
-function respond() {
-  const text = input.value.trim().toLowerCase();
+function respond(){
+  const inputField = document.getElementById("userInput");
+  const text = inputField.value.trim().toLowerCase();
+  const box = document.getElementById("responseBox");
 
-  if(text === ""){
-    responseBox.innerHTML = "Your voice matters.";
-    return;
-  }
+  // do nothing if empty
+  if(text === "") return;
 
   let reply;
 
-  if(text.includes("sad") || text.includes("cry")){
-    reply = "It's okay to feel this way. You are not alone.";
+  if(text.includes("sad") || text.includes("cry") || text.includes("hurt")){
+    reply = "It's okay to feel this way. You don’t have to carry it alone.";
   }
-  else if(text.includes("stress") || text.includes("tired")){
-    reply = "Pause. Breathe. One step at a time.";
+  else if(text.includes("stress") || text.includes("pressure") || text.includes("tired")){
+    reply = "Pause. Breathe. You have survived every difficult day so far.";
   }
-  else if(text.includes("alone")){
+  else if(text.includes("alone") || text.includes("lonely")){
     reply = "Even in silence, you are not alone.";
   }
-  else if(text.includes("happy")){
-    reply = "Hold onto this feeling. You deserve it.";
+  else if(text.includes("happy") || text.includes("good")){
+    reply = "Hold onto this feeling. You deserve moments like this.";
   }
-  else{
+  else if(text.includes("angry") || text.includes("frustrated")){
+    reply = "Anger is a signal, not your identity. Let it pass.";
+  }
+  else {
     const responses = [
       "You are heard.",
+      "This space is safe for your thoughts.",
+      "Let it out. You don’t have to hold it inside.",
       "Your feelings are valid.",
-      "Let it out. This space is safe.",
-      "Take a slow breath.",
-      "Expression is strength."
+      "Take a slow breath. You're okay.",
+      "Expression is strength.",
+      "Whatever you're carrying, you can set it down here."
     ];
     reply = responses[Math.floor(Math.random()*responses.length)];
   }
 
-  responseBox.innerHTML = reply;
-  input.value = "";
+  box.innerHTML = reply;
+  inputField.value = "";
+}
+
+function showTnC(){
+  document.getElementById("homepageContent").style.display="none";
+  document.getElementById("tcSection").style.display="block";
+}
+
+function showHome(){
+  document.getElementById("tcSection").style.display="none";
+  document.getElementById("homepageContent").style.display="flex";
 }
 </script>
 
