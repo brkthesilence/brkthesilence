@@ -31,9 +31,7 @@ body {
   cursor: pointer;
 }
 
-.logo:hover {
-  opacity: 0.7;
-}
+.logo:hover { opacity: 0.7; }
 
 /* Homepage Content */
 .container {
@@ -70,6 +68,7 @@ body {
   border-radius: 30px;
   background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
   margin-bottom: 30px;
+  position: relative;
 }
 
 .search-input {
@@ -77,16 +76,28 @@ body {
   height: 54px;
   border: none;
   border-radius: 30px;
-  padding: 0 22px;
+  padding: 0 50px 0 22px;
   font-size: 16px;
   color: #ffffff;
   background: #121212;
   outline: none;
 }
 
-.search-input::placeholder {
-  color: #777;
+.search-input::placeholder { color: #777; }
+
+.search-btn {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
 }
+
+.search-btn:hover { color: #fff; }
 
 .response {
   margin-top: 20px;
@@ -96,7 +107,7 @@ body {
   font-size: 15px;
 }
 
-/* T&C Section (hidden by default) */
+/* T&C Section */
 .tc-section {
   display: none;
   max-width: 800px;
@@ -115,11 +126,7 @@ body {
   text-align: center;
 }
 
-.tc-section h2 {
-  font-size: 20px;
-  margin-top: 40px;
-  margin-bottom: 15px;
-}
+.tc-section h2 { margin-top: 40px; margin-bottom: 15px; }
 
 .tc-section p, .tc-section li {
   color: #cfcfcf;
@@ -147,151 +154,80 @@ footer a {
   cursor: pointer;
 }
 
-footer a:hover {
-  text-decoration: underline;
-}
+footer a:hover { text-decoration: underline; }
 
-/* Animations */
 @keyframes fadeIn {
   from {opacity: 0;}
   to {opacity: 1;}
 }
 
-/* Mobile */
 @media (max-width: 600px) {
-  .headline {
-    font-size: 18px;
-  }
-
-  .search-input {
-    height: 48px;
-    font-size: 14px;
-  }
-
-  .tc-section h1 {
-    font-size: 24px;
-  }
-
-  .tc-section h2 {
-    font-size: 18px;
-  }
+  .headline { font-size: 18px; }
+  .search-input { height: 48px; font-size: 14px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Logo -->
 <div class="logo" onclick="showHome()">BRK THE SILENCE</div>
 
-<!-- Homepage Content -->
 <div class="container" id="homepageContent">
   <div class="headline">Empower your inner voice.</div>
   <div class="subheadline">A quiet space to express what you usually keep inside.</div>
 
   <div class="search-wrapper">
-    <input 
-      type="text" 
-      class="search-input" 
-      id="userInput"
-      placeholder="What’s on your mind"
-      onkeydown="handleEnter(event)"
-    >
+    <form id="searchForm">
+      <input 
+        type="text" 
+        class="search-input" 
+        id="userInput"
+        placeholder="What’s on your mind"
+      >
+      <button type="submit" class="search-btn">🔍</button>
+    </form>
   </div>
 
   <div class="response" id="responseBox"></div>
 </div>
 
-<!-- Terms & Conditions Section -->
 <div class="tc-section" id="tcSection">
   <h1>Terms & Conditions</h1>
   <p><em>Last Updated: February 18, 2026</em></p>
-
-  <h2>1. What This Platform Is</h2>
   <p>BRK THE SILENCE is a quiet digital space created for personal expression.</p>
-  <p>It is:</p>
-  <ul>
-    <li>A place to reflect</li>
-    <li>A non-judgmental environment</li>
-    <li>A calm interface for releasing thoughts</li>
-  </ul>
-  <p>It is not:</p>
-  <ul>
-    <li>Social media</li>
-    <li>A therapy or medical service</li>
-    <li>A crisis support system</li>
-    <li>A public discussion forum</li>
-    <li>A chat application</li>
-  </ul>
-
-  <h2>2. No Accounts. No Identity Collection.</h2>
-  <p>You are not required to create an account to use this platform.</p>
-  <p>We do not ask for:</p>
-  <ul>
-    <li>Name</li>
-    <li>Email address</li>
-    <li>Phone number</li>
-    <li>Personal identity information</li>
-  </ul>
-
-  <h2>3. Privacy</h2>
-  <ul>
-    <li>Conversations are not publicly visible.</li>
-    <li>We do not sell personal data.</li>
-    <li>We do not build behavioral profiles.</li>
-    <li>We do not intentionally collect identity information.</li>
-  </ul>
-  <p>Anonymous usage insights may be used strictly to improve platform functionality.</p>
-
-  <h2>4. Responsible Use</h2>
-  <p>By using this platform, you agree not to:</p>
-  <ul>
-    <li>Promote violence</li>
-    <li>Share abusive or hateful content</li>
-    <li>Post illegal material</li>
-    <li>Encourage harm toward yourself or others</li>
-  </ul>
-
-  <h2>5. Crisis Disclaimer</h2>
-  <p>This platform is not a medical or psychological service.</p>
-  <p>If you are experiencing severe emotional distress or crisis, contact local emergency services or a licensed professional immediately.</p>
-
-  <h2>6. No Guarantees</h2>
-  <p>This platform is provided "as is." We do not guarantee emotional outcomes or uninterrupted availability.</p>
-
-  <h2>7. Updates</h2>
-  <p>These terms may be updated periodically. Any changes will be reflected clearly on this page.</p>
 </div>
 
-<!-- Footer -->
 <footer>
   No Identity. No Judgement. Just Expression. |
   <a onclick="showTnC()">T&C</a>
 </footer>
 
 <script>
-function handleEnter(event) {
-  if (event.key === "Enter") {
-    const input = document.getElementById("userInput").value;
-    const responseBox = document.getElementById("responseBox");
-    if (!input.trim()) {
-      responseBox.innerHTML = "Your voice matters.";
-      return;
-    }
-    responseBox.innerHTML = "You are heard. This space exists for expression without fear.";
+document.getElementById("searchForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const inputField = document.getElementById("userInput");
+  const input = inputField.value.trim();
+  const responseBox = document.getElementById("responseBox");
+
+  if (!input) {
+    responseBox.innerHTML = "Your voice matters.";
+    return;
   }
-}
+
+  responseBox.innerHTML =
+    "You are heard. This space exists for expression without fear.";
+
+  inputField.value = "";
+});
 
 function showTnC() {
   document.getElementById("homepageContent").style.display = "none";
-  const tc = document.getElementById("tcSection");
-  tc.style.display = "block";
-  tc.scrollIntoView({ behavior: "smooth" });
+  document.getElementById("tcSection").style.display = "block";
 }
 
 function showHome() {
   document.getElementById("tcSection").style.display = "none";
   document.getElementById("homepageContent").style.display = "flex";
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
 
