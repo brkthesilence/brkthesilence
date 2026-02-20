@@ -5,23 +5,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = req.body || {};
-    const messages = body.messages || [];
+    const { messages } = req.body || {};
+    const text = messages?.[0]?.content?.trim();
 
-    const lastMessage =
-      messages[messages.length - 1]?.content?.trim();
-
-    // ❗ prevent reply if no text
-    if (!lastMessage) {
+    // no input → no reply
+    if (!text) {
       return res.status(200).json({ reply: "" });
     }
 
-    // ❗ ignore tiny inputs
-    if (lastMessage.length < 3) {
-      return res.status(200).json({ reply: "I'm here." });
-    }
-
-    const apiResponse = await fetch("https://api.openai.com/v1/responses", {
+    const openai = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
@@ -29,27 +21,21 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `Respond with a short, calm, supportive message:\n\n${lastMessage}`,
-        max_output_tokens: 120,
-        temperature: 0.6
+        input: text,
+        max_output_tokens: 60
       })
     });
 
-    if (!apiResponse.ok) {
-      console.error("OpenAI error:", await apiResponse.text());
-      return res.status(200).json({ reply: "I'm here with you." });
-    }
-
-    const data = await apiResponse.json();
+    const data = await openai.json();
 
     const reply =
       data?.output?.[0]?.content?.[0]?.text ||
       "I'm here with you.";
 
-    res.status(200).json({ reply: reply.trim() });
+    res.status(200).json({ reply });
 
-  } catch (error) {
-    console.error("SERVER ERROR:", error);
+  } catch (err) {
+    console.error(err);
     res.status(200).json({ reply: "I'm here with you." });
   }
 }
