@@ -2,155 +2,298 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<!-- Mobile Friendly -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>BRK The Silence — Terms & Conditions</title>
+<title>BRK THE SILENCE</title>
 
 <style>
-
-/* ===== GLOBAL STYLE ===== */
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #e5e5e5; /* light grey background */
-  line-height: 1.7;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ===== CONTENT CONTAINER ===== */
-.container {
-  max-width: 800px;
-  margin: auto;
-  background: #dcdcdc; /* darker grey content panel */
-  padding: 30px 22px;
+body {
+  background: #0b0b0b;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== HEADINGS ===== */
-h1 {
+/* Logo */
+.logo {
+  padding-top: 60px;
   text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.logo:hover {
+  opacity: 0.7;
+}
+
+/* Homepage Content */
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Headline */
+.headline {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subheadline {
+  font-size: 15px;
+  color: #b0b0b0;
+  margin-bottom: 35px;
+}
+
+/* Search Bar */
+.search-wrapper {
+  width: 100%;
+  max-width: 700px;
+  padding: 2px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
   margin-bottom: 30px;
 }
 
-h2 {
-  margin-top: 28px;
+.search-input {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 30px;
+  padding: 0 22px;
+  font-size: 16px;
+  color: #ffffff;
+  background: #121212;
+  outline: none;
 }
 
-/* ===== TEXT ===== */
-p {
-  margin: 10px 0;
+.search-input::placeholder {
+  color: #777;
 }
 
-ul {
-  padding-left: 20px;
+.response {
+  margin-top: 20px;
+  max-width: 700px;
+  color: #cfcfcf;
+  line-height: 1.6;
+  font-size: 15px;
 }
 
-li {
-  margin-bottom: 8px;
+/* T&C Section (hidden by default) */
+.tc-section {
+  display: none;
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+  text-align: left;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-/* ===== MOBILE OPTIMIZATION ===== */
+.tc-section h1 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #ff7a18, #ff3cac, #7b2ff7, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.tc-section h2 {
+  font-size: 20px;
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+
+.tc-section p, .tc-section li {
+  color: #cfcfcf;
+  margin-bottom: 12px;
+}
+
+.tc-section ul {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  color: #888;
+  border-top: 1px solid #111;
+}
+
+footer a {
+  color: #888;
+  text-decoration: none;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* Mobile */
 @media (max-width: 600px) {
-  .container {
-    padding: 22px 16px;
+  .headline {
+    font-size: 18px;
+  }
+
+  .search-input {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .tc-section h1 {
+    font-size: 24px;
+  }
+
+  .tc-section h2 {
+    font-size: 18px;
   }
 }
-
 </style>
 </head>
 <body>
 
-<div class="container">
+<!-- Logo -->
+<div class="logo" onclick="showHome()">BRK THE SILENCE</div>
 
-<h1>BRK The Silence — Terms & Conditions</h1>
+<!-- Homepage Content -->
+<div class="container" id="homepageContent">
+  <div class="headline">Empower your inner voice.</div>
+  <div class="subheadline">A quiet space to express what you usually keep inside.</div>
 
-<p>Welcome to <strong>BRK The Silence</strong>. By accessing or using this website, you agree to these Terms & Conditions. Our intention is to create a space built on transparency, trust, respect, and human connection.</p>
+  <div class="search-wrapper">
+    <input 
+      type="text" 
+      class="search-input" 
+      id="userInput"
+      placeholder="What’s on your mind"
+      onkeydown="handleEnter(event)"
+    >
+  </div>
 
-<h2>1. Purpose Of This Platform</h2>
-<p>BRK The Silence exists to:</p>
-<ul>
-<li>Provide a safe space for expression</li>
-<li>Share thoughts, stories, and emotions</li>
-<li>Promote awareness, self-growth, and human connection</li>
-</ul>
-<p>This platform is intended for supportive and reflective engagement. It is <strong>not</strong> a medical, legal, or therapeutic service.</p>
-
-<h2>2. Emotional & Personal Content Disclaimer</h2>
-<p>Content shared on this platform may include personal experiences, emotions, and opinions.</p>
-<ul>
-<li>These are shared to encourage awareness, understanding, and connection</li>
-<li>They are not a substitute for professional medical, psychological, or legal advice</li>
-<li>If you are experiencing severe emotional distress or crisis, please seek support from a qualified professional or local support services</li>
-</ul>
-
-<h2>3. User Responsibility & Respectful Conduct</h2>
-<p>By using this platform, you agree to:</p>
-<ul>
-<li>Respect the experiences and perspectives of others</li>
-<li>Avoid abusive, hateful, harmful, or discriminatory content</li>
-<li>Refrain from spam, promotion, or misuse of the platform</li>
-<li>Communicate with honesty, empathy, and responsibility</li>
-</ul>
-<p>We reserve the right to remove content or restrict access if these principles are violated.</p>
-
-<h2>4. Privacy & Confidentiality</h2>
-<p>Your privacy matters.</p>
-<ul>
-<li>We do not sell or trade personal information</li>
-<li>Information shared voluntarily may be used to improve the platform experience</li>
-<li>Please avoid sharing sensitive personal, financial, or identifying information publicly</li>
-</ul>
-<p>Use the platform mindfully and responsibly.</p>
-
-<h2>5. Paid Services & Digital Offerings</h2>
-<p>If you purchase any service or digital product:</p>
-<ul>
-<li>You agree to the stated pricing, description, and delivery scope</li>
-<li>Delivery timelines will be communicated clearly</li>
-<li>Digital products and delivered services are non-refundable unless stated otherwise</li>
-</ul>
-<p>We aim to maintain fairness, clarity, and transparency in all offerings.</p>
-
-<h2>6. Intellectual Property</h2>
-<p>All content on this website — including text, branding, visuals, and design — is the property of BRK The Silence unless otherwise stated.</p>
-
-<p>You may:</p>
-<ul>
-<li>Share with appropriate credit</li>
-<li>Quote with attribution</li>
-</ul>
-
-<p>You may not:</p>
-<ul>
-<li>Reproduce for commercial use</li>
-<li>Copy, modify, or distribute without permission</li>
-</ul>
-
-<h2>7. Platform Philosophy & Community Values</h2>
-<p>BRK The Silence is built on:</p>
-<ul>
-<li>Authenticity over perfection</li>
-<li>Expression over suppression</li>
-<li>Connection over judgment</li>
-</ul>
-<p>We encourage thoughtful, respectful, and meaningful interaction.</p>
-
-<h2>8. Limitation Of Liability</h2>
-<p>By using this platform, you acknowledge:</p>
-<ul>
-<li>You are responsible for how you interpret and use the content</li>
-<li>The platform provides supportive content, not professional advice</li>
-<li>BRK The Silence is not liable for personal decisions made based on platform content</li>
-</ul>
-
-<h2>9. Modifications To These Terms</h2>
-<p>These Terms may be updated to improve clarity, transparency, or platform functionality. Continued use of the website signifies acceptance of any updated terms.</p>
-
-<h2>Final Note</h2>
-<p>This platform is built for humans — not perfection, not performance.</p>
-<p><strong>Speak. Feel. Heal. Grow.</strong></p>
-
+  <div class="response" id="responseBox"></div>
 </div>
+
+<!-- Terms & Conditions Section -->
+<div class="tc-section" id="tcSection">
+  <h1>Terms & Conditions</h1>
+  <p><em>Last Updated: February 18, 2026</em></p>
+
+  <h2>1. What This Platform Is</h2>
+  <p>BRK THE SILENCE is a quiet digital space created for personal expression.</p>
+  <p>It is:</p>
+  <ul>
+    <li>A place to reflect</li>
+    <li>A non-judgmental environment</li>
+    <li>A calm interface for releasing thoughts</li>
+  </ul>
+  <p>It is not:</p>
+  <ul>
+    <li>Social media</li>
+    <li>A therapy or medical service</li>
+    <li>A crisis support system</li>
+    <li>A public discussion forum</li>
+    <li>A chat application</li>
+  </ul>
+
+  <h2>2. No Accounts. No Identity Collection.</h2>
+  <p>You are not required to create an account to use this platform.</p>
+  <p>We do not ask for:</p>
+  <ul>
+    <li>Name</li>
+    <li>Email address</li>
+    <li>Phone number</li>
+    <li>Personal identity information</li>
+  </ul>
+
+  <h2>3. Privacy</h2>
+  <ul>
+    <li>Conversations are not publicly visible.</li>
+    <li>We do not sell personal data.</li>
+    <li>We do not build behavioral profiles.</li>
+    <li>We do not intentionally collect identity information.</li>
+  </ul>
+  <p>Anonymous usage insights may be used strictly to improve platform functionality.</p>
+
+  <h2>4. Responsible Use</h2>
+  <p>By using this platform, you agree not to:</p>
+  <ul>
+    <li>Promote violence</li>
+    <li>Share abusive or hateful content</li>
+    <li>Post illegal material</li>
+    <li>Encourage harm toward yourself or others</li>
+  </ul>
+
+  <h2>5. Crisis Disclaimer</h2>
+  <p>This platform is not a medical or psychological service.</p>
+  <p>If you are experiencing severe emotional distress or crisis, contact local emergency services or a licensed professional immediately.</p>
+
+  <h2>6. No Guarantees</h2>
+  <p>This platform is provided "as is." We do not guarantee emotional outcomes or uninterrupted availability.</p>
+
+  <h2>7. Updates</h2>
+  <p>These terms may be updated periodically. Any changes will be reflected clearly on this page.</p>
+</div>
+
+<!-- Footer -->
+<footer>
+  No Identity. No Judgement. Just Expression. |
+  <a onclick="showTnC()">T&C</a>
+</footer>
+
+<script>
+function handleEnter(event) {
+  if (event.key === "Enter") {
+    const input = document.getElementById("userInput").value;
+    const responseBox = document.getElementById("responseBox");
+    if (!input.trim()) {
+      responseBox.innerHTML = "Your voice matters.";
+      return;
+    }
+    responseBox.innerHTML = "You are heard. This space exists for expression without fear.";
+  }
+}
+
+function showTnC() {
+  document.getElementById("homepageContent").style.display = "none";
+  const tc = document.getElementById("tcSection");
+  tc.style.display = "block";
+  tc.scrollIntoView({ behavior: "smooth" });
+}
+
+function showHome() {
+  document.getElementById("tcSection").style.display = "none";
+  document.getElementById("homepageContent").style.display = "flex";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
 
 </body>
 </html>
