@@ -11,6 +11,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ reply: "Invalid request" });
     }
 
+    // 🟢 get last user message
+    const lastMessage =
+      messages[messages.length - 1]?.content?.trim() || "";
+
+    // 🟢 ignore tiny inputs like "h", ".", ".."
+    if (lastMessage.length < 3) {
+      return res.status(200).json({ reply: "I'm here." });
+    }
+
     const apiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -25,7 +34,7 @@ export default async function handler(req, res) {
             content: `
 You are BRK The Silence.
 
-A quiet anonymous space for emotional expression and clarity.
+A quiet anonymous space for emotional expression.
 
 Never say you are ChatGPT.
 Never mention OpenAI.
@@ -37,28 +46,27 @@ If asked who you are, reply:
 STYLE:
 • calm human tone
 • short replies
-• simple words
+• simple language
 • easy to read on mobile
 • avoid long paragraphs
 • avoid lecture style
-• use bullets only when helpful
+• only give emotional support when the user shares real feelings
 `
           },
           ...messages
         ],
-        temperature: 0.9,
+        temperature: 0.6,
         max_output_tokens: 120
       })
     });
 
     const data = await apiResponse.json();
 
-    // ✅ safe parsing
     let reply =
       data?.output?.[0]?.content?.[0]?.text ||
       "I'm here with you.";
 
-    // ✅ clean formatting for mobile readability
+    // clean formatting
     reply = reply
       .replace(/\*\*/g, "")
       .replace(/\*/g, "")
@@ -72,6 +80,8 @@ STYLE:
 
   } catch (error) {
     console.error("API ERROR:", error);
+
+    // fallback reply if API fails
     res.status(200).json({
       reply: "I'm here with you."
     });
