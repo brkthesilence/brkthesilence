@@ -20,14 +20,15 @@ body {
   letter-spacing: 3px;
 }
 
-/* chat area */
+/* chat wrapper */
 .chat-wrapper {
   max-width: 700px;
   margin: auto;
-  height: 80vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  padding-top: 20px;
 }
 
 #chatBox {
@@ -37,20 +38,25 @@ body {
 
 .message {
   background: #1e1e1e;
-  padding: 10px 14px;
-  border-radius: 14px;
-  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
   max-width: 80%;
 }
 
 /* input area */
 .input-area {
-  position: sticky;
-  bottom: 20px;
-  margin: 0 15px 20px;
+  position: fixed;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .input-box {
+  width: 90%;
+  max-width: 700px;
   display: flex;
   align-items: center;
   background: #111;
@@ -70,7 +76,6 @@ body {
 
 .mic-btn {
   cursor: pointer;
-  font-size: 18px;
   margin-left: 8px;
 }
 
@@ -79,45 +84,17 @@ body {
   color: black;
   border: none;
   border-radius: 50%;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
 }
 
-/* footer link */
+/* footer */
 .footer {
   text-align: center;
   font-size: 12px;
   opacity: 0.6;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
-
-/* modal */
-.modal {
-  display: none;
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.8);
-  overflow:auto;
-}
-
-.modal-content {
-  background:#fff;
-  color:#000;
-  margin:40px auto;
-  padding:25px;
-  max-width:700px;
-  border-radius:8px;
-}
-
-.close {
-  float:right;
-  cursor:pointer;
-  font-size:20px;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -126,35 +103,25 @@ body {
 <div class="header">BRK THE SILENCE</div>
 
 <div class="chat-wrapper">
-  <div id="chatBox"></div>
-
-  <div class="input-area">
-    <div class="input-box">
-      <input type="text" id="messageInput" placeholder="Type your message">
-      <span class="mic-btn" onclick="startListening()">🎤</span>
-      <button class="send-btn" onclick="sendMessage()">➤</button>
-    </div>
+  <div id="chatBox">
+    <div class="message">Hi. I'm here to listen. You can share anything.</div>
   </div>
 </div>
 
-<div class="footer" onclick="openTerms()">Terms & Privacy</div>
-
-<!-- T&C Modal -->
-<div id="termsModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeTerms()">✖</span>
-    <h2>BRK The Silence — Terms & Conditions</h2>
-    <p>This platform provides a safe space for expression and is not a medical or therapeutic service.</p>
-    <p>Your conversations are private and reset when you leave.</p>
+<div class="input-area">
+  <div class="input-box">
+    <input type="text" id="messageInput" placeholder="Type your message">
+    <span class="mic-btn" onclick="startListening()">🎤</span>
+    <button class="send-btn" onclick="sendMessage()">➤</button>
   </div>
 </div>
+
+<div class="footer">Terms & Privacy</div>
 
 <script>
-
-/* send message */
 function sendMessage(){
-  const input = document.getElementById("messageInput");
-  const msg = input.value.trim();
+  const input=document.getElementById("messageInput");
+  const msg=input.value.trim();
   if(!msg) return;
 
   addMessage(msg);
@@ -174,7 +141,6 @@ function addMessage(text){
   document.getElementById("chatBox").appendChild(div);
 }
 
-/* voice input */
 function startListening(){
   if(!('webkitSpeechRecognition'in window)){
     alert("Voice not supported");
@@ -188,21 +154,12 @@ function startListening(){
   }
 }
 
-/* voice reply */
 function speak(text){
   const speech=new SpeechSynthesisUtterance(text);
   speech.lang="en-IN";
   window.speechSynthesis.speak(speech);
 }
-
-/* modal */
-function openTerms(){
-  document.getElementById("termsModal").style.display="block";
-}
-function closeTerms(){
-  document.getElementById("termsModal").style.display="none";
-}
-
 </script>
+
 </body>
 </html>
