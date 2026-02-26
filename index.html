@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>BRK THE SILENCE — Coming Soon</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 
@@ -18,6 +18,7 @@
   --text: #f2f2f2;
   --divider: #2a2a2a;
   --button-border: #444444;
+  --button-hover: #1a1a1a;
 }
 
 body.light {
@@ -25,6 +26,7 @@ body.light {
   --text: #1a1a1a;
   --divider: #e5e5e5;
   --button-border: #cccccc;
+  --button-hover: #f5f5f5;
 }
 
 /* =========================
@@ -41,7 +43,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Inter', sans-serif;
-  line-height: 1.6;
+  line-height: 1.7;
   font-size: 16px;
   transition: background 0.3s ease, color 0.3s ease;
   min-height: 100vh;
@@ -57,12 +59,12 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 40px;
+  padding: 32px 60px;
   border-bottom: 1px solid var(--divider);
 }
 
 .logo {
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 1px;
 }
 
@@ -70,6 +72,7 @@ nav {
   cursor: pointer;
   font-size: 14px;
   opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
 
 .toggle:hover {
@@ -85,7 +88,7 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 80px 24px;
+  padding: 120px 24px;
 }
 
 .container {
@@ -93,73 +96,77 @@ nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 80px;
+  gap: 120px;
 }
 
 /* =========================
-   LEFT COLUMN
+   LEFT SIDE
 ========================= */
 
 .left {
-  max-width: 520px;
+  max-width: 560px;
 }
 
 .left h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 48px;
-  margin-bottom: 24px;
+  font-size: 52px;
+  font-weight: 500;
+  margin-bottom: 32px;
 }
 
 .left p {
   font-size: 18px;
-  margin-bottom: 30px;
+  margin-bottom: 42px;
 }
 
 .divider {
   height: 1px;
   background: var(--divider);
-  margin: 40px 0;
+  margin: 60px 0;
 }
 
 .small {
   font-size: 14px;
-  opacity: 0.6;
+  opacity: 0.5;
+  letter-spacing: 0.5px;
 }
 
 /* =========================
-   RIGHT COLUMN (BUTTONS)
+   RIGHT SIDE
 ========================= */
 
 .right {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  min-width: 240px;
+  justify-content: center;
+  gap: 40px;
+  min-width: 280px;
 }
 
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 button {
-  padding: 14px 20px;
+  padding: 18px 24px;
   background: transparent;
   border: 1px solid var(--button-border);
   color: var(--text);
   font-size: 14px;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 button:hover {
-  background: rgba(255,255,255,0.05);
+  background: var(--button-hover);
 }
 
 .counter {
   font-size: 13px;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 /* =========================
@@ -168,7 +175,7 @@ button:hover {
 
 footer {
   border-top: 1px solid var(--divider);
-  padding: 24px 40px;
+  padding: 32px 60px;
   font-size: 14px;
   opacity: 0.5;
 }
@@ -181,15 +188,19 @@ footer {
 
   .container {
     flex-direction: column;
-    gap: 60px;
+    gap: 80px;
   }
 
   .left h1 {
-    font-size: 34px;
+    font-size: 36px;
   }
 
   nav, footer {
-    padding: 20px;
+    padding: 24px;
+  }
+
+  .main {
+    padding: 80px 24px;
   }
 
 }
@@ -207,7 +218,7 @@ footer {
 <div class="main">
   <div class="container">
 
-    <!-- LEFT -->
+    <!-- LEFT COLUMN -->
     <div class="left">
       <h1>Silence is about to be examined.</h1>
 
@@ -223,11 +234,11 @@ footer {
       </p>
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT COLUMN -->
     <div class="right">
 
       <div class="button-group">
-        <button onclick="increaseInterest()">I'm Interested</button>
+        <button onclick="increaseInterest()">I’m Interested</button>
         <div class="counter" id="interestCount">0 responses</div>
       </div>
 
@@ -247,16 +258,23 @@ footer {
 
 <script>
 
-let interest = 0;
-let curious = 0;
+// Load saved values
+let interest = parseInt(localStorage.getItem("interestCount")) || 0;
+let curious = parseInt(localStorage.getItem("curiousCount")) || 0;
+
+// Display saved values
+document.getElementById("interestCount").innerText = interest + " responses";
+document.getElementById("curiousCount").innerText = curious + " responses";
 
 function increaseInterest() {
   interest++;
+  localStorage.setItem("interestCount", interest);
   document.getElementById("interestCount").innerText = interest + " responses";
 }
 
 function increaseCurious() {
   curious++;
+  localStorage.setItem("curiousCount", curious);
   document.getElementById("curiousCount").innerText = curious + " responses";
 }
 
