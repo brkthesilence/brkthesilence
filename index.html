@@ -1,59 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BRK THE SILENCE — Coming Soon</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+   COLOR SYSTEM (Dark Default)
+========================= */
+
+:root {
+  --bg: #111111;
+  --text: #f2f2f2;
+  --divider: #2a2a2a;
+  --button-border: #444444;
+  --button-hover: #1a1a1a;
+}
+
+body.light {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --divider: #e5e5e5;
+  --button-border: #cccccc;
+  --button-hover: #f5f5f5;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
+  font-size: 16px;
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 60px;
+  border-bottom: 1px solid var(--divider);
+}
+
+.logo {
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.toggle {
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.toggle:hover {
+  opacity: 1;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120px 24px;
+}
+
+.container {
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 120px;
+}
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.left {
+  max-width: 560px;
+}
+
+.left h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+
+.left p {
+  font-size: 18px;
+  margin-bottom: 42px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--divider);
+  margin: 60px 0;
+}
+
+.small {
+  font-size: 14px;
+  opacity: 0.5;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  min-width: 280px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+button {
+  padding: 18px 24px;
+  background: transparent;
+  border: 1px solid var(--button-border);
+  color: var(--text);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.counter {
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  border-top: 1px solid var(--divider);
+  padding: 32px 60px;
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .container {
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  .left h1 {
+    font-size: 36px;
+  }
+
+  nav, footer {
+    padding: 24px;
+  }
+
+  .main {
+    padding: 80px 24px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">BRK THE SILENCE</div>
+  <div class="toggle" onclick="toggleTheme()">Light / Dark</div>
+</nav>
+
+<div class="main">
+  <div class="container">
+
+    <div class="left">
+      <h1>Silence is about to be examined.</h1>
+
+      <p>
+        A private publication exploring emotional performance,
+        stress, and modern psychological realities.
+      </p>
+
+      <div class="divider"></div>
+
+      <p class="small">
+        Launching soon.
+      </p>
+    </div>
+
+    <div class="right">
+
+      <div class="button-group">
+        <button id="interestBtn" onclick="vote('interest')">I’m Interested</button>
+        <div class="counter" id="interestCount">0 responses</div>
+      </div>
+
+      <div class="button-group">
+        <button id="curiousBtn" onclick="vote('curious')">Just Curious</button>
+        <div class="counter" id="curiousCount">0 responses</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  © 2026 BRK THE SILENCE
+</footer>
+
 <script>
 
-// Load saved counts
-let interest = parseInt(localStorage.getItem("interestCount")) || 0;
-let curious = parseInt(localStorage.getItem("curiousCount")) || 0;
+document.addEventListener("DOMContentLoaded", function () {
 
-// Check if user already voted
-let hasVoted = localStorage.getItem("hasVoted");
+  let interest = parseInt(localStorage.getItem("interestCount")) || 0;
+  let curious = parseInt(localStorage.getItem("curiousCount")) || 0;
+  let hasVoted = localStorage.getItem("hasVoted");
 
-// Get elements
-const interestBtn = document.getElementById("interestBtn");
-const curiousBtn = document.getElementById("curiousBtn");
-const interestDisplay = document.getElementById("interestCount");
-const curiousDisplay = document.getElementById("curiousCount");
+  const interestBtn = document.getElementById("interestBtn");
+  const curiousBtn = document.getElementById("curiousBtn");
+  const interestDisplay = document.getElementById("interestCount");
+  const curiousDisplay = document.getElementById("curiousCount");
 
-// Display counts
-interestDisplay.innerText = interest + " responses";
-curiousDisplay.innerText = curious + " responses";
+  interestDisplay.innerText = interest + " responses";
+  curiousDisplay.innerText = curious + " responses";
 
-// If already voted → disable buttons
-if (hasVoted) {
-  interestBtn.disabled = true;
-  curiousBtn.disabled = true;
-  interestBtn.style.opacity = "0.5";
-  curiousBtn.style.opacity = "0.5";
-}
-
-function increaseInterest() {
-  if (!hasVoted) {
-    interest++;
-    localStorage.setItem("interestCount", interest);
-    localStorage.setItem("hasVoted", "true");
-    interestDisplay.innerText = interest + " responses";
-    disableVoting();
+  if (hasVoted === "true") {
+    interestBtn.disabled = true;
+    curiousBtn.disabled = true;
   }
-}
 
-function increaseCurious() {
-  if (!hasVoted) {
-    curious++;
-    localStorage.setItem("curiousCount", curious);
+  window.vote = function(type) {
+
+    if (localStorage.getItem("hasVoted") === "true") return;
+
+    if (type === "interest") {
+      interest++;
+      localStorage.setItem("interestCount", interest);
+      interestDisplay.innerText = interest + " responses";
+    }
+
+    if (type === "curious") {
+      curious++;
+      localStorage.setItem("curiousCount", curious);
+      curiousDisplay.innerText = curious + " responses";
+    }
+
     localStorage.setItem("hasVoted", "true");
-    curiousDisplay.innerText = curious + " responses";
-    disableVoting();
-  }
-}
 
-function disableVoting() {
-  interestBtn.disabled = true;
-  curiousBtn.disabled = true;
-  interestBtn.style.opacity = "0.5";
-  curiousBtn.style.opacity = "0.5";
-}
+    interestBtn.disabled = true;
+    curiousBtn.disabled = true;
+  }
+
+});
 
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
 
 </script>
+
+</body>
+</html>
