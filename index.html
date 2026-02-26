@@ -15,6 +15,7 @@
   --divider: #2a2a2a;
   --button-border: #444444;
   --button-hover: #1a1a1a;
+  --success: #888888;
 }
 
 body.light {
@@ -23,6 +24,7 @@ body.light {
   --divider: #e5e5e5;
   --button-border: #cccccc;
   --button-hover: #f5f5f5;
+  --success: #555555;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,71 +33,74 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Inter', sans-serif;
-  line-height: 1.7;
-  font-size: 16px;
-  transition: background 0.3s ease, color 0.3s ease;
-  min-height: 100vh;
+  line-height: 1.6;
+  transition: 0.3s ease;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* NAV */
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 40px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--divider);
 }
 
 .logo { font-weight: 500; letter-spacing: 1px; }
 .toggle { cursor: pointer; font-size: 14px; opacity: 0.7; }
 
+/* MAIN */
 .main {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 100px 20px;
+  padding: 20px;
 }
 
 .container {
-  max-width: 1100px;
   width: 100%;
+  max-width: 1000px;
   display: flex;
   justify-content: space-between;
-  gap: 100px;
+  gap: 80px;
 }
 
-.left { max-width: 560px; }
+/* LEFT */
+.left {
+  max-width: 520px;
+}
 
 .left h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 46px;
-  margin-bottom: 28px;
+  font-size: 40px;
+  margin-bottom: 20px;
 }
 
-.left p { font-size: 18px; margin-bottom: 40px; }
-
-.divider {
-  height: 1px;
-  background: var(--divider);
-  margin: 50px 0;
+.left p {
+  font-size: 16px;
+  margin-bottom: 30px;
 }
 
-.small { font-size: 14px; opacity: 0.5; }
+.small {
+  font-size: 13px;
+  opacity: 0.6;
+}
 
+/* RIGHT */
 .right {
   display: flex;
   flex-direction: column;
+  gap: 20px;
   justify-content: center;
-  gap: 30px;
-  min-width: 260px;
+  min-width: 240px;
 }
 
-.button-group { display: flex; flex-direction: column; gap: 10px; }
-
 button {
-  padding: 16px 20px;
+  padding: 14px;
   background: transparent;
   border: 1px solid var(--button-border);
   color: var(--text);
@@ -104,22 +109,56 @@ button {
   transition: 0.2s ease;
 }
 
-button:hover { background: var(--button-hover); }
-button:disabled { opacity: 0.5; cursor: not-allowed; }
+button:hover {
+  background: var(--button-hover);
+}
 
-.counter { font-size: 13px; opacity: 0.6; }
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-footer {
-  border-top: 1px solid var(--divider);
-  padding: 28px 40px;
-  font-size: 14px;
+.counter {
+  font-size: 12px;
   opacity: 0.5;
 }
 
+.confirmation {
+  font-size: 13px;
+  color: var(--success);
+  opacity: 0;
+  transition: 0.3s ease;
+}
+
+.confirmation.show {
+  opacity: 1;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--divider);
+  padding: 15px 24px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* MOBILE */
 @media (max-width: 900px) {
-  .container { flex-direction: column; gap: 60px; }
-  .left h1 { font-size: 34px; }
-  nav, footer { padding: 20px; }
+
+  body {
+    height: 100vh;
+  }
+
+  .container {
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+  }
+
+  .left h1 {
+    font-size: 28px;
+  }
+
 }
 
 </style>
@@ -141,19 +180,18 @@ footer {
         A private publication exploring emotional performance,
         stress, and modern psychological realities.
       </p>
-      <div class="divider"></div>
       <p class="small">Launching soon.</p>
     </div>
 
     <div class="right">
-      <div class="button-group">
-        <button id="interestBtn">I’m Interested</button>
-        <div class="counter" id="interestCount">0 responses</div>
-      </div>
+      <button id="interestBtn">I’m Interested</button>
+      <div class="counter" id="interestCount">0 responses</div>
 
-      <div class="button-group">
-        <button id="curiousBtn">Just Curious</button>
-        <div class="counter" id="curiousCount">0 responses</div>
+      <button id="curiousBtn">Just Curious</button>
+      <div class="counter" id="curiousCount">0 responses</div>
+
+      <div class="confirmation" id="confirmationMsg">
+        Your response has been recorded.
       </div>
     </div>
 
@@ -176,35 +214,40 @@ function initVoting() {
   const curiousBtn = document.getElementById("curiousBtn");
   const interestDisplay = document.getElementById("interestCount");
   const curiousDisplay = document.getElementById("curiousCount");
+  const confirmation = document.getElementById("confirmationMsg");
 
-  // Display saved values
   interestDisplay.textContent = interest + " responses";
   curiousDisplay.textContent = curious + " responses";
 
   if (hasVoted) {
     interestBtn.disabled = true;
     curiousBtn.disabled = true;
+    confirmation.classList.add("show");
   }
 
-  interestBtn.addEventListener("click", function () {
+  function vote(type) {
     if (hasVoted) return;
-    interest++;
-    localStorage.setItem("interestCount", interest);
-    localStorage.setItem("hasVoted", "true");
-    interestDisplay.textContent = interest + " responses";
-    interestBtn.disabled = true;
-    curiousBtn.disabled = true;
-  });
 
-  curiousBtn.addEventListener("click", function () {
-    if (hasVoted) return;
-    curious++;
-    localStorage.setItem("curiousCount", curious);
+    if (type === "interest") {
+      interest++;
+      localStorage.setItem("interestCount", interest);
+      interestDisplay.textContent = interest + " responses";
+    }
+
+    if (type === "curious") {
+      curious++;
+      localStorage.setItem("curiousCount", curious);
+      curiousDisplay.textContent = curious + " responses";
+    }
+
     localStorage.setItem("hasVoted", "true");
-    curiousDisplay.textContent = curious + " responses";
     interestBtn.disabled = true;
     curiousBtn.disabled = true;
-  });
+    confirmation.classList.add("show");
+  }
+
+  interestBtn.addEventListener("click", function(){ vote("interest"); });
+  curiousBtn.addEventListener("click", function(){ vote("curious"); });
 }
 
 document.addEventListener("DOMContentLoaded", initVoting);
