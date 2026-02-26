@@ -216,21 +216,22 @@ footer {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  // 🔥 RESET EVERYTHING TO 0 (one-time reset)
-  localStorage.setItem("interestCount", 0);
-  localStorage.setItem("curiousCount", 0);
-  localStorage.removeItem("hasVoted");
-
-  let interest = 0;
-  let curious = 0;
+  let interest = parseInt(localStorage.getItem("interestCount")) || 0;
+  let curious = parseInt(localStorage.getItem("curiousCount")) || 0;
+  let hasVoted = localStorage.getItem("hasVoted");
 
   const interestBtn = document.getElementById("interestBtn");
   const curiousBtn = document.getElementById("curiousBtn");
   const interestDisplay = document.getElementById("interestCount");
   const curiousDisplay = document.getElementById("curiousCount");
 
-  interestDisplay.innerText = "0 responses";
-  curiousDisplay.innerText = "0 responses";
+  interestDisplay.innerText = interest + " responses";
+  curiousDisplay.innerText = curious + " responses";
+
+  if (hasVoted === "true") {
+    interestBtn.disabled = true;
+    curiousBtn.disabled = true;
+  }
 
   window.vote = function(type) {
 
@@ -238,11 +239,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (type === "interest") {
       interest++;
+      localStorage.setItem("interestCount", interest);
       interestDisplay.innerText = interest + " responses";
     }
 
     if (type === "curious") {
       curious++;
+      localStorage.setItem("curiousCount", curious);
       curiousDisplay.innerText = curious + " responses";
     }
 
