@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>BRK THE SILENCE</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 
-/* =========================
-   ROOT COLOR VARIABLES
-========================= */
+/* ================= ROOT COLORS ================= */
+
 :root {
   --bg: #ffffff;
   --text: #1a1a1a;
@@ -25,20 +23,18 @@ body.dark {
   --divider: #2a2a2a;
 }
 
-/* =========================
-   GLOBAL STYLES
-========================= */
+/* ================= GLOBAL ================= */
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
   background: var(--bg);
   color: var(--text);
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
   font-size: 16px;
   transition: background 0.3s ease, color 0.3s ease;
@@ -50,20 +46,18 @@ a {
 }
 
 img {
-  max-width: 100%;
   display: block;
+  width: 100%;
 }
 
-/* =========================
-   NAVIGATION
-========================= */
+/* ================= NAVIGATION ================= */
 
 nav {
+  border-bottom: 1px solid var(--divider);
+  padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--divider);
 }
 
 .logo {
@@ -73,89 +67,86 @@ nav {
 
 .nav-links {
   display: flex;
-  gap: 24px;
+  gap: 28px;
   align-items: center;
 }
 
-.toggle-btn {
+.toggle {
   cursor: pointer;
-  font-size: 14px;
 }
 
-/* =========================
-   MAIN CONTAINER
-========================= */
+/* ================= CENTERED MAIN ================= */
 
-.main-container {
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 60px 24px;
+.main-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 100px 24px;
 }
 
 .content-column {
-  max-width: 720px;
+  width: 100%;
+  max-width: 760px; /* Critical for proper centered reading column */
 }
 
-/* =========================
-   HERO SECTION
-========================= */
+/* ================= HERO ================= */
 
 .hero h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 42px;
-  margin-bottom: 16px;
+  font-size: 48px;
+  font-weight: 500;
+  margin-bottom: 20px;
 }
 
 .hero p {
-  margin-bottom: 20px;
   font-size: 18px;
+  margin-bottom: 30px;
 }
 
-.cta-links {
+.cta {
   display: flex;
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: 30px;
+  margin-bottom: 60px;
 }
 
-/* =========================
-   DIVIDER
-========================= */
+/* ================= DIVIDER ================= */
 
 .divider {
   height: 1px;
   background: var(--divider);
-  margin: 40px 0;
+  margin: 50px 0;
 }
 
-/* =========================
-   FEATURED ARTICLE
-========================= */
+/* ================= FEATURED ================= */
+
+.featured-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
 
 .featured img {
-  height: 150px;
+  max-height: 180px;
   object-fit: cover;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .featured h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  margin-bottom: 10px;
+  font-size: 30px;
+  margin-bottom: 14px;
 }
 
 .featured p {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-/* =========================
-   ARCHIVE SECTION
-========================= */
+/* ================= ARCHIVE ================= */
 
 .archive-item {
   display: flex;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .archive-item img {
@@ -166,44 +157,44 @@ nav {
 
 .archive-item h4 {
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .locked {
-  font-size: 12px;
+  font-size: 13px;
   opacity: 0.6;
 }
 
-/* =========================
-   FOOTER
-========================= */
+/* ================= FOOTER ================= */
 
 footer {
   border-top: 1px solid var(--divider);
-  padding: 30px 24px;
+  margin-top: 80px;
+  padding: 30px 40px;
   font-size: 14px;
-  opacity: 0.7;
-  text-align: left;
-  max-width: 1100px;
-  margin: auto;
+  opacity: 0.6;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* ================= RESPONSIVE ================= */
 
 @media (max-width: 768px) {
+
+  nav {
+    padding: 20px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .main-wrapper {
+    padding: 60px 20px;
+  }
+
   .archive-item {
     flex-direction: column;
   }
 
-  .featured img {
-    height: 160px;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
 }
 
 </style>
@@ -211,29 +202,25 @@ footer {
 
 <body>
 
-<!-- NAVIGATION -->
 <nav>
   <div class="logo">BRK THE SILENCE</div>
   <div class="nav-links">
     <a href="#">Archive</a>
     <a href="#">Membership</a>
     <a href="#">Account</a>
-    <span class="toggle-btn" onclick="toggleTheme()">Toggle</span>
+    <span class="toggle" onclick="toggleTheme()">☀︎</span>
   </div>
 </nav>
 
-<!-- MAIN CONTENT -->
-<div class="main-container">
+<div class="main-wrapper">
   <div class="content-column">
 
     <!-- HERO -->
     <section class="hero">
-      <h1 id="mainHeadline">The Psychology Behind Modern Silence.</h1>
-      <p id="subHeadline">
-        Professional insights on emotional performance, stress, and identity.
-      </p>
+      <h1>The Psychology Behind Modern Silence.</h1>
+      <p>Professional insights on emotional performance, stress, and identity.</p>
 
-      <div class="cta-links">
+      <div class="cta">
         <a href="#">Read Featured Article</a>
         <a href="#">View Member Archive</a>
       </div>
@@ -241,16 +228,20 @@ footer {
 
     <div class="divider"></div>
 
-    <!-- FEATURED ARTICLE -->
+    <!-- FEATURED -->
     <section class="featured">
-      <img src="https://picsum.photos/800/300" alt="Featured">
-      <h2 id="featuredTitle">Why High Performers Collapse Quietly</h2>
+      <div class="featured-label">FEATURED ARTICLE</div>
+
+      <img src="https://picsum.photos/900/300" alt="Featured">
+
+      <h2>Understanding Emotional Labor in Professional Settings</h2>
+
       <p>
-        An executive overview of emotional suppression in modern professional environments and its long-term cognitive impact.
+        An executive overview of emotional suppression in modern professional
+        environments and its long-term cognitive impact.
       </p>
 
-      <div class="divider"></div>
-      <p><a href="#">Access Membership</a></p>
+      <a href="#">Access Membership</a>
     </section>
 
     <div class="divider"></div>
@@ -258,26 +249,26 @@ footer {
     <!-- ARCHIVE -->
     <section>
       <div class="archive-item">
-        <img src="https://picsum.photos/100" alt="">
+        <img src="https://picsum.photos/100" />
         <div>
           <h4>Stress Pandemic 2026</h4>
-          <p class="locked">Locked • Member Access</p>
+          <div class="locked">Locked • Member Access</div>
         </div>
       </div>
 
       <div class="archive-item">
-        <img src="https://picsum.photos/101" alt="">
+        <img src="https://picsum.photos/101" />
         <div>
           <h4>Loneliness Era 2027</h4>
-          <p class="locked">Locked • Member Access</p>
+          <div class="locked">Locked • Member Access</div>
         </div>
       </div>
 
       <div class="archive-item">
-        <img src="https://picsum.photos/102" alt="">
+        <img src="https://picsum.photos/102" />
         <div>
           <h4>Identity Crisis Age 2028</h4>
-          <p class="locked">Locked • Member Access</p>
+          <div class="locked">Locked • Member Access</div>
         </div>
       </div>
     </section>
@@ -285,7 +276,6 @@ footer {
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   © 2026 BRK THE SILENCE &nbsp; | &nbsp; Terms &nbsp; | &nbsp; Privacy
 </footer>
