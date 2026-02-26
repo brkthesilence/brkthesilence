@@ -70,9 +70,7 @@ nav {
 }
 
 /* LEFT */
-.left {
-  max-width: 520px;
-}
+.left { max-width: 520px; }
 
 .left h1 {
   font-family: 'Playfair Display', serif;
@@ -109,19 +107,10 @@ button {
   transition: 0.2s ease;
 }
 
-button:hover {
-  background: var(--button-hover);
-}
+button:hover { background: var(--button-hover); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.counter {
-  font-size: 12px;
-  opacity: 0.5;
-}
+.counter { font-size: 12px; opacity: 0.5; }
 
 .confirmation {
   font-size: 13px;
@@ -130,24 +119,26 @@ button:disabled {
   transition: 0.3s ease;
 }
 
-.confirmation.show {
-  opacity: 1;
-}
+.confirmation.show { opacity: 1; }
 
 /* FOOTER */
 footer {
   border-top: 1px solid var(--divider);
   padding: 15px 24px;
   font-size: 12px;
-  opacity: 0.5;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.signature {
+  font-family: "Vijaya", "Brush Script MT", cursive;
+  font-size: 14px;
+  margin-left: 6px;
+  opacity: 0.8;
 }
 
 /* MOBILE */
 @media (max-width: 900px) {
-
-  body {
-    height: 100vh;
-  }
 
   .container {
     flex-direction: column;
@@ -155,9 +146,7 @@ footer {
     justify-content: center;
   }
 
-  .left h1 {
-    font-size: 28px;
-  }
+  .left h1 { font-size: 28px; }
 
 }
 
@@ -190,9 +179,7 @@ footer {
       <button id="curiousBtn">Just Curious</button>
       <div class="counter" id="curiousCount">0 responses</div>
 
-      <div class="confirmation" id="confirmationMsg">
-        Your response has been recorded.
-      </div>
+      <div class="confirmation" id="confirmationMsg"></div>
     </div>
 
   </div>
@@ -200,6 +187,7 @@ footer {
 
 <footer>
   © 2026 BRK THE SILENCE
+  <span class="signature">(by Siddhant Kuril)</span>
 </footer>
 
 <script>
@@ -222,11 +210,13 @@ function initVoting() {
   if (hasVoted) {
     interestBtn.disabled = true;
     curiousBtn.disabled = true;
+    confirmation.textContent = "You have already voted.";
     confirmation.classList.add("show");
   }
 
   function vote(type) {
-    if (hasVoted) return;
+
+    if (localStorage.getItem("hasVoted") === "true") return;
 
     if (type === "interest") {
       interest++;
@@ -241,8 +231,11 @@ function initVoting() {
     }
 
     localStorage.setItem("hasVoted", "true");
+
     interestBtn.disabled = true;
     curiousBtn.disabled = true;
+
+    confirmation.textContent = "Your response has been recorded.";
     confirmation.classList.add("show");
   }
 
