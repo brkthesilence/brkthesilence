@@ -9,10 +9,6 @@
 
 <style>
 
-/* =========================
-   COLOR SYSTEM (Dark Default)
-========================= */
-
 :root {
   --bg: #111111;
   --text: #f2f2f2;
@@ -28,10 +24,6 @@ body.light {
   --button-border: #cccccc;
   --button-hover: #f5f5f5;
 }
-
-/* =========================
-   GLOBAL
-========================= */
 
 * {
   margin: 0;
@@ -50,10 +42,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-/* =========================
-   NAVIGATION
-========================= */
 
 nav {
   display: flex;
@@ -74,14 +62,6 @@ nav {
   opacity: 0.7;
 }
 
-.toggle:hover {
-  opacity: 1;
-}
-
-/* =========================
-   MAIN LAYOUT
-========================= */
-
 .main {
   flex: 1;
   display: flex;
@@ -98,10 +78,6 @@ nav {
   gap: 120px;
 }
 
-/* =========================
-   LEFT SIDE
-========================= */
-
 .left {
   max-width: 560px;
 }
@@ -109,7 +85,6 @@ nav {
 .left h1 {
   font-family: 'Playfair Display', serif;
   font-size: 52px;
-  font-weight: 500;
   margin-bottom: 32px;
 }
 
@@ -127,12 +102,7 @@ nav {
 .small {
   font-size: 14px;
   opacity: 0.5;
-  letter-spacing: 0.5px;
 }
-
-/* =========================
-   RIGHT SIDE
-========================= */
 
 .right {
   display: flex;
@@ -154,7 +124,6 @@ button {
   border: 1px solid var(--button-border);
   color: var(--text);
   font-size: 14px;
-  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -173,10 +142,6 @@ button:disabled {
   opacity: 0.5;
 }
 
-/* =========================
-   FOOTER
-========================= */
-
 footer {
   border-top: 1px solid var(--divider);
   padding: 32px 60px;
@@ -184,12 +149,7 @@ footer {
   opacity: 0.5;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
 @media (max-width: 900px) {
-
   .container {
     flex-direction: column;
     gap: 80px;
@@ -206,7 +166,6 @@ footer {
   .main {
     padding: 80px 24px;
   }
-
 }
 
 </style>
@@ -224,17 +183,12 @@ footer {
 
     <div class="left">
       <h1>Silence is about to be examined.</h1>
-
       <p>
         A private publication exploring emotional performance,
         stress, and modern psychological realities.
       </p>
-
       <div class="divider"></div>
-
-      <p class="small">
-        Launching soon.
-      </p>
+      <p class="small">Launching soon.</p>
     </div>
 
     <div class="right">
@@ -262,22 +216,21 @@ footer {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  let interest = parseInt(localStorage.getItem("interestCount")) || 0;
-  let curious = parseInt(localStorage.getItem("curiousCount")) || 0;
-  let hasVoted = localStorage.getItem("hasVoted");
+  // 🔥 RESET EVERYTHING TO 0 (one-time reset)
+  localStorage.setItem("interestCount", 0);
+  localStorage.setItem("curiousCount", 0);
+  localStorage.removeItem("hasVoted");
+
+  let interest = 0;
+  let curious = 0;
 
   const interestBtn = document.getElementById("interestBtn");
   const curiousBtn = document.getElementById("curiousBtn");
   const interestDisplay = document.getElementById("interestCount");
   const curiousDisplay = document.getElementById("curiousCount");
 
-  interestDisplay.innerText = interest + " responses";
-  curiousDisplay.innerText = curious + " responses";
-
-  if (hasVoted === "true") {
-    interestBtn.disabled = true;
-    curiousBtn.disabled = true;
-  }
+  interestDisplay.innerText = "0 responses";
+  curiousDisplay.innerText = "0 responses";
 
   window.vote = function(type) {
 
@@ -285,13 +238,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (type === "interest") {
       interest++;
-      localStorage.setItem("interestCount", interest);
       interestDisplay.innerText = interest + " responses";
     }
 
     if (type === "curious") {
       curious++;
-      localStorage.setItem("curiousCount", curious);
       curiousDisplay.innerText = curious + " responses";
     }
 
