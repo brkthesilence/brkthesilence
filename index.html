@@ -3,27 +3,33 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BRK THE SILENCE</title>
+<title>BRK THE SILENCE — Coming Soon</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 
-/* ================= ROOT COLORS ================= */
+/* =========================
+   COLOR SYSTEM (Dark Default)
+========================= */
 
 :root {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --divider: #e5e5e5;
-}
-
-body.dark {
   --bg: #111111;
   --text: #f2f2f2;
   --divider: #2a2a2a;
+  --button-border: #444444;
 }
 
-/* ================= GLOBAL ================= */
+body.light {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --divider: #e5e5e5;
+  --button-border: #cccccc;
+}
+
+/* =========================
+   GLOBAL
+========================= */
 
 * {
   margin: 0;
@@ -38,26 +44,21 @@ body {
   line-height: 1.6;
   font-size: 16px;
   transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-a {
-  color: inherit;
-  text-decoration: underline;
-}
-
-img {
-  display: block;
-  width: 100%;
-}
-
-/* ================= NAVIGATION ================= */
+/* =========================
+   NAVIGATION
+========================= */
 
 nav {
-  border-bottom: 1px solid var(--divider);
-  padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 24px 40px;
+  border-bottom: 1px solid var(--divider);
 }
 
 .logo {
@@ -65,134 +66,130 @@ nav {
   letter-spacing: 1px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 28px;
-  align-items: center;
-}
-
 .toggle {
   cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
 }
 
-/* ================= CENTERED MAIN ================= */
+.toggle:hover {
+  opacity: 1;
+}
 
-.main-wrapper {
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.main {
+  flex: 1;
   display: flex;
   justify-content: center;
-  padding: 100px 24px;
+  align-items: center;
+  padding: 80px 24px;
 }
 
-.content-column {
+.container {
+  max-width: 1100px;
   width: 100%;
-  max-width: 760px; /* Critical for proper centered reading column */
+  display: flex;
+  justify-content: space-between;
+  gap: 80px;
 }
 
-/* ================= HERO ================= */
+/* =========================
+   LEFT COLUMN
+========================= */
 
-.hero h1 {
+.left {
+  max-width: 520px;
+}
+
+.left h1 {
   font-family: 'Playfair Display', serif;
   font-size: 48px;
-  font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-.hero p {
+.left p {
   font-size: 18px;
   margin-bottom: 30px;
 }
 
-.cta {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 60px;
-}
-
-/* ================= DIVIDER ================= */
-
 .divider {
   height: 1px;
   background: var(--divider);
-  margin: 50px 0;
+  margin: 40px 0;
 }
 
-/* ================= FEATURED ================= */
-
-.featured-label {
-  font-size: 12px;
-  letter-spacing: 2px;
-  opacity: 0.7;
-  margin-bottom: 20px;
-}
-
-.featured img {
-  max-height: 180px;
-  object-fit: cover;
-  margin-bottom: 24px;
-}
-
-.featured h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 30px;
-  margin-bottom: 14px;
-}
-
-.featured p {
-  margin-bottom: 30px;
-}
-
-/* ================= ARCHIVE ================= */
-
-.archive-item {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.archive-item img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-}
-
-.archive-item h4 {
-  font-weight: 500;
-  margin-bottom: 6px;
-}
-
-.locked {
-  font-size: 13px;
-  opacity: 0.6;
-}
-
-/* ================= FOOTER ================= */
-
-footer {
-  border-top: 1px solid var(--divider);
-  margin-top: 80px;
-  padding: 30px 40px;
+.small {
   font-size: 14px;
   opacity: 0.6;
 }
 
-/* ================= RESPONSIVE ================= */
+/* =========================
+   RIGHT COLUMN (BUTTONS)
+========================= */
 
-@media (max-width: 768px) {
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 240px;
+}
 
-  nav {
-    padding: 20px;
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+button {
+  padding: 14px 20px;
+  background: transparent;
+  border: 1px solid var(--button-border);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.counter {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  border-top: 1px solid var(--divider);
+  padding: 24px 40px;
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .container {
+    flex-direction: column;
+    gap: 60px;
   }
 
-  .hero h1 {
+  .left h1 {
     font-size: 34px;
   }
 
-  .main-wrapper {
-    padding: 60px 20px;
-  }
-
-  .archive-item {
-    flex-direction: column;
+  nav, footer {
+    padding: 20px;
   }
 
 }
@@ -204,86 +201,69 @@ footer {
 
 <nav>
   <div class="logo">BRK THE SILENCE</div>
-  <div class="nav-links">
-    <a href="#">Archive</a>
-    <a href="#">Membership</a>
-    <a href="#">Account</a>
-    <span class="toggle" onclick="toggleTheme()">☀︎</span>
-  </div>
+  <div class="toggle" onclick="toggleTheme()">Light / Dark</div>
 </nav>
 
-<div class="main-wrapper">
-  <div class="content-column">
+<div class="main">
+  <div class="container">
 
-    <!-- HERO -->
-    <section class="hero">
-      <h1>The Psychology Behind Modern Silence.</h1>
-      <p>Professional insights on emotional performance, stress, and identity.</p>
-
-      <div class="cta">
-        <a href="#">Read Featured Article</a>
-        <a href="#">View Member Archive</a>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- FEATURED -->
-    <section class="featured">
-      <div class="featured-label">FEATURED ARTICLE</div>
-
-      <img src="https://picsum.photos/900/300" alt="Featured">
-
-      <h2>Understanding Emotional Labor in Professional Settings</h2>
+    <!-- LEFT -->
+    <div class="left">
+      <h1>Silence is about to be examined.</h1>
 
       <p>
-        An executive overview of emotional suppression in modern professional
-        environments and its long-term cognitive impact.
+        A private publication exploring emotional performance,
+        stress, and modern psychological realities.
       </p>
 
-      <a href="#">Access Membership</a>
-    </section>
+      <div class="divider"></div>
 
-    <div class="divider"></div>
+      <p class="small">
+        Launching soon.
+      </p>
+    </div>
 
-    <!-- ARCHIVE -->
-    <section>
-      <div class="archive-item">
-        <img src="https://picsum.photos/100" />
-        <div>
-          <h4>Stress Pandemic 2026</h4>
-          <div class="locked">Locked • Member Access</div>
-        </div>
+    <!-- RIGHT -->
+    <div class="right">
+
+      <div class="button-group">
+        <button onclick="increaseInterest()">I'm Interested</button>
+        <div class="counter" id="interestCount">0 responses</div>
       </div>
 
-      <div class="archive-item">
-        <img src="https://picsum.photos/101" />
-        <div>
-          <h4>Loneliness Era 2027</h4>
-          <div class="locked">Locked • Member Access</div>
-        </div>
+      <div class="button-group">
+        <button onclick="increaseCurious()">Just Curious</button>
+        <div class="counter" id="curiousCount">0 responses</div>
       </div>
 
-      <div class="archive-item">
-        <img src="https://picsum.photos/102" />
-        <div>
-          <h4>Identity Crisis Age 2028</h4>
-          <div class="locked">Locked • Member Access</div>
-        </div>
-      </div>
-    </section>
+    </div>
 
   </div>
 </div>
 
 <footer>
-  © 2026 BRK THE SILENCE &nbsp; | &nbsp; Terms &nbsp; | &nbsp; Privacy
+  © 2026 BRK THE SILENCE
 </footer>
 
 <script>
-function toggleTheme() {
-  document.body.classList.toggle("dark");
+
+let interest = 0;
+let curious = 0;
+
+function increaseInterest() {
+  interest++;
+  document.getElementById("interestCount").innerText = interest + " responses";
 }
+
+function increaseCurious() {
+  curious++;
+  document.getElementById("curiousCount").innerText = curious + " responses";
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
 </script>
 
 </body>
