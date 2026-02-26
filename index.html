@@ -25,11 +25,7 @@ body.light {
   --button-hover: #f5f5f5;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: var(--bg);
@@ -47,27 +43,19 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 32px 60px;
+  padding: 28px 40px;
   border-bottom: 1px solid var(--divider);
 }
 
-.logo {
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
-.toggle {
-  cursor: pointer;
-  font-size: 14px;
-  opacity: 0.7;
-}
+.logo { font-weight: 500; letter-spacing: 1px; }
+.toggle { cursor: pointer; font-size: 14px; opacity: 0.7; }
 
 .main {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 120px 24px;
+  padding: 100px 20px;
 }
 
 .container {
@@ -75,97 +63,63 @@ nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 120px;
+  gap: 100px;
 }
 
-.left {
-  max-width: 560px;
-}
+.left { max-width: 560px; }
 
 .left h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 52px;
-  margin-bottom: 32px;
+  font-size: 46px;
+  margin-bottom: 28px;
 }
 
-.left p {
-  font-size: 18px;
-  margin-bottom: 42px;
-}
+.left p { font-size: 18px; margin-bottom: 40px; }
 
 .divider {
   height: 1px;
   background: var(--divider);
-  margin: 60px 0;
+  margin: 50px 0;
 }
 
-.small {
-  font-size: 14px;
-  opacity: 0.5;
-}
+.small { font-size: 14px; opacity: 0.5; }
 
 .right {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 40px;
-  min-width: 280px;
+  gap: 30px;
+  min-width: 260px;
 }
 
-.button-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.button-group { display: flex; flex-direction: column; gap: 10px; }
 
 button {
-  padding: 18px 24px;
+  padding: 16px 20px;
   background: transparent;
   border: 1px solid var(--button-border);
   color: var(--text);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.2s ease;
 }
 
-button:hover {
-  background: var(--button-hover);
-}
+button:hover { background: var(--button-hover); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.counter {
-  font-size: 13px;
-  opacity: 0.5;
-}
+.counter { font-size: 13px; opacity: 0.6; }
 
 footer {
   border-top: 1px solid var(--divider);
-  padding: 32px 60px;
+  padding: 28px 40px;
   font-size: 14px;
   opacity: 0.5;
 }
 
 @media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-    gap: 80px;
-  }
-
-  .left h1 {
-    font-size: 36px;
-  }
-
-  nav, footer {
-    padding: 24px;
-  }
-
-  .main {
-    padding: 80px 24px;
-  }
+  .container { flex-direction: column; gap: 60px; }
+  .left h1 { font-size: 34px; }
+  nav, footer { padding: 20px; }
 }
 
 </style>
@@ -192,17 +146,15 @@ footer {
     </div>
 
     <div class="right">
-
       <div class="button-group">
-        <button id="interestBtn" onclick="vote('interest')">I’m Interested</button>
+        <button id="interestBtn">I’m Interested</button>
         <div class="counter" id="interestCount">0 responses</div>
       </div>
 
       <div class="button-group">
-        <button id="curiousBtn" onclick="vote('curious')">Just Curious</button>
+        <button id="curiousBtn">Just Curious</button>
         <div class="counter" id="curiousCount">0 responses</div>
       </div>
-
     </div>
 
   </div>
@@ -214,48 +166,48 @@ footer {
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+function initVoting() {
 
-  let interest = parseInt(localStorage.getItem("interestCount")) || 0;
-  let curious = parseInt(localStorage.getItem("curiousCount")) || 0;
-  let hasVoted = localStorage.getItem("hasVoted");
+  let interest = parseInt(localStorage.getItem("interestCount") || "0");
+  let curious = parseInt(localStorage.getItem("curiousCount") || "0");
+  let hasVoted = localStorage.getItem("hasVoted") === "true";
 
   const interestBtn = document.getElementById("interestBtn");
   const curiousBtn = document.getElementById("curiousBtn");
   const interestDisplay = document.getElementById("interestCount");
   const curiousDisplay = document.getElementById("curiousCount");
 
-  interestDisplay.innerText = interest + " responses";
-  curiousDisplay.innerText = curious + " responses";
+  // Display saved values
+  interestDisplay.textContent = interest + " responses";
+  curiousDisplay.textContent = curious + " responses";
 
-  if (hasVoted === "true") {
+  if (hasVoted) {
     interestBtn.disabled = true;
     curiousBtn.disabled = true;
   }
 
-  window.vote = function(type) {
-
-    if (localStorage.getItem("hasVoted") === "true") return;
-
-    if (type === "interest") {
-      interest++;
-      localStorage.setItem("interestCount", interest);
-      interestDisplay.innerText = interest + " responses";
-    }
-
-    if (type === "curious") {
-      curious++;
-      localStorage.setItem("curiousCount", curious);
-      curiousDisplay.innerText = curious + " responses";
-    }
-
+  interestBtn.addEventListener("click", function () {
+    if (hasVoted) return;
+    interest++;
+    localStorage.setItem("interestCount", interest);
     localStorage.setItem("hasVoted", "true");
-
+    interestDisplay.textContent = interest + " responses";
     interestBtn.disabled = true;
     curiousBtn.disabled = true;
-  }
+  });
 
-});
+  curiousBtn.addEventListener("click", function () {
+    if (hasVoted) return;
+    curious++;
+    localStorage.setItem("curiousCount", curious);
+    localStorage.setItem("hasVoted", "true");
+    curiousDisplay.textContent = curious + " responses";
+    interestBtn.disabled = true;
+    curiousBtn.disabled = true;
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initVoting);
 
 function toggleTheme() {
   document.body.classList.toggle("light");
