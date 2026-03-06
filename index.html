@@ -60,6 +60,10 @@ th{
 background:#121a2b;
 }
 
+.serial{
+width:60px;
+}
+
 td input{
 background:none;
 border:none;
@@ -141,6 +145,7 @@ margin-bottom:10px;
 
 <thead>
 <tr>
+<th class="serial">#</th>
 <th>Player Name</th>
 <th>Status</th>
 <th>SD + GR</th>
@@ -236,6 +241,10 @@ body.innerHTML=""
 for(let i=0;i<25;i++){
 
 let tr=document.createElement("tr")
+
+let serial=document.createElement("td")
+serial.innerText=i+1
+tr.appendChild(serial)
 
 let nameCell=document.createElement("td")
 
@@ -354,6 +363,7 @@ let buyerIndex=data[team][i]
 exportData.push({
 
 Team:team,
+Serial:i+1,
 Player:playerNames[team][i],
 Status:buyerIndex==null?"Unsold":"Sold",
 Buyer:buyerIndex==null?"":buyers[buyerIndex]
@@ -392,6 +402,7 @@ for(let i=0;i<25;i++){
 let buyerIndex=data[team][i]
 
 let line=
+(i+1)+". "+
 playerNames[team][i]+" - "+
 (buyerIndex==null?"Unsold":buyers[buyerIndex])
 
