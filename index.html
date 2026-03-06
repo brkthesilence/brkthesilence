@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,8 +73,6 @@ border:none;
 color:white;
 text-align:center;
 }
-
-/* BUYER COLORS */
 
 .buyer0{background:#3b82f6;color:white}
 .buyer1{background:#22c55e;color:black}
@@ -222,9 +221,10 @@ const teams=[
 
 const buyers=["SD","KD","PP","NR","SK","DEV"]
 
-/* PLAYER LIST */
+/* REAL PLAYER LISTS */
 
 const players={
+
 Mumbai:["Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton","Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir","Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch","Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar","Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"],
 
 Punjab:["Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash","Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen","Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen","Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar","Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"],
@@ -244,6 +244,7 @@ Gujarat:["Shubhman Gill","Jos Buttler","Kumar Kushagra","Anuj Rawat","Tom Banton
 Kolkata:["Ajinkya Rahane","Rinku Singh","A Raghuvanshi","Manish Pandey","Cameron Green","Finn Allen","Tejasvi Singh","Rahul Tripathi","Tim Seifert","Rovman Powell","Anukul Roy","Sarthak Ranjan","Daksh Kamra","Rachin Ravindra","Ramandeep Singh","Vaibhav Arora","Matheesha Pathirana","Kartik Tyagi","Prashant Solanki","Akash Deep","Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","NA"],
 
 Lucknow:["Rishabh Pant","Aiden Markram","Himmat Singh","Matthew Breetzke","Mukul Chaudhary","Akshat Radhuwanshi","Josh Inglis","Nicholas Pooran","Mitchell Marsh","Abdul Samad","Shahbaz Ahmad","Arshin Kulkarni","Wanindu Hasaranga","Ayush Badoni","Mohd Shami","Avesh Khan","M Siddharth","Digvesh Rathi","Akash Singh","Prince Yadav","Arjun Tendulkar","Anrich Nortje","Naman Tiwari","Mayank Yadav","Mohsin Khan"]
+
 }
 
 let saved=JSON.parse(localStorage.getItem("auctionData"))
@@ -260,18 +261,21 @@ localStorage.setItem("auctionData",JSON.stringify({data,points}))
 }
 
 let currentTeam=0
+
 const tabs=document.getElementById("tabs")
 
 teams.forEach((team,i)=>{
 let el=document.createElement("div")
 el.className="tab"
 el.innerText=team
+
 el.onclick=()=>{
 currentTeam=i
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
 el.classList.add("active")
 render()
 }
+
 tabs.appendChild(el)
 })
 
@@ -366,14 +370,21 @@ totals[buyer]+=points[team][i]||0
 let arr=buyers.map((b,i)=>({name:b,pts:totals[i]}))
 arr.sort((a,b)=>b.pts-a.pts)
 
-let colors=["#22c55e","#84cc16","#eab308","#f97316","#ef4444","#7f1d1d"]
+let colors=[
+"#d1fae5",
+"#dcfce7",
+"#fef9c3",
+"#fde68a",
+"#fecaca",
+"#fbcfe8"
+]
 
 let html=""
 let total=0
 
 arr.forEach((t,i)=>{
 total+=t.pts
-html+=`<div class="rank" style="background:${colors[i]};color:black">
+html+=`<div class="rank" style="background:${colors[i]};color:#1f2937">
 <span>${i+1}. ${t.name}</span>
 <span>${t.pts}</span>
 </div>`
@@ -397,13 +408,17 @@ function loadMatch(){
 
 let a=teamA.value
 let b=teamB.value
+
 if(a===b) return
 
 let html="<tr><th>Player</th><th>Team</th><th>Points</th></tr>"
 
 ;[a,b].forEach(team=>{
+
 players[team].forEach((p,i)=>{
-html+=`<tr>
+
+html+=`
+<tr>
 <td>${p}</td>
 <td>${team}</td>
 <td>
@@ -416,8 +431,11 @@ updateLeaderboard();
 render();
 ">
 </td>
-</tr>`
+</tr>
+`
+
 })
+
 })
 
 matchTable.innerHTML=html
