@@ -104,6 +104,19 @@ margin:4px;
 cursor:pointer;
 }
 
+.statInput{
+width:40px;
+background:#0f172a;
+border:none;
+color:white;
+text-align:center;
+}
+
+.points{
+font-weight:bold;
+color:#22c55e;
+}
+
 </style>
 </head>
 
@@ -138,6 +151,12 @@ cursor:pointer;
 <th>PP + LG</th>
 <th>NR + PK</th>
 <th>DEVASHISH</th>
+<th>Runs</th>
+<th>4s</th>
+<th>6s</th>
+<th>Wkts</th>
+<th>Catches</th>
+<th>Points</th>
 </tr>
 </thead>
 
@@ -178,14 +197,17 @@ const buyers=["SD + GR","KD + SK","PP + LG","NR + PK","DEVASHISH"]
 let currentTeam=0
 
 let saved=JSON.parse(localStorage.getItem("auction"))
+
 let data=saved?.data||{}
+let stats=saved?.stats||{}
 
 teams.forEach(t=>{
 if(!data[t]) data[t]=Array(25).fill(null)
+if(!stats[t]) stats[t]=Array(25).fill(null)
 })
 
 function save(){
-localStorage.setItem("auction",JSON.stringify({data}))
+localStorage.setItem("auction",JSON.stringify({data,stats}))
 }
 
 const tabs=document.getElementById("tabs")
@@ -206,6 +228,18 @@ tabs.appendChild(el)
 })
 
 tabs.children[0].classList.add("active")
+
+function calcPoints(s){
+
+return (
+(s.runs||0)*1 +
+(s.f4||0)*1 +
+(s.f6||0)*2 +
+(s.w||0)*25 +
+(s.c||0)*8
+)
+
+}
 
 function render(){
 
@@ -254,6 +288,42 @@ render()
 tr.appendChild(td)
 
 })
+
+if(!stats[teams[currentTeam]][i])
+stats[teams[currentTeam]][i]={runs:0,f4:0,f6:0,w:0,c:0}
+
+let s=stats[teams[currentTeam]][i]
+
+function createInput(val,key){
+
+let td=document.createElement("td")
+
+let inp=document.createElement("input")
+inp.className="statInput"
+inp.value=val
+
+inp.oninput=()=>{
+s[key]=parseInt(inp.value)||0
+save()
+render()
+}
+
+td.appendChild(inp)
+return td
+
+}
+
+tr.appendChild(createInput(s.runs,"runs"))
+tr.appendChild(createInput(s.f4,"f4"))
+tr.appendChild(createInput(s.f6,"f6"))
+tr.appendChild(createInput(s.w,"w"))
+tr.appendChild(createInput(s.c,"c"))
+
+let p=document.createElement("td")
+p.className="points"
+p.innerText=calcPoints(s)
+
+tr.appendChild(p)
 
 body.appendChild(tr)
 
@@ -310,13 +380,20 @@ teams.forEach(team=>{
 for(let i=0;i<25;i++){
 
 let buyer=data[team][i]
+let s=stats[team][i]||{}
 
 rows.push({
 Team:team,
 Serial:i+1,
 Player:"Player "+(i+1),
 Status:buyer==null?"Unsold":"Sold",
-Buyer:buyer==null?"":buyers[buyer]
+Buyer:buyer==null?"":buyers[buyer],
+Runs:s.runs||0,
+Fours:s.f4||0,
+Sixes:s.f6||0,
+Wickets:s.w||0,
+Catches:s.c||0,
+Points:calcPoints(s)
 })
 
 }
@@ -349,8 +426,14 @@ y+=8
 for(let i=0;i<25;i++){
 
 let buyer=data[team][i]
+let s=stats[team][i]||{}
 
-doc.text((i+1)+". Player "+(i+1)+" - "+(buyer==null?"Unsold":buyers[buyer]),25,y)
+doc.text(
+(i+1)+". Player "+(i+1)+
+" - "+(buyer==null?"Unsold":buyers[buyer])+
+" | Points: "+calcPoints(s),
+25,y
+)
 
 y+=7
 
