@@ -84,7 +84,6 @@ width:260px;
 padding:20px;
 border-left:1px solid #1f2a44;
 background:#060a12;
-overflow-y:auto;
 }
 
 .summary{
@@ -105,33 +104,6 @@ margin:4px;
 cursor:pointer;
 }
 
-.statInput{
-width:40px;
-background:#0f172a;
-border:none;
-color:white;
-text-align:center;
-}
-
-.points{
-font-weight:bold;
-color:#22c55e;
-}
-
-.rank{
-padding:8px;
-margin-bottom:6px;
-display:flex;
-justify-content:space-between;
-border-radius:6px;
-}
-
-.r1{background:#4ade80;color:black;}
-.r2{background:#d9f99d;color:black;}
-.r3{background:#fde68a;color:black;}
-.r4{background:#fca5a5;color:black;}
-.r5{background:#ef4444;color:white;}
-
 </style>
 </head>
 
@@ -145,7 +117,6 @@ border-radius:6px;
 <button onclick="resetTimer()">Reset</button>
 <span id="timer">15s</span>
 </div>
-
 </header>
 
 <div class="tabs" id="tabs"></div>
@@ -166,12 +137,6 @@ border-radius:6px;
 <th>PP + LG</th>
 <th>NR + PK</th>
 <th>DEVASHISH</th>
-<th>Runs</th>
-<th>4s</th>
-<th>6s</th>
-<th>Wkts</th>
-<th>Catches</th>
-<th>Points</th>
 </tr>
 </thead>
 
@@ -196,10 +161,6 @@ border-radius:6px;
 <button onclick="exportExcel()">Excel</button>
 <button onclick="exportPDF()">PDF</button>
 
-<h3>Fantasy Leaderboard</h3>
-
-<div id="leaderboard"></div>
-
 </div>
 
 </div>
@@ -213,20 +174,103 @@ const teams=[
 
 const buyers=["SD + GR","KD + SK","PP + LG","NR + PK","DEVASHISH"]
 
+/* PLAYER LISTS */
+
+const playerNames={
+
+Mumbai:[
+"Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton",
+"Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir",
+"Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch",
+"Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar",
+"Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"
+],
+
+Punjab:[
+"Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash",
+"Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen",
+"Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen",
+"Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar",
+"Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"
+],
+
+Rajasthan:[
+"Riyan Parag","Shubham Dubey","Vaibhav Suryavanshi","Donovan Ferreria","Lhuan Dre Pretorious",
+"Ravi Singh","Aman Rao Perala","Shimron Hetmyer","Yashasvi Jaiswal","Dhruv Jurel",
+"Yudhvir Singh Charak","Ravindra Jadeja","Sam Curran","Jofra Archer","Tushar Deshpende",
+"Kuwena Maphaka","Ravi Bishnoi","Sushant Mishra","Yash Raj Kunja","Vignesh Puthoor",
+"Brijesh Sharma","Adam Milne","Kuldeep Sen","Sandeep Sharma","Nandre Burger"
+],
+
+Bangalore:[
+"Rajat Patidar","Devdutt Padikkal","Virat Kohli","Phil Salt","Jitesh Sharma",
+"Jordan Cox","Krunal Pandya","Swapnil Singh","Tim David","Romario Shepherd",
+"Jacob Bethell","Venkatesh Iyer","Satvik Deswal","Mangesh Yadav","Vicky Ostwal",
+"Vihaan Malhotra","Kanishk Chouhan","Josh Hazlewood","Rasikh Dar","Suyash Sharma",
+"Bhuvneshwar Sharma","Nuwan Thusawa","Abhinandan Singh","Jacob Duffy","Yash Dayal"
+],
+
+Hyderabad:[
+"Ishan Kishan","Aniket Verma","Smaran Ravichandran","Salil Arora","Heinrich Klaasen",
+"Travis Head","Harshal Patel","Kamindu Mendis","Harsh Dubey","Brydon Carse",
+"Shivang Kumar","Krains Fuletra","Liam Livingstone","Jack Edwards","Abhishek Sharma",
+"Nitish Kumar Reddy","Pat Cummins","Zeeshan Ansari","Jaydev Unadkat","Eshan Malinga",
+"Sakib Hussain","Onkar Tarmale","Amit Kumar","Praful Hinge","Shivam Mavi"
+],
+
+Chennai:[
+"Ruturaj Gaikwad","MS Dhoni","Sanju Samson","Dewald Brevis","Ayush Mhatre",
+"Kartik Sharma","Sarfaraz Khan","Urvil Patel","Anshul Kamboj","Jamie Overton",
+"Ramakrishna Ghosh","Prashant Veer","Matthew Short","Aman Khan","Zak Foulkes",
+"Shivam Dubey","Khaleel Ahmed","Noor Ahmed","Mukesh Choudhary","Nathan Ellis",
+"Shreyas Gopal","Gurjapneet Singh","Akeal Hosein","Matt Henry","Rahul Chahar"
+],
+
+Delhi:[
+"KL Rahul","Karun Nair","David Miller","Ben Duckett","Pathum Nisaanka",
+"Sahil Parakh","Prithvi Shaw","Abhishek Porel","Tristan Stubbs","Axar Patel",
+"Sameer Rizvi","Ashutosh Sharma","Vipraj Nigam","Ajay Mandal","Tripurana Vijay",
+"Madhav Tiwari","Auqib Dar","Nitish Rana","Mitchell Starc","T Natarajan",
+"Mukesh Kumar","Dushamantha Chameera","Lungi Ngidi","Kyle Jamieson","Kuldeep Yadav"
+],
+
+Gujarat:[
+"Shubhman Gill","Jos Buttler","Kumar Kushagra","Anuj Rawat","Tom Banton",
+"Glenn Philips","Nishant Sindhu","Washington Sundar","Mohd Arshad Khan","Sai Kishore",
+"Jayant Yadav","Jason Holder","Sai Sudarshan","Shahrukh Khan","Kagiso Rabada",
+" Mohd Siraj","Prasidh Krishna","Manav Suthar","Gurnoor Singh Brar","Ishant Sharma",
+"Ashok Sharma","Prithvi Raj Yarra","Luke Wood","Rahul Tewatia","Rashid Khan"
+],
+
+Kolkata:[
+"Ajinkya Rahane","Rinku Singh","A Raghuvanshi","Manish Pandey","Cameron Green",
+"Finn Allen","Tejasvi Singh","Rahul Tripathi","Tim Seifert","Rovman Powell",
+"Anukul Roy","Sarthak Ranjan","Daksh Kamra","Rachin Ravindra","Ramandeep Singh",
+"Vaibhav Arora","Matheesha Pathirana","Kartik Tyagi","Prashant Solanki","Akash Deep",
+"Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","NA"
+],
+
+Lucknow:[
+"Rishabh Pant","Aiden Markram","Himmat Singh","Matthew Breetzke","Mukul Chaudhary",
+"Akshat Radhuwanshi","Josh Inglis","Nicholas Pooran","Mitchell Marsh","Abdul Samad",
+"Shahbaz Ahmad","Arshin Kulkarni","Wanindu Hasaranga","Ayush Badoni","Mohd Shami",
+"Avesh Khan","M Siddharth","Digvesh Rathi","Akash Singh","Prince Yadav",
+"Arjun Tendulkar","Anrich Nortje","Naman Tiwari","Mayank Yadav","Mohsin Khan"
+]
+
+}
+
 let currentTeam=0
 
 let saved=JSON.parse(localStorage.getItem("auction"))
-
 let data=saved?.data||{}
-let stats=saved?.stats||{}
 
 teams.forEach(t=>{
 if(!data[t]) data[t]=Array(25).fill(null)
-if(!stats[t]) stats[t]=Array(25).fill(null)
 })
 
 function save(){
-localStorage.setItem("auction",JSON.stringify({data,stats}))
+localStorage.setItem("auction",JSON.stringify({data}))
 }
 
 const tabs=document.getElementById("tabs")
@@ -235,104 +279,31 @@ teams.forEach((team,i)=>{
 let el=document.createElement("div")
 el.className="tab"
 el.innerText=team
-
 el.onclick=()=>{
 currentTeam=i
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
 el.classList.add("active")
 render()
 }
-
 tabs.appendChild(el)
 })
 
 tabs.children[0].classList.add("active")
-
-function calcPoints(s){
-
-return (
-(s.runs||0) +
-(s.f4||0)*1 +
-(s.f6||0)*2 +
-(s.w||0)*25 +
-(s.c||0)*8
-)
-
-}
-
-function updateLeaderboard(){
-
-let totals=[0,0,0,0,0]
-
-teams.forEach(team=>{
-
-for(let i=0;i<25;i++){
-
-let buyer=data[team][i]
-
-if(buyer!=null){
-
-let s=stats[team][i]||{}
-
-totals[buyer]+=calcPoints(s)
-
-}
-
-}
-
-})
-
-let arr=buyers.map((b,i)=>({
-name:b,
-points:totals[i]
-}))
-
-arr.sort((a,b)=>b.points-a.points)
-
-let html=""
-
-let grand=0
-
-arr.forEach((t,i)=>{
-
-grand+=t.points
-
-html+=`<div class="rank r${i+1}">
-<span>${t.name}</span>
-<span>${t.points.toLocaleString()}</span>
-</div>`
-
-})
-
-html+=`<div class="summary">
-<strong>Total</strong>
-<strong>${grand.toLocaleString()}</strong>
-</div>`
-
-document.getElementById("leaderboard").innerHTML=html
-
-}
 
 function render(){
 
 const body=document.getElementById("rows")
 body.innerHTML=""
 
-for(let i=0;i<25;i++){
+playerNames[teams[currentTeam]].forEach((player,i)=>{
 
 let tr=document.createElement("tr")
 
-let td1=document.createElement("td")
-td1.innerText=i+1
-tr.appendChild(td1)
-
-let td2=document.createElement("td")
-td2.innerText="Player "+(i+1)
-tr.appendChild(td2)
-
-let td3=document.createElement("td")
-td3.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
-tr.appendChild(td3)
+tr.innerHTML=`
+<td>${i+1}</td>
+<td>${player}</td>
+<td>${data[teams[currentTeam]][i]==null?"—":"SOLD"}</td>
+`
 
 buyers.forEach((b,bi)=>{
 
@@ -344,64 +315,19 @@ td.innerHTML="✓"
 }
 
 td.onclick=()=>{
-
-if(data[teams[currentTeam]][i]==bi){
-data[teams[currentTeam]][i]=null
-}else{
-data[teams[currentTeam]][i]=bi
-}
-
+data[teams[currentTeam]][i]=data[teams[currentTeam]][i]==bi?null:bi
 save()
-updateCounts()
 render()
-
+updateCounts()
 }
 
 tr.appendChild(td)
 
 })
 
-if(!stats[teams[currentTeam]][i])
-stats[teams[currentTeam]][i]={runs:0,f4:0,f6:0,w:0,c:0}
-
-let s=stats[teams[currentTeam]][i]
-
-function input(val,key){
-
-let td=document.createElement("td")
-let inp=document.createElement("input")
-
-inp.className="statInput"
-inp.value=val
-
-inp.oninput=()=>{
-s[key]=parseInt(inp.value)||0
-save()
-render()
-}
-
-td.appendChild(inp)
-return td
-
-}
-
-tr.appendChild(input(s.runs,"runs"))
-tr.appendChild(input(s.f4,"f4"))
-tr.appendChild(input(s.f6,"f6"))
-tr.appendChild(input(s.w,"w"))
-tr.appendChild(input(s.c,"c"))
-
-let p=document.createElement("td")
-p.className="points"
-p.innerText=calcPoints(s)
-
-tr.appendChild(p)
-
 body.appendChild(tr)
 
-}
-
-updateLeaderboard()
+})
 
 }
 
@@ -424,32 +350,6 @@ document.getElementById("c"+i).innerText=c
 render()
 updateCounts()
 
-let timer=15
-let interval
-
-function startTimer(){
-clearInterval(interval)
-
-interval=setInterval(()=>{
-timer--
-document.getElementById("timer").innerText=timer+"s"
-
-if(timer<=0) clearInterval(interval)
-
-},1000)
-}
-
-function resetTimer(){
-timer=15
-document.getElementById("timer").innerText="15s"
-clearInterval(interval)
-}
-
-function exportExcel(){}
-
-function exportPDF(){}
-
 </script>
-
 </body>
 </html>
