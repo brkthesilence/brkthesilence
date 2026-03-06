@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <title>T20 Auction Board</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <style>
 
 body{
@@ -94,26 +92,12 @@ justify-content:space-between;
 border-radius:6px;
 }
 
-button{
-background:#1b2a44;
-color:white;
-border:none;
-padding:8px 12px;
-margin:4px;
-cursor:pointer;
-}
-
-.stat{
-width:45px;
+.pointsInput{
+width:60px;
 background:#0f172a;
 border:none;
 color:white;
 text-align:center;
-}
-
-.points{
-font-weight:bold;
-color:#22c55e;
 }
 
 .rank{
@@ -157,12 +141,7 @@ border-radius:6px;
 <th>PP+LG</th>
 <th>NR+PK</th>
 <th>DEV</th>
-<th>Runs</th>
-<th>4s</th>
-<th>6s</th>
-<th>Wkts</th>
-<th>Catch</th>
-<th>Pts</th>
+<th>Points</th>
 </tr>
 </thead>
 
@@ -202,11 +181,11 @@ const buyers=["SD+GR","KD+SK","PP+LG","NR+PK","DEV"]
 let currentTeam=0
 
 let data={}
-let stats={}
+let points={}
 
 teams.forEach(t=>{
 data[t]=Array(25).fill(null)
-stats[t]=Array(25).fill(null)
+points[t]=Array(25).fill(0)
 })
 
 const tabs=document.getElementById("tabs")
@@ -227,16 +206,6 @@ tabs.appendChild(el)
 })
 
 tabs.children[0].classList.add("active")
-
-function calcPoints(s){
-
-return (s.runs||0)
-+(s.f4||0)
-+(s.f6||0)*2
-+(s.w||0)*25
-+(s.c||0)*8
-
-}
 
 function render(){
 
@@ -276,45 +245,22 @@ tr.appendChild(td)
 
 })
 
-if(!stats[teams[currentTeam]][i])
-stats[teams[currentTeam]][i]={runs:0,f4:0,f6:0,w:0,c:0}
-
-let s=stats[teams[currentTeam]][i]
-
-function input(val,key){
-
 let td=document.createElement("td")
-let inp=document.createElement("input")
 
-inp.className="stat"
-inp.value=val
+let inp=document.createElement("input")
+inp.className="pointsInput"
+inp.value=points[teams[currentTeam]][i]
 
 inp.oninput=()=>{
 
-s[key]=parseInt(inp.value)||0
-
+points[teams[currentTeam]][i]=parseInt(inp.value)||0
 updateLeaderboard()
-render()
 
 }
 
 td.appendChild(inp)
 
-return td
-
-}
-
-tr.appendChild(input(s.runs,"runs"))
-tr.appendChild(input(s.f4,"f4"))
-tr.appendChild(input(s.f6,"f6"))
-tr.appendChild(input(s.w,"w"))
-tr.appendChild(input(s.c,"c"))
-
-let p=document.createElement("td")
-p.className="points"
-p.innerText=calcPoints(s)
-
-tr.appendChild(p)
+tr.appendChild(td)
 
 body.appendChild(tr)
 
@@ -350,9 +296,7 @@ let buyer=data[team][i]
 
 if(buyer!=null){
 
-let s=stats[team][i]||{}
-
-totals[buyer]+=calcPoints(s)
+totals[buyer]+=points[team][i]||0
 
 }
 
