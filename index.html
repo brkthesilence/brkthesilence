@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Ek Ka Double</title>
+<title>T20 Auction Board</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -190,15 +190,25 @@ const teams=[
 
 const buyers=["SD+GR","KD+SK","PP+LG","NR+PK","DEV"]
 
-let currentTeam=0
+let saved=JSON.parse(localStorage.getItem("auctionData"))
 
-let data={}
-let points={}
+let data=saved?.data || {}
+let points=saved?.points || {}
 
 teams.forEach(t=>{
-data[t]=Array(25).fill(null)
-points[t]=Array(25).fill(0)
+if(!data[t]) data[t]=Array(25).fill(null)
+if(!points[t]) points[t]=Array(25).fill(0)
 })
+
+function save(){
+
+localStorage.setItem("auctionData",
+JSON.stringify({data,points})
+)
+
+}
+
+let currentTeam=0
 
 const tabs=document.getElementById("tabs")
 
@@ -262,6 +272,7 @@ td.onclick=()=>{
 
 data[teams[currentTeam]][i]=data[teams[currentTeam]][i]==bi?null:bi
 
+save()
 updateCounts()
 updateLeaderboard()
 render()
@@ -282,6 +293,7 @@ inp.oninput=()=>{
 
 points[teams[currentTeam]][i]=parseInt(inp.value)||0
 
+save()
 updateLeaderboard()
 render()
 
