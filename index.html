@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T20 Auction Board (Live)</title>
+<title>T20 Auction Board Live</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -12,17 +12,19 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-/* PASTE YOUR FIREBASE CONFIG HERE */
+/* ---------------- FIREBASE CONFIG ---------------- */
 
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_DOMAIN",
-databaseURL: "YOUR_DB_URL",
-projectId: "YOUR_PROJECT_ID",
-storageBucket: "YOUR_BUCKET",
-messagingSenderId: "YOUR_ID",
-appId: "YOUR_APP_ID"
+apiKey: "PASTE_API_KEY",
+authDomain: "PASTE_DOMAIN",
+databaseURL: "PASTE_DATABASE_URL",
+projectId: "PASTE_PROJECT_ID",
+storageBucket: "PASTE_BUCKET",
+messagingSenderId: "PASTE_ID",
+appId: "PASTE_APP_ID"
 };
+
+/* -------------------------------------------------- */
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -34,174 +36,156 @@ const teams=[
 "Chennai","Delhi","Gujarat","Kolkata","Lucknow"
 ]
 
+/* BUYERS */
+
 const buyers=["KD","PG","SD","DEV","NR","SPL"]
 
-/* PLAYER LIST (shortened example — replace if needed) */
+/* PLAYER LISTS */
 
 const players={
-Mumbai:["Rohit Sharma","Surya Kumar Yadav","Tilak Verma","Hardik Pandya","Jasprit Bumrah"],
-Punjab:["Shreyas Iyer","Marcus Stoinis","Harpreet Brar","Yuzvendra Chahal","Lockie Ferguson"],
-Rajasthan:["Yashasvi Jaiswal","Dhruv Jurel","Ravindra Jadeja","Jofra Archer","Kuldeep Sen"],
-Bangalore:["Virat Kohli","Phil Salt","Jitesh Sharma","Krunal Pandya","Josh Hazlewood"],
-Hyderabad:["Ishan Kishan","Travis Head","Harshal Patel","Pat Cummins","Abhishek Sharma"],
-Chennai:["Ruturaj Gaikwad","MS Dhoni","Shivam Dubey","Noor Ahmed","Matt Henry"],
-Delhi:["KL Rahul","David Miller","Axar Patel","Mitchell Starc","Kuldeep Yadav"],
-Gujarat:["Shubman Gill","Jos Buttler","Sai Sudarshan","Kagiso Rabada","Rashid Khan"],
-Kolkata:["Ajinkya Rahane","Rinku Singh","Sunil Narine","Varun Chakravarthy","Harshit Rana"],
-Lucknow:["Rishabh Pant","Nicholas Pooran","Mitchell Marsh","Mohd Shami","Avesh Khan"]
+
+Mumbai:[
+"Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton",
+"Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir",
+"Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch",
+"Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar",
+"Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"
+],
+
+Punjab:[
+"Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash",
+"Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen",
+"Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen",
+"Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar",
+"Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"
+],
+
+Rajasthan:[
+"Riyan Parag","Shubham Dubey","Vaibhav Suryavanshi","Donovan Ferreria","Lhuan Dre Pretorious",
+"Ravi Singh","Aman Rao Perala","Shimron Hetmyer","Yashasvi Jaiswal","Dhruv Jurel",
+"Yudhvir Singh Charak","Ravindra Jadeja","Sam Curran","Jofra Archer","Tushar Deshpende",
+"Kuwena Maphaka","Ravi Bishnoi","Sushant Mishra","Yash Raj Kunja","Vignesh Puthoor",
+"Brijesh Sharma","Adam Milne","Kuldeep Sen","Sandeep Sharma","Nandre Burger"
+],
+
+Bangalore:[
+"Rajat Patidar","Devdutt Padikkal","Virat Kohli","Phil Salt","Jitesh Sharma",
+"Jordan Cox","Krunal Pandya","Swapnil Singh","Tim David","Romario Shepherd",
+"Jacob Bethell","Venkatesh Iyer","Satvik Deswal","Mangesh Yadav","Vicky Ostwal",
+"Vihaan Malhotra","Kanishk Chouhan","Josh Hazlewood","Rasikh Dar","Suyash Sharma",
+"Bhuvneshwar Sharma","Nuwan Thusawa","Abhinandan Singh","Jacob Duffy","Yash Dayal"
+],
+
+Hyderabad:[
+"Ishan Kishan","Aniket Verma","Smaran Ravichandran","Salil Arora","Heinrich Klaasen",
+"Travis Head","Harshal Patel","Kamindu Mendis","Harsh Dubey","Brydon Carse",
+"Shivang Kumar","Krains Fuletra","Liam Livingstone","Jack Edwards","Abhishek Sharma",
+"Nitish Kumar Reddy","Pat Cummins","Zeeshan Ansari","Jaydev Unadkat","Eshan Malinga",
+"Sakib Hussain","Onkar Tarmale","Amit Kumar","Praful Hinge","Shivam Mavi"
+],
+
+Chennai:[
+"Ruturaj Gaikwad","MS Dhoni","Sanju Samson","Dewald Brevis","Ayush Mhatre",
+"Kartik Sharma","Sarfaraz Khan","Urvil Patel","Anshul Kamboj","Jamie Overton",
+"Ramakrishna Ghosh","Prashant Veer","Matthew Short","Aman Khan","Zak Foulkes",
+"Shivam Dubey","Khaleel Ahmed","Noor Ahmed","Mukesh Choudhary","Nathan Ellis",
+"Shreyas Gopal","Gurjapneet Singh","Akeal Hosein","Matt Henry","Rahul Chahar"
+],
+
+Delhi:[
+"KL Rahul","Karun Nair","David Miller","Ben Duckett","Pathum Nisaanka",
+"Sahil Parakh","Prithvi Shaw","Abhishek Porel","Tristan Stubbs","Axar Patel",
+"Sameer Rizvi","Ashutosh Sharma","Vipraj Nigam","Ajay Mandal","Tripurana Vijay",
+"Madhav Tiwari","Auqib Dar","Nitish Rana","Mitchell Starc","T Natarajan",
+"Mukesh Kumar","Dushamantha Chameera","Lungi Ngidi","Kyle Jamieson","Kuldeep Yadav"
+],
+
+Gujarat:[
+"Shubhman Gill","Jos Buttler","Kumar Kushagra","Anuj Rawat","Tom Banton",
+"Glenn Philips","Nishant Sindhu","Washington Sundar","Mohd Arshad Khan","Sai Kishore",
+"Jayant Yadav","Jason Holder","Sai Sudarshan","Shahrukh Khan","Kagiso Rabada",
+"Mohd Siraj","Prasidh Krishna","Manav Suthar","Gurnoor Singh Brar","Ishant Sharma",
+"Ashok Sharma","Prithvi Raj Yarra","Luke Wood","Rahul Tewatia","Rashid Khan"
+],
+
+Kolkata:[
+"Ajinkya Rahane","Rinku Singh","A Raghuvanshi","Manish Pandey","Cameron Green",
+"Finn Allen","Tejasvi Singh","Rahul Tripathi","Tim Seifert","Rovman Powell",
+"Anukul Roy","Sarthak Ranjan","Daksh Kamra","Rachin Ravindra","Ramandeep Singh",
+"Vaibhav Arora","Matheesha Pathirana","Kartik Tyagi","Prashant Solanki","Akash Deep",
+"Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","NA"
+],
+
+Lucknow:[
+"Rishabh Pant","Aiden Markram","Himmat Singh","Matthew Breetzke","Mukul Chaudhary",
+"Akshat Radhuwanshi","Josh Inglis","Nicholas Pooran","Mitchell Marsh","Abdul Samad",
+"Shahbaz Ahmad","Arshin Kulkarni","Wanindu Hasaranga","Ayush Badoni","Mohd Shami",
+"Avesh Khan","M Siddharth","Digvesh Rathi","Akash Singh","Prince Yadav",
+"Arjun Tendulkar","Anrich Nortje","Naman Tiwari","Mayank Yadav","Mohsin Khan"
+]
+
 }
 
-/* DATA */
+/* DATA STRUCTURE */
 
 let data={}
 let points={}
 
 teams.forEach(t=>{
-data[t]=Array(players[t].length).fill(null)
-points[t]=Array(players[t].length).fill(0)
+data[t]=Array(25).fill(null)
+points[t]=Array(25).fill(0)
 })
 
-/* SAVE LIVE */
+/* SAVE */
 
 function save(){
 set(ref(db,"auction"),{data,points})
 }
 
-/* LIVE LISTENER */
+/* LIVE SYNC */
 
-onValue(ref(db,"auction"),snapshot=>{
-let val=snapshot.val()
-if(!val) return
-data=val.data
-points=val.points
+onValue(ref(db,"auction"),snap=>{
+let v=snap.val()
+if(!v) return
+data=v.data
+points=v.points
 render()
-updateLeaderboard()
 })
 
-/* RENDER TABLE */
-
-let currentTeam=0
+/* RENDER */
 
 window.render=function(){
 
 const body=document.getElementById("rows")
 body.innerHTML=""
 
-players[teams[currentTeam]].forEach((player,i)=>{
+players["Mumbai"].forEach((p,i)=>{
 
 let tr=document.createElement("tr")
 
-tr.innerHTML=`<td>${i+1}</td><td>${player}</td>`
-
-let status=document.createElement("td")
-status.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
-tr.appendChild(status)
+tr.innerHTML=`<td>${i+1}</td><td>${p}</td>`
 
 buyers.forEach((b,bi)=>{
 
 let td=document.createElement("td")
 
-if(data[teams[currentTeam]][i]==bi){
+if(data["Mumbai"][i]==bi){
 td.className="buyer"+bi
 td.innerHTML="✓"
 }
 
 td.onclick=()=>{
-data[teams[currentTeam]][i]=data[teams[currentTeam]][i]==bi?null:bi
+data["Mumbai"][i]=data["Mumbai"][i]==bi?null:bi
 save()
 }
 
 tr.appendChild(td)
 
 })
-
-let td=document.createElement("td")
-
-let inp=document.createElement("input")
-inp.className="pointsInput"
-inp.value=points[teams[currentTeam]][i]
-
-inp.oninput=()=>{
-points[teams[currentTeam]][i]=parseInt(inp.value)||0
-save()
-}
-
-td.appendChild(inp)
-tr.appendChild(td)
 
 body.appendChild(tr)
 
 })
-
-}
-
-/* LEADERBOARD */
-
-window.updateLeaderboard=function(){
-
-let totals=[0,0,0,0,0,0]
-
-teams.forEach(team=>{
-for(let i=0;i<players[team].length;i++){
-let buyer=data[team][i]
-if(buyer!=null){
-totals[buyer]+=points[team][i]
-}
-}
-})
-
-let arr=buyers.map((b,i)=>({name:b,pts:totals[i]}))
-arr.sort((a,b)=>b.pts-a.pts)
-
-let colors=[
-"#d1fae5",
-"#dcfce7",
-"#fef9c3",
-"#fde68a",
-"#fecaca",
-"#fbcfe8"
-]
-
-let html=""
-let total=0
-
-arr.forEach((t,i)=>{
-total+=t.pts
-html+=`<div class="rank" style="background:${colors[i]};color:#111">
-<span>${i+1}. ${t.name}</span>
-<span>${t.pts}</span>
-</div>`
-})
-
-html+=`<div class="summary"><b>Total</b><b>${total}</b></div>`
-
-document.getElementById("leaderboard").innerHTML=html
-
-}
-
-/* EXCEL */
-
-window.exportExcel=function(){
-
-let rows=[]
-
-teams.forEach(team=>{
-players[team].forEach((p,i)=>{
-rows.push({
-Team:team,
-Player:p,
-Buyer:data[team][i]==null?"Unsold":buyers[data[team][i]],
-Points:points[team][i]
-})
-})
-})
-
-let ws=XLSX.utils.json_to_sheet(rows)
-let wb=XLSX.utils.book_new()
-
-XLSX.utils.book_append_sheet(wb,ws,"Results")
-
-XLSX.writeFile(wb,"AuctionResults.xlsx")
 
 }
 
@@ -210,7 +194,6 @@ XLSX.writeFile(wb,"AuctionResults.xlsx")
 <style>
 
 body{
-margin:0;
 font-family:Segoe UI;
 background:#0b0f18;
 color:white;
@@ -221,17 +204,9 @@ width:100%;
 border-collapse:collapse;
 }
 
-th,td{
+td,th{
 border:1px solid #1f2a44;
 padding:8px;
-text-align:center;
-}
-
-.pointsInput{
-width:60px;
-background:#0f172a;
-border:none;
-color:white;
 text-align:center;
 }
 
@@ -242,29 +217,13 @@ text-align:center;
 .buyer4{background:#f43f5e}
 .buyer5{background:#14b8a6}
 
-.rank{
-display:flex;
-justify-content:space-between;
-padding:8px;
-margin-bottom:5px;
-border-radius:5px;
-}
-
-.summary{
-background:#10192c;
-padding:8px;
-margin-top:10px;
-display:flex;
-justify-content:space-between;
-}
-
 </style>
 
 </head>
 
 <body onload="render()">
 
-<h2 style="padding:15px">T20 Auction Board (Live)</h2>
+<h2>T20 Auction Board Live</h2>
 
 <table>
 
@@ -272,30 +231,18 @@ justify-content:space-between;
 <tr>
 <th>#</th>
 <th>Player</th>
-<th>Status</th>
 <th>KD</th>
 <th>PG</th>
 <th>SD</th>
 <th>DEV</th>
 <th>NR</th>
 <th>SPL</th>
-<th>Points</th>
 </tr>
 </thead>
 
 <tbody id="rows"></tbody>
 
 </table>
-
-<div style="padding:20px">
-
-<button onclick="exportExcel()">Export Excel</button>
-
-<h3>Leaderboard</h3>
-
-<div id="leaderboard"></div>
-
-</div>
 
 </body>
 </html>
