@@ -1,206 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BRK THE SILENCE — Coming Soon</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T20 Auction Board</title>
 
 <style>
-:root {
-  --bg: #111111;
-  --text: #f2f2f2;
-  --divider: #2a2a2a;
-  --button-border: #444444;
-  --button-hover: #1a1a1a;
+
+body{
+margin:0;
+font-family:Segoe UI,Arial;
+background:#000;
+color:#fff;
+overflow:hidden;
 }
 
-body.light {
-  --bg: #ffffff;
-  --text: #1a1a1a;
-  --divider: #e5e5e5;
-  --button-border: #cccccc;
-  --button-hover: #f5f5f5;
+.topbar{
+position:sticky;
+top:0;
+background:#111;
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px;
+overflow-x:auto;
+border-bottom:1px solid #333;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  min-height: 100vh;
-  display:flex;
-  flex-direction:column;
+.tab{
+padding:8px 14px;
+border:1px solid #444;
+background:#000;
+cursor:pointer;
+white-space:nowrap;
 }
 
-nav {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px 24px;
-  border-bottom:1px solid var(--divider);
+.tab.active{
+background:#1f1f1f;
+border-color:#888;
 }
 
-.main {
-  flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:40px 20px;
+.timer{
+margin-left:auto;
+font-size:20px;
+font-weight:bold;
 }
 
-.container {
-  max-width:1000px;
-  width:100%;
-  display:flex;
-  justify-content:space-between;
-  gap:60px;
+.container{
+display:flex;
+height:calc(100vh - 50px);
 }
 
-.left h1 {
-  font-family:'Playfair Display', serif;
-  font-size:38px;
-  margin-bottom:18px;
+.table-wrap{
+flex:1;
+overflow-y:auto;
 }
 
-.right {
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  min-width:220px;
+table{
+width:100%;
+border-collapse:collapse;
 }
 
-button {
-  padding:14px;
-  background:transparent;
-  border:1px solid var(--button-border);
-  color:var(--text);
-  cursor:pointer;
+th,td{
+border:1px solid #333;
+padding:10px;
+text-align:center;
+min-width:120px;
 }
 
-button:disabled {
-  opacity:0.5;
-  cursor:not-allowed;
+th{
+background:#111;
 }
 
-.counter { font-size:12px; opacity:0.6; }
-
-footer {
-  border-top:1px solid var(--divider);
-  padding:15px;
-  text-align:center;
-  font-size:12px;
-  opacity:0.6;
+.player{
+text-align:left;
+background:#000;
+color:#fff;
+border:none;
+width:100%;
+outline:none;
 }
 
-.signature {
-  font-family:"Vijaya","Brush Script MT",cursive;
-  margin-left:6px;
+.buyer{
+cursor:pointer;
+height:40px;
 }
 
-@media(max-width:900px){
-  .container { flex-direction:column; gap:30px; }
-  .left h1 { font-size:26px; }
+.buyer.active{
+background:#00c853;
+color:#000;
+font-weight:bold;
 }
+
+.sold{
+background:#002b00;
+}
+
+.sidepanel{
+width:220px;
+border-left:1px solid #333;
+padding:20px;
+background:#0a0a0a;
+}
+
+.count{
+margin-bottom:15px;
+font-size:18px;
+}
+
 </style>
 </head>
 
 <body>
 
-<nav>
-  <div>BRK THE SILENCE</div>
-  <div onclick="toggleTheme()" style="cursor:pointer;">Light / Dark</div>
-</nav>
+<div class="topbar" id="tabs"></div>
 
-<div class="main">
-  <div class="container">
+<div class="container">
 
-    <div class="left">
-      <h1>Silence is about to be examined.</h1>
-      <p>A private publication exploring emotional performance and modern realities.</p>
-      <p style="font-size:13px;opacity:0.6;">Launching soon.</p>
-    </div>
+<div class="table-wrap">
+<table id="auctionTable">
 
-    <div class="right">
-      <button id="interestBtn">I’m Interested</button>
-      <div class="counter" id="interestCount">Loading...</div>
+<thead>
+<tr>
+<th>Player Name</th>
+<th>SD + GR</th>
+<th>KD + SK</th>
+<th>PP + LG</th>
+<th>NR + PK</th>
+<th>DEVASHISH</th>
+</tr>
+</thead>
 
-      <button id="curiousBtn">Just Curious</button>
-      <div class="counter" id="curiousCount">Loading...</div>
+<tbody id="players"></tbody>
 
-      <div id="confirmation" style="font-size:13px;opacity:0;margin-top:10px;"></div>
-    </div>
-
-  </div>
+</table>
 </div>
 
-<footer>
-  © 2026 BRK THE SILENCE
-  <span class="signature">(by Siddhant Kuril)</span>
-</footer>
+<div class="sidepanel">
+
+<div class="timer" id="timer">15</div>
+
+<div class="count">SD + GR: <span id="c0">0</span></div>
+<div class="count">KD + SK: <span id="c1">0</span></div>
+<div class="count">PP + LG: <span id="c2">0</span></div>
+<div class="count">NR + PK: <span id="c3">0</span></div>
+<div class="count">Devashish: <span id="c4">0</span></div>
+
+</div>
+
+</div>
 
 <script>
-const supabaseUrl = "https://meitgfbhwzmbgcasofbc.supabase.co";
-const supabaseKey = "sb_publishable_a6IblQ1mDySl81NqUGy6Zg_Hn7HUO83";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-const interestBtn = document.getElementById("interestBtn");
-const curiousBtn = document.getElementById("curiousBtn");
-const interestCount = document.getElementById("interestCount");
-const curiousCount = document.getElementById("curiousCount");
-const confirmation = document.getElementById("confirmation");
+const buyers=[
+"SD + GR",
+"KD + SK",
+"PP + LG",
+"NR + PK",
+"DEVASHISH"
+]
 
-async function loadCounts() {
-  const { data, error } = await supabase
-    .from("votes")
-    .select("type");
+const teams=[
+"Mumbai","Punjab","Rajasthan","Bangalore","Hyderabad",
+"Chennai","Delhi","Gujarat","Kolkata","Lucknow",
+"Mumbai 2","Punjab 2","Rajasthan 2","Bangalore 2","Hyderabad 2",
+"Chennai 2","Delhi 2","Gujarat 2","Kolkata 2","Lucknow 2"
+]
 
-  if (error) {
-    console.error(error);
-    return;
-  }
+let currentTeam=0
+let data={}
 
-  const interest = data.filter(v => v.type === "interest").length;
-  const curious = data.filter(v => v.type === "curious").length;
+teams.forEach(t=>{
+data[t]=Array(25).fill(null)
+})
 
-  interestCount.textContent = interest + " responses";
-  curiousCount.textContent = curious + " responses";
+const tabs=document.getElementById("tabs")
+
+teams.forEach((team,i)=>{
+const el=document.createElement("div")
+el.className="tab"
+el.innerText=team
+el.onclick=()=>{
+currentTeam=i
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+el.classList.add("active")
+render()
+}
+tabs.appendChild(el)
+})
+
+tabs.firstChild.classList.add("active")
+
+function render(){
+
+const body=document.getElementById("players")
+body.innerHTML=""
+
+for(let i=0;i<25;i++){
+
+const tr=document.createElement("tr")
+
+const td=document.createElement("td")
+const input=document.createElement("input")
+input.className="player"
+input.placeholder="Paste player name"
+td.appendChild(input)
+tr.appendChild(td)
+
+buyers.forEach((b,bi)=>{
+
+const cell=document.createElement("td")
+cell.className="buyer"
+
+if(data[teams[currentTeam]][i]===bi){
+cell.classList.add("active")
+tr.classList.add("sold")
 }
 
-async function vote(type) {
-  if (localStorage.getItem("hasVoted")) {
-    confirmation.style.opacity = 1;
-    confirmation.textContent = "You have already voted.";
-    interestBtn.disabled = true;
-    curiousBtn.disabled = true;
-    return;
-  }
+cell.onclick=()=>{
 
-  await supabase.from("votes").insert([{ type }]);
-
-  localStorage.setItem("hasVoted", "true");
-
-  interestBtn.disabled = true;
-  curiousBtn.disabled = true;
-
-  confirmation.style.opacity = 1;
-  confirmation.textContent = "Your response has been recorded.";
-
-  loadCounts();
+if(data[teams[currentTeam]][i]===bi){
+data[teams[currentTeam]][i]=null
+}else{
+data[teams[currentTeam]][i]=bi
 }
 
-interestBtn.addEventListener("click", () => vote("interest"));
-curiousBtn.addEventListener("click", () => vote("curious"));
+updateCounts()
+render()
 
-loadCounts();
-
-function toggleTheme() {
-  document.body.classList.toggle("light");
 }
+
+tr.appendChild(cell)
+
+})
+
+body.appendChild(tr)
+
+}
+
+}
+
+function updateCounts(){
+
+let counts=[0,0,0,0,0]
+
+Object.values(data).forEach(team=>{
+team.forEach(b=>{
+if(b!==null) counts[b]++
+})
+})
+
+counts.forEach((c,i)=>{
+document.getElementById("c"+i).innerText=c
+})
+
+}
+
+render()
+
+let time=15
+
+setInterval(()=>{
+time--
+if(time<=0) time=15
+document.getElementById("timer").innerText=time
+},1000)
+
 </script>
 
 </body>
