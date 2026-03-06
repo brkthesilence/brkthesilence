@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T20 Auction Board</title>
+<title>Ek Ka Double</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -16,8 +16,6 @@ color:white;
 }
 
 header{
-display:flex;
-justify-content:space-between;
 padding:12px 20px;
 background:#0a0d14;
 border-bottom:1px solid #1f2a44;
@@ -41,7 +39,7 @@ background:#152238;
 
 .main{
 display:flex;
-height:calc(100vh - 100px);
+height:calc(100vh - 90px);
 }
 
 .tableArea{
@@ -58,7 +56,6 @@ thead th{
 position:sticky;
 top:0;
 background:#121a2b;
-z-index:5;
 }
 
 th,td{
@@ -78,6 +75,14 @@ font-weight:bold;
 .buyer3{background:#fb923c;color:black;}
 .buyer4{background:#ef4444;color:white;}
 
+.pointsInput{
+width:60px;
+background:#0f172a;
+border:none;
+color:white;
+text-align:center;
+}
+
 .side{
 width:260px;
 padding:20px;
@@ -94,23 +99,6 @@ justify-content:space-between;
 border-radius:6px;
 }
 
-.pointsInput{
-width:60px;
-background:#0f172a;
-border:none;
-color:white;
-text-align:center;
-}
-
-button{
-background:#1b2a44;
-color:white;
-border:none;
-padding:8px 12px;
-margin:4px;
-cursor:pointer;
-}
-
 .rank{
 display:flex;
 justify-content:space-between;
@@ -124,6 +112,15 @@ border-radius:6px;
 .r3{background:#fde68a;color:black;}
 .r4{background:#fca5a5;color:black;}
 .r5{background:#ef4444;color:white;}
+
+button{
+background:#1b2a44;
+color:white;
+border:none;
+padding:8px 12px;
+margin-top:8px;
+cursor:pointer;
+}
 
 </style>
 </head>
@@ -227,11 +224,26 @@ function render(){
 const body=document.getElementById("rows")
 body.innerHTML=""
 
+let players=[]
+
 for(let i=0;i<25;i++){
+
+players.push({
+index:i,
+points:points[teams[currentTeam]][i]
+})
+
+}
+
+players.sort((a,b)=>b.points-a.points)
+
+players.forEach((p,pos)=>{
+
+let i=p.index
 
 let tr=document.createElement("tr")
 
-tr.innerHTML=`<td>${i+1}</td><td>Player ${i+1}</td>`
+tr.innerHTML=`<td>${pos+1}</td><td>Player ${i+1}</td>`
 
 let status=document.createElement("td")
 status.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
@@ -269,7 +281,9 @@ inp.value=points[teams[currentTeam]][i]
 inp.oninput=()=>{
 
 points[teams[currentTeam]][i]=parseInt(inp.value)||0
+
 updateLeaderboard()
+render()
 
 }
 
@@ -279,7 +293,7 @@ tr.appendChild(td)
 
 body.appendChild(tr)
 
-}
+})
 
 }
 
