@@ -201,11 +201,7 @@ if(!points[t]) points[t]=Array(25).fill(0)
 })
 
 function save(){
-
-localStorage.setItem("auctionData",
-JSON.stringify({data,points})
-)
-
+localStorage.setItem("auctionData",JSON.stringify({data,points}))
 }
 
 let currentTeam=0
@@ -234,26 +230,11 @@ function render(){
 const body=document.getElementById("rows")
 body.innerHTML=""
 
-let players=[]
-
 for(let i=0;i<25;i++){
-
-players.push({
-index:i,
-points:points[teams[currentTeam]][i]
-})
-
-}
-
-players.sort((a,b)=>b.points-a.points)
-
-players.forEach((p,pos)=>{
-
-let i=p.index
 
 let tr=document.createElement("tr")
 
-tr.innerHTML=`<td>${pos+1}</td><td>Player ${i+1}</td>`
+tr.innerHTML=`<td>${i+1}</td><td>Player ${i+1}</td>`
 
 let status=document.createElement("td")
 status.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
@@ -292,10 +273,8 @@ inp.value=points[teams[currentTeam]][i]
 inp.oninput=()=>{
 
 points[teams[currentTeam]][i]=parseInt(inp.value)||0
-
 save()
 updateLeaderboard()
-render()
 
 }
 
@@ -305,7 +284,7 @@ tr.appendChild(td)
 
 body.appendChild(tr)
 
-})
+}
 
 }
 
