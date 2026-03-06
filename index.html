@@ -74,13 +74,6 @@ color:white;
 text-align:center;
 }
 
-.buyer0{background:#3b82f6}
-.buyer1{background:#22c55e}
-.buyer2{background:#a855f7}
-.buyer3{background:#fb923c}
-.buyer4{background:#f43f5e}
-.buyer5{background:#14b8a6}
-
 .side{
 width:260px;
 padding:20px;
@@ -91,7 +84,7 @@ background:#060a12;
 .summary{
 background:#10192c;
 padding:10px;
-margin-bottom:10px;
+margin-top:10px;
 display:flex;
 justify-content:space-between;
 border-radius:6px;
@@ -103,7 +96,6 @@ justify-content:space-between;
 padding:8px;
 margin-bottom:6px;
 border-radius:6px;
-background:#152238;
 }
 
 button{
@@ -222,27 +214,18 @@ const teams=[
 
 const buyers=["SD","KD","PP","NR","SK","DEV"]
 
-/* REAL PLAYER LISTS */
+/* PLAYER LISTS */
 
 const players={
 Mumbai:["Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton","Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir","Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch","Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar","Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"],
-
 Punjab:["Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash","Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen","Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen","Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar","Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"],
-
 Rajasthan:["Riyan Parag","Shubham Dubey","Vaibhav Suryavanshi","Donovan Ferreria","Lhuan Dre Pretorious","Ravi Singh","Aman Rao Perala","Shimron Hetmyer","Yashasvi Jaiswal","Dhruv Jurel","Yudhvir Singh Charak","Ravindra Jadeja","Sam Curran","Jofra Archer","Tushar Deshpende","Kuwena Maphaka","Ravi Bishnoi","Sushant Mishra","Yash Raj Kunja","Vignesh Puthoor","Brijesh Sharma","Adam Milne","Kuldeep Sen","Sandeep Sharma","Nandre Burger"],
-
 Bangalore:["Rajat Patidar","Devdutt Padikkal","Virat Kohli","Phil Salt","Jitesh Sharma","Jordan Cox","Krunal Pandya","Swapnil Singh","Tim David","Romario Shepherd","Jacob Bethell","Venkatesh Iyer","Satvik Deswal","Mangesh Yadav","Vicky Ostwal","Vihaan Malhotra","Kanishk Chouhan","Josh Hazlewood","Rasikh Dar","Suyash Sharma","Bhuvneshwar Sharma","Nuwan Thusawa","Abhinandan Singh","Jacob Duffy","Yash Dayal"],
-
 Hyderabad:["Ishan Kishan","Aniket Verma","Smaran Ravichandran","Salil Arora","Heinrich Klaasen","Travis Head","Harshal Patel","Kamindu Mendis","Harsh Dubey","Brydon Carse","Shivang Kumar","Krains Fuletra","Liam Livingstone","Jack Edwards","Abhishek Sharma","Nitish Kumar Reddy","Pat Cummins","Zeeshan Ansari","Jaydev Unadkat","Eshan Malinga","Sakib Hussain","Onkar Tarmale","Amit Kumar","Praful Hinge","Shivam Mavi"],
-
 Chennai:["Ruturaj Gaikwad","MS Dhoni","Sanju Samson","Dewald Brevis","Ayush Mhatre","Kartik Sharma","Sarfaraz Khan","Urvil Patel","Anshul Kamboj","Jamie Overton","Ramakrishna Ghosh","Prashant Veer","Matthew Short","Aman Khan","Zak Foulkes","Shivam Dubey","Khaleel Ahmed","Noor Ahmed","Mukesh Choudhary","Nathan Ellis","Shreyas Gopal","Gurjapneet Singh","Akeal Hosein","Matt Henry","Rahul Chahar"],
-
 Delhi:["KL Rahul","Karun Nair","David Miller","Ben Duckett","Pathum Nisaanka","Sahil Parakh","Prithvi Shaw","Abhishek Porel","Tristan Stubbs","Axar Patel","Sameer Rizvi","Ashutosh Sharma","Vipraj Nigam","Ajay Mandal","Tripurana Vijay","Madhav Tiwari","Auqib Dar","Nitish Rana","Mitchell Starc","T Natarajan","Mukesh Kumar","Dushamantha Chameera","Lungi Ngidi","Kyle Jamieson","Kuldeep Yadav"],
-
 Gujarat:["Shubhman Gill","Jos Buttler","Kumar Kushagra","Anuj Rawat","Tom Banton","Glenn Philips","Nishant Sindhu","Washington Sundar","Mohd Arshad Khan","Sai Kishore","Jayant Yadav","Jason Holder","Sai Sudarshan","Shahrukh Khan","Kagiso Rabada","Mohd Siraj","Prasidh Krishna","Manav Suthar","Gurnoor Singh Brar","Ishant Sharma","Ashok Sharma","Prithvi Raj Yarra","Luke Wood","Rahul Tewatia","Rashid Khan"],
-
 Kolkata:["Ajinkya Rahane","Rinku Singh","A Raghuvanshi","Manish Pandey","Cameron Green","Finn Allen","Tejasvi Singh","Rahul Tripathi","Tim Seifert","Rovman Powell","Anukul Roy","Sarthak Ranjan","Daksh Kamra","Rachin Ravindra","Ramandeep Singh","Vaibhav Arora","Matheesha Pathirana","Kartik Tyagi","Prashant Solanki","Akash Deep","Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","NA"],
-
 Lucknow:["Rishabh Pant","Aiden Markram","Himmat Singh","Matthew Breetzke","Mukul Chaudhary","Akshat Radhuwanshi","Josh Inglis","Nicholas Pooran","Mitchell Marsh","Abdul Samad","Shahbaz Ahmad","Arshin Kulkarni","Wanindu Hasaranga","Ayush Badoni","Mohd Shami","Avesh Khan","M Siddharth","Digvesh Rathi","Akash Singh","Prince Yadav","Arjun Tendulkar","Anrich Nortje","Naman Tiwari","Mayank Yadav","Mohsin Khan"]
 }
 
@@ -298,7 +281,6 @@ buyers.forEach((b,bi)=>{
 let td=document.createElement("td")
 
 if(data[teams[currentTeam]][i]==bi){
-td.className="buyer"+bi
 td.innerHTML="✓"
 }
 
@@ -367,12 +349,61 @@ totals[buyer]+=points[team][i]||0
 let arr=buyers.map((b,i)=>({name:b,pts:totals[i]}))
 arr.sort((a,b)=>b.pts-a.pts)
 
+let colors=["#22c55e","#84cc16","#eab308","#f97316","#ef4444","#7f1d1d"]
+
 let html=""
-arr.forEach(t=>{
-html+=`<div class="rank">${t.name}<span>${t.pts}</span></div>`
+let total=0
+
+arr.forEach((t,i)=>{
+total+=t.pts
+html+=`<div class="rank" style="background:${colors[i]};color:black">
+<span>${i+1}. ${t.name}</span>
+<span>${t.pts}</span>
+</div>`
 })
 
+html+=`<div class="summary">
+<strong>Total</strong>
+<strong>${total}</strong>
+</div>`
+
 leaderboard.innerHTML=html
+
+}
+
+function toggleMatch(){
+let panel=document.getElementById("matchContent")
+panel.style.display=panel.style.display==="none"?"block":"none"
+}
+
+function loadMatch(){
+
+let a=teamA.value
+let b=teamB.value
+if(a===b) return
+
+let html="<tr><th>Player</th><th>Team</th><th>Points</th></tr>"
+
+;[a,b].forEach(team=>{
+players[team].forEach((p,i)=>{
+html+=`<tr>
+<td>${p}</td>
+<td>${team}</td>
+<td>
+<input class="pointsInput"
+value="${points[team][i]}"
+oninput="
+points['${team}'][${i}]=parseInt(this.value)||0;
+save();
+updateLeaderboard();
+render();
+">
+</td>
+</tr>`
+})
+})
+
+matchTable.innerHTML=html
 
 }
 
@@ -387,49 +418,6 @@ o2.value=t
 o2.innerText=t
 teamB.appendChild(o2)
 })
-
-function loadMatch(){
-
-let a=teamA.value
-let b=teamB.value
-
-if(a===b) return
-
-let html="<tr><th>Player</th><th>Team</th><th>Points</th></tr>"
-
-;[a,b].forEach(team=>{
-
-players[team].forEach((p,i)=>{
-
-html+=`
-<tr>
-<td>${p}</td>
-<td>${team}</td>
-<td>
-<input class="pointsInput"
-value="${points[team][i]}"
-oninput="
-points['${team}'][${i}]=parseInt(this.value)||0;
-save();
-updateLeaderboard();
-render();
-">
-</td>
-</tr>
-`
-
-})
-
-})
-
-matchTable.innerHTML=html
-
-}
-
-function toggleMatch(){
-let panel=document.getElementById("matchContent")
-panel.style.display=panel.style.display==="none"?"block":"none"
-}
 
 function exportExcel(){
 
