@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>T20 Auction Board</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <style>
 
 body{
@@ -100,6 +102,15 @@ color:white;
 text-align:center;
 }
 
+button{
+background:#1b2a44;
+color:white;
+border:none;
+padding:8px 12px;
+margin:4px;
+cursor:pointer;
+}
+
 .rank{
 display:flex;
 justify-content:space-between;
@@ -160,6 +171,10 @@ border-radius:6px;
 <div class="summary">PP+LG <span id="c2">0</span></div>
 <div class="summary">NR+PK <span id="c3">0</span></div>
 <div class="summary">DEV <span id="c4">0</span></div>
+
+<h3>Export</h3>
+
+<button onclick="exportExcel()">Export Excel</button>
 
 <h3>Leaderboard</h3>
 
@@ -328,6 +343,36 @@ html+=`<div class="summary">
 </div>`
 
 document.getElementById("leaderboard").innerHTML=html
+
+}
+
+function exportExcel(){
+
+let rows=[]
+
+teams.forEach(team=>{
+
+for(let i=0;i<25;i++){
+
+let buyer=data[team][i]
+
+rows.push({
+Team:team,
+Player:"Player "+(i+1),
+Buyer:buyer==null?"Unsold":buyers[buyer],
+Points:points[team][i]||0
+})
+
+}
+
+})
+
+let ws=XLSX.utils.json_to_sheet(rows)
+let wb=XLSX.utils.book_new()
+
+XLSX.utils.book_append_sheet(wb,ws,"Results")
+
+XLSX.writeFile(wb,"AuctionFantasyResults.xlsx")
 
 }
 
