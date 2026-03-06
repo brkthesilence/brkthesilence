@@ -42,9 +42,10 @@ display:flex;
 height:calc(100vh - 90px);
 }
 
-.tableArea{
+.left{
 flex:1;
 overflow:auto;
+padding:10px;
 }
 
 table{
@@ -64,13 +65,6 @@ padding:8px;
 text-align:center;
 }
 
-.buyer0{background:#3b82f6;}
-.buyer1{background:#22c55e;}
-.buyer2{background:#a855f7;}
-.buyer3{background:#fb923c;}
-.buyer4{background:#f43f5e;}
-.buyer5{background:#14b8a6;}
-
 .pointsInput{
 width:60px;
 background:#0f172a;
@@ -79,12 +73,18 @@ color:white;
 text-align:center;
 }
 
+.buyer0{background:#3b82f6}
+.buyer1{background:#22c55e}
+.buyer2{background:#a855f7}
+.buyer3{background:#fb923c}
+.buyer4{background:#f43f5e}
+.buyer5{background:#14b8a6}
+
 .side{
-width:300px;
+width:260px;
 padding:20px;
 border-left:1px solid #1f2a44;
 background:#060a12;
-overflow:auto;
 }
 
 .summary{
@@ -110,17 +110,23 @@ background:#1b2a44;
 color:white;
 border:none;
 padding:8px 12px;
-margin-top:8px;
+margin-top:6px;
 cursor:pointer;
 }
 
 select{
-width:100%;
-margin-top:6px;
 background:#0f172a;
 color:white;
 border:none;
 padding:6px;
+margin-right:5px;
+}
+
+.matchPanel{
+background:#10192c;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
 }
 
 </style>
@@ -136,7 +142,23 @@ padding:6px;
 
 <div class="main">
 
-<div class="tableArea">
+<div class="left">
+
+<!-- MATCH PANEL -->
+<div class="matchPanel">
+
+<h3>Match Points</h3>
+
+<select id="teamA"></select>
+<select id="teamB"></select>
+
+<button onclick="loadMatch()">Load Match</button>
+
+<table id="matchTable" style="margin-top:10px"></table>
+
+</div>
+
+<!-- MAIN TABLE -->
 
 <table>
 
@@ -178,15 +200,6 @@ padding:6px;
 <h3>Leaderboard</h3>
 <div id="leaderboard"></div>
 
-<h3>Match Points</h3>
-
-<select id="teamA"></select>
-<select id="teamB"></select>
-
-<button onclick="loadMatch()">Load Match</button>
-
-<table id="matchTable" style="margin-top:10px;width:100%"></table>
-
 </div>
 
 </div>
@@ -200,27 +213,16 @@ const teams=[
 
 const buyers=["SD","KD","PP","NR","SK","DEV"]
 
-/* PLAYER LISTS (YOUR ORIGINAL DATA KEPT) */
-
 const players={
 Mumbai:["Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton","Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir","Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch","Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar","Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"],
-
 Punjab:["Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash","Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen","Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen","Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar","Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"],
-
 Rajasthan:["Riyan Parag","Shubham Dubey","Vaibhav Suryavanshi","Donovan Ferreria","Lhuan Dre Pretorious","Ravi Singh","Aman Rao Perala","Shimron Hetmyer","Yashasvi Jaiswal","Dhruv Jurel","Yudhvir Singh Charak","Ravindra Jadeja","Sam Curran","Jofra Archer","Tushar Deshpende","Kuwena Maphaka","Ravi Bishnoi","Sushant Mishra","Yash Raj Kunja","Vignesh Puthoor","Brijesh Sharma","Adam Milne","Kuldeep Sen","Sandeep Sharma","Nandre Burger"],
-
 Bangalore:["Rajat Patidar","Devdutt Padikkal","Virat Kohli","Phil Salt","Jitesh Sharma","Jordan Cox","Krunal Pandya","Swapnil Singh","Tim David","Romario Shepherd","Jacob Bethell","Venkatesh Iyer","Satvik Deswal","Mangesh Yadav","Vicky Ostwal","Vihaan Malhotra","Kanishk Chouhan","Josh Hazlewood","Rasikh Dar","Suyash Sharma","Bhuvneshwar Sharma","Nuwan Thusawa","Abhinandan Singh","Jacob Duffy","Yash Dayal"],
-
 Hyderabad:["Ishan Kishan","Aniket Verma","Smaran Ravichandran","Salil Arora","Heinrich Klaasen","Travis Head","Harshal Patel","Kamindu Mendis","Harsh Dubey","Brydon Carse","Shivang Kumar","Krains Fuletra","Liam Livingstone","Jack Edwards","Abhishek Sharma","Nitish Kumar Reddy","Pat Cummins","Zeeshan Ansari","Jaydev Unadkat","Eshan Malinga","Sakib Hussain","Onkar Tarmale","Amit Kumar","Praful Hinge","Shivam Mavi"],
-
 Chennai:["Ruturaj Gaikwad","MS Dhoni","Sanju Samson","Dewald Brevis","Ayush Mhatre","Kartik Sharma","Sarfaraz Khan","Urvil Patel","Anshul Kamboj","Jamie Overton","Ramakrishna Ghosh","Prashant Veer","Matthew Short","Aman Khan","Zak Foulkes","Shivam Dubey","Khaleel Ahmed","Noor Ahmed","Mukesh Choudhary","Nathan Ellis","Shreyas Gopal","Gurjapneet Singh","Akeal Hosein","Matt Henry","Rahul Chahar"],
-
 Delhi:["KL Rahul","Karun Nair","David Miller","Ben Duckett","Pathum Nisaanka","Sahil Parakh","Prithvi Shaw","Abhishek Porel","Tristan Stubbs","Axar Patel","Sameer Rizvi","Ashutosh Sharma","Vipraj Nigam","Ajay Mandal","Tripurana Vijay","Madhav Tiwari","Auqib Dar","Nitish Rana","Mitchell Starc","T Natarajan","Mukesh Kumar","Dushamantha Chameera","Lungi Ngidi","Kyle Jamieson","Kuldeep Yadav"],
-
 Gujarat:["Shubhman Gill","Jos Buttler","Kumar Kushagra","Anuj Rawat","Tom Banton","Glenn Philips","Nishant Sindhu","Washington Sundar","Mohd Arshad Khan","Sai Kishore","Jayant Yadav","Jason Holder","Sai Sudarshan","Shahrukh Khan","Kagiso Rabada","Mohd Siraj","Prasidh Krishna","Manav Suthar","Gurnoor Singh Brar","Ishant Sharma","Ashok Sharma","Prithvi Raj Yarra","Luke Wood","Rahul Tewatia","Rashid Khan"],
-
 Kolkata:["Ajinkya Rahane","Rinku Singh","A Raghuvanshi","Manish Pandey","Cameron Green","Finn Allen","Tejasvi Singh","Rahul Tripathi","Tim Seifert","Rovman Powell","Anukul Roy","Sarthak Ranjan","Daksh Kamra","Rachin Ravindra","Ramandeep Singh","Vaibhav Arora","Matheesha Pathirana","Kartik Tyagi","Prashant Solanki","Akash Deep","Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","NA"],
-
 Lucknow:["Rishabh Pant","Aiden Markram","Himmat Singh","Matthew Breetzke","Mukul Chaudhary","Akshat Radhuwanshi","Josh Inglis","Nicholas Pooran","Mitchell Marsh","Abdul Samad","Shahbaz Ahmad","Arshin Kulkarni","Wanindu Hasaranga","Ayush Badoni","Mohd Shami","Avesh Khan","M Siddharth","Digvesh Rathi","Akash Singh","Prince Yadav","Arjun Tendulkar","Anrich Nortje","Naman Tiwari","Mayank Yadav","Mohsin Khan"]
 }
 
@@ -240,7 +242,6 @@ localStorage.setItem("auctionData",JSON.stringify({data,points}))
 }
 
 let currentTeam=0
-
 const tabs=document.getElementById("tabs")
 
 teams.forEach((team,i)=>{
@@ -257,8 +258,6 @@ tabs.appendChild(el)
 })
 
 tabs.children[0].classList.add("active")
-
-/* MAIN TABLE */
 
 function render(){
 
@@ -365,15 +364,15 @@ leaderboard.innerHTML=html
 /* MATCH PANEL */
 
 teams.forEach(t=>{
-let opt1=document.createElement("option")
-opt1.value=t
-opt1.innerText=t
-teamA.appendChild(opt1)
+let o1=document.createElement("option")
+o1.value=t
+o1.innerText=t
+teamA.appendChild(o1)
 
-let opt2=document.createElement("option")
-opt2.value=t
-opt2.innerText=t
-teamB.appendChild(opt2)
+let o2=document.createElement("option")
+o2.value=t
+o2.innerText=t
+teamB.appendChild(o2)
 })
 
 function loadMatch(){
