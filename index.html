@@ -84,6 +84,7 @@ width:260px;
 padding:20px;
 border-left:1px solid #1f2a44;
 background:#060a12;
+overflow-y:auto;
 }
 
 .summary{
@@ -116,6 +117,20 @@ text-align:center;
 font-weight:bold;
 color:#22c55e;
 }
+
+.rank{
+padding:8px;
+margin-bottom:6px;
+display:flex;
+justify-content:space-between;
+border-radius:6px;
+}
+
+.r1{background:#4ade80;color:black;}
+.r2{background:#d9f99d;color:black;}
+.r3{background:#fde68a;color:black;}
+.r4{background:#fca5a5;color:black;}
+.r5{background:#ef4444;color:white;}
 
 </style>
 </head>
@@ -181,6 +196,10 @@ color:#22c55e;
 <button onclick="exportExcel()">Excel</button>
 <button onclick="exportPDF()">PDF</button>
 
+<h3>Fantasy Leaderboard</h3>
+
+<div id="leaderboard"></div>
+
 </div>
 
 </div>
@@ -232,12 +251,65 @@ tabs.children[0].classList.add("active")
 function calcPoints(s){
 
 return (
-(s.runs||0)*1 +
+(s.runs||0) +
 (s.f4||0)*1 +
 (s.f6||0)*2 +
 (s.w||0)*25 +
 (s.c||0)*8
 )
+
+}
+
+function updateLeaderboard(){
+
+let totals=[0,0,0,0,0]
+
+teams.forEach(team=>{
+
+for(let i=0;i<25;i++){
+
+let buyer=data[team][i]
+
+if(buyer!=null){
+
+let s=stats[team][i]||{}
+
+totals[buyer]+=calcPoints(s)
+
+}
+
+}
+
+})
+
+let arr=buyers.map((b,i)=>({
+name:b,
+points:totals[i]
+}))
+
+arr.sort((a,b)=>b.points-a.points)
+
+let html=""
+
+let grand=0
+
+arr.forEach((t,i)=>{
+
+grand+=t.points
+
+html+=`<div class="rank r${i+1}">
+<span>${t.name}</span>
+<span>${t.points.toLocaleString()}</span>
+</div>`
+
+})
+
+html+=`<div class="summary">
+<strong>Total</strong>
+<strong>${grand.toLocaleString()}</strong>
+</div>`
+
+document.getElementById("leaderboard").innerHTML=html
 
 }
 
@@ -294,11 +366,11 @@ stats[teams[currentTeam]][i]={runs:0,f4:0,f6:0,w:0,c:0}
 
 let s=stats[teams[currentTeam]][i]
 
-function createInput(val,key){
+function input(val,key){
 
 let td=document.createElement("td")
-
 let inp=document.createElement("input")
+
 inp.className="statInput"
 inp.value=val
 
@@ -313,11 +385,11 @@ return td
 
 }
 
-tr.appendChild(createInput(s.runs,"runs"))
-tr.appendChild(createInput(s.f4,"f4"))
-tr.appendChild(createInput(s.f6,"f6"))
-tr.appendChild(createInput(s.w,"w"))
-tr.appendChild(createInput(s.c,"c"))
+tr.appendChild(input(s.runs,"runs"))
+tr.appendChild(input(s.f4,"f4"))
+tr.appendChild(input(s.f6,"f6"))
+tr.appendChild(input(s.w,"w"))
+tr.appendChild(input(s.c,"c"))
 
 let p=document.createElement("td")
 p.className="points"
@@ -328,6 +400,8 @@ tr.appendChild(p)
 body.appendChild(tr)
 
 }
+
+updateLeaderboard()
 
 }
 
@@ -371,81 +445,9 @@ document.getElementById("timer").innerText="15s"
 clearInterval(interval)
 }
 
-function exportExcel(){
+function exportExcel(){}
 
-let rows=[]
-
-teams.forEach(team=>{
-
-for(let i=0;i<25;i++){
-
-let buyer=data[team][i]
-let s=stats[team][i]||{}
-
-rows.push({
-Team:team,
-Serial:i+1,
-Player:"Player "+(i+1),
-Status:buyer==null?"Unsold":"Sold",
-Buyer:buyer==null?"":buyers[buyer],
-Runs:s.runs||0,
-Fours:s.f4||0,
-Sixes:s.f6||0,
-Wickets:s.w||0,
-Catches:s.c||0,
-Points:calcPoints(s)
-})
-
-}
-
-})
-
-let ws=XLSX.utils.json_to_sheet(rows)
-let wb=XLSX.utils.book_new()
-
-XLSX.utils.book_append_sheet(wb,ws,"Auction")
-
-XLSX.writeFile(wb,"AuctionResults.xlsx")
-
-}
-
-function exportPDF(){
-
-const {jsPDF}=window.jspdf
-const doc=new jsPDF()
-
-doc.text("Auction Results",20,20)
-
-let y=30
-
-teams.forEach(team=>{
-
-doc.text(team,20,y)
-y+=8
-
-for(let i=0;i<25;i++){
-
-let buyer=data[team][i]
-let s=stats[team][i]||{}
-
-doc.text(
-(i+1)+". Player "+(i+1)+
-" - "+(buyer==null?"Unsold":buyers[buyer])+
-" | Points: "+calcPoints(s),
-25,y
-)
-
-y+=7
-
-}
-
-y+=5
-
-})
-
-doc.save("AuctionResults.pdf")
-
-}
+function exportPDF(){}
 
 </script>
 
