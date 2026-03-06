@@ -137,7 +137,7 @@ margin-bottom:10px;
 
 <div style="flex:1; overflow:auto">
 
-<table id="auctionTable">
+<table>
 
 <thead>
 <tr>
@@ -169,7 +169,6 @@ margin-bottom:10px;
 
 <div class="export">
 <h4>Export Results</h4>
-
 <button onclick="exportExcel()">Export Excel</button>
 <button onclick="exportPDF()">Export PDF</button>
 </div>
@@ -190,13 +189,25 @@ const buyers=[
 ]
 
 let currentTeam=0
-let data={}
-let playerNames={}
+
+let saved=JSON.parse(localStorage.getItem("auctionData"))
+
+let data=saved?.data || {}
+let playerNames=saved?.playerNames || {}
 
 teams.forEach(t=>{
-data[t]=Array(25).fill(null)
-playerNames[t]=Array(25).fill("")
+if(!data[t]) data[t]=Array(25).fill(null)
+if(!playerNames[t]) playerNames[t]=Array(25).fill("")
 })
+
+function saveData(){
+
+localStorage.setItem("auctionData",JSON.stringify({
+data,
+playerNames
+}))
+
+}
 
 const tabs=document.getElementById("tabs")
 
@@ -204,12 +215,14 @@ teams.forEach((team,i)=>{
 const el=document.createElement("div")
 el.className="tab"
 el.innerText=team
+
 el.onclick=()=>{
 currentTeam=i
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
 el.classList.add("active")
 render()
 }
+
 tabs.appendChild(el)
 })
 
@@ -231,13 +244,16 @@ input.value=playerNames[teams[currentTeam]][i]
 
 input.oninput=(e)=>{
 playerNames[teams[currentTeam]][i]=e.target.value
+saveData()
 }
 
 nameCell.appendChild(input)
 tr.appendChild(nameCell)
 
 let status=document.createElement("td")
+
 status.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
+
 tr.appendChild(status)
 
 buyers.forEach((b,bi)=>{
@@ -246,18 +262,25 @@ let td=document.createElement("td")
 td.className="buyer"
 
 if(data[teams[currentTeam]][i]==bi){
+
 td.classList.add("activeBuyer")
 td.innerHTML="✓"
+
 }
 
 td.onclick=()=>{
 
 if(data[teams[currentTeam]][i]==bi){
+
 data[teams[currentTeam]][i]=null
+
 }else{
+
 data[teams[currentTeam]][i]=bi
+
 }
 
+saveData()
 updateCounts()
 render()
 
@@ -290,27 +313,32 @@ document.getElementById("c"+i).innerText=c
 }
 
 render()
+updateCounts()
 
 let timer=15
 let interval
 
 function startTimer(){
+
 clearInterval(interval)
 
 interval=setInterval(()=>{
+
 timer--
 document.getElementById("timer").innerText=timer+"s"
 
-if(timer<=0){
-clearInterval(interval)
-}
+if(timer<=0) clearInterval(interval)
+
 },1000)
+
 }
 
 function resetTimer(){
+
 timer=15
 document.getElementById("timer").innerText="15s"
 clearInterval(interval)
+
 }
 
 function exportExcel(){
