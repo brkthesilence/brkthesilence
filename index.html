@@ -10,13 +10,11 @@
 <style>
 
 body{
+margin:0;
+font-family:Segoe UI;
 background:#0b0f18;
 color:white;
-font-family:Segoe UI;
-margin:0;
 }
-
-/* HEADER */
 
 header{
 display:flex;
@@ -26,12 +24,9 @@ background:#0a0d14;
 border-bottom:1px solid #1f2a44;
 }
 
-/* TEAM TABS */
-
 .tabs{
 display:flex;
 overflow-x:auto;
-background:#0b0f18;
 border-bottom:1px solid #1f2a44;
 }
 
@@ -45,21 +40,15 @@ border-right:1px solid #1f2a44;
 background:#152238;
 }
 
-/* MAIN LAYOUT */
-
-.container{
+.main{
 display:flex;
 height:calc(100vh - 100px);
 }
 
-/* TABLE AREA */
-
-.table-area{
+.tableArea{
 flex:1;
 overflow-y:auto;
 }
-
-/* TABLE */
 
 table{
 width:100%;
@@ -70,7 +59,7 @@ thead th{
 position:sticky;
 top:0;
 background:#121a2b;
-z-index:2;
+z-index:5;
 }
 
 th,td{
@@ -79,49 +68,40 @@ padding:10px;
 text-align:center;
 }
 
-.serial{
-width:60px;
-}
-
 .buyer{
 cursor:pointer;
-font-size:18px;
+font-weight:bold;
 }
 
-/* BUYER COLORS */
-
-.buyer0{background:#3b82f6;color:white;font-weight:bold;}
-.buyer1{background:#22c55e;color:black;font-weight:bold;}
-.buyer2{background:#a855f7;color:white;font-weight:bold;}
-.buyer3{background:#fb923c;color:black;font-weight:bold;}
-.buyer4{background:#ef4444;color:white;font-weight:bold;}
-
-/* SIDE PANEL */
+.buyer0{background:#3b82f6;color:white;}
+.buyer1{background:#22c55e;color:black;}
+.buyer2{background:#a855f7;color:white;}
+.buyer3{background:#fb923c;color:black;}
+.buyer4{background:#ef4444;color:white;}
 
 .side{
 width:260px;
-background:#060a12;
 padding:20px;
 border-left:1px solid #1f2a44;
+background:#060a12;
 }
 
-.summaryBox{
+.summary{
 background:#10192c;
-padding:12px;
+padding:10px;
 margin-bottom:10px;
-border-radius:6px;
 display:flex;
 justify-content:space-between;
+border-radius:6px;
 }
 
 button{
 background:#1b2a44;
 color:white;
 border:none;
-padding:8px 14px;
-margin:5px;
+padding:8px 12px;
+margin:4px;
 cursor:pointer;
-border-radius:4px;
 }
 
 </style>
@@ -135,15 +115,16 @@ border-radius:4px;
 <div>
 <button onclick="startTimer()">Start</button>
 <button onclick="resetTimer()">Reset</button>
-<button id="timer">15s</button>
+<span id="timer">15s</span>
 </div>
+
 </header>
 
 <div class="tabs" id="tabs"></div>
 
-<div class="container">
+<div class="main">
 
-<div class="table-area">
+<div class="tableArea">
 
 <table>
 
@@ -170,11 +151,11 @@ border-radius:4px;
 
 <h3>Live Summary</h3>
 
-<div class="summaryBox">SD + GR <span id="c0">0</span></div>
-<div class="summaryBox">KD + SK <span id="c1">0</span></div>
-<div class="summaryBox">PP + LG <span id="c2">0</span></div>
-<div class="summaryBox">NR + PK <span id="c3">0</span></div>
-<div class="summaryBox">Devashish <span id="c4">0</span></div>
+<div class="summary">SD + GR <span id="c0">0</span></div>
+<div class="summary">KD + SK <span id="c1">0</span></div>
+<div class="summary">PP + LG <span id="c2">0</span></div>
+<div class="summary">NR + PK <span id="c3">0</span></div>
+<div class="summary">Devashish <span id="c4">0</span></div>
 
 <h4>Export</h4>
 
@@ -187,27 +168,24 @@ border-radius:4px;
 
 <script>
 
-const teams=["Mumbai","Punjab","Rajasthan","Bangalore","Hyderabad","Chennai","Delhi","Gujarat","Kolkata","Lucknow"]
+const teams=[
+"Mumbai","Punjab","Rajasthan","Bangalore","Hyderabad",
+"Chennai","Delhi","Gujarat","Kolkata","Lucknow"
+]
 
 const buyers=["SD + GR","KD + SK","PP + LG","NR + PK","DEVASHISH"]
 
-const playerNames={
-"Mumbai":["Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton","Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir","Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch","Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar","Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"],
-
-"Punjab":["Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash","Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen","Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen","Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar","Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"]
-}
-
 let currentTeam=0
 
-let saved=JSON.parse(localStorage.getItem("auctionData"))
+let saved=JSON.parse(localStorage.getItem("auction"))
 let data=saved?.data||{}
 
 teams.forEach(t=>{
 if(!data[t]) data[t]=Array(25).fill(null)
 })
 
-function saveData(){
-localStorage.setItem("auctionData",JSON.stringify({data}))
+function save(){
+localStorage.setItem("auction",JSON.stringify({data}))
 }
 
 const tabs=document.getElementById("tabs")
@@ -238,25 +216,24 @@ for(let i=0;i<25;i++){
 
 let tr=document.createElement("tr")
 
-let serial=document.createElement("td")
-serial.innerText=i+1
-tr.appendChild(serial)
+let td1=document.createElement("td")
+td1.innerText=i+1
+tr.appendChild(td1)
 
-let name=document.createElement("td")
-name.innerText=playerNames[teams[currentTeam]][i]
-tr.appendChild(name)
+let td2=document.createElement("td")
+td2.innerText="Player "+(i+1)
+tr.appendChild(td2)
 
-let status=document.createElement("td")
-status.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
-tr.appendChild(status)
+let td3=document.createElement("td")
+td3.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
+tr.appendChild(td3)
 
 buyers.forEach((b,bi)=>{
 
 let td=document.createElement("td")
-td.className="buyer"
 
 if(data[teams[currentTeam]][i]==bi){
-td.classList.add("buyer"+bi)
+td.className="buyer buyer"+bi
 td.innerHTML="✓"
 }
 
@@ -268,7 +245,7 @@ data[teams[currentTeam]][i]=null
 data[teams[currentTeam]][i]=bi
 }
 
-saveData()
+save()
 updateCounts()
 render()
 
@@ -308,10 +285,13 @@ let interval
 
 function startTimer(){
 clearInterval(interval)
+
 interval=setInterval(()=>{
 timer--
 document.getElementById("timer").innerText=timer+"s"
+
 if(timer<=0) clearInterval(interval)
+
 },1000)
 }
 
@@ -326,6 +306,7 @@ function exportExcel(){
 let rows=[]
 
 teams.forEach(team=>{
+
 for(let i=0;i<25;i++){
 
 let buyer=data[team][i]
@@ -333,12 +314,13 @@ let buyer=data[team][i]
 rows.push({
 Team:team,
 Serial:i+1,
-Player:playerNames[team][i],
+Player:"Player "+(i+1),
 Status:buyer==null?"Unsold":"Sold",
 Buyer:buyer==null?"":buyers[buyer]
 })
 
 }
+
 })
 
 let ws=XLSX.utils.json_to_sheet(rows)
@@ -368,7 +350,7 @@ for(let i=0;i<25;i++){
 
 let buyer=data[team][i]
 
-doc.text((i+1)+". "+playerNames[team][i]+" - "+(buyer==null?"Unsold":buyers[buyer]),25,y)
+doc.text((i+1)+". Player "+(i+1)+" - "+(buyer==null?"Unsold":buyers[buyer]),25,y)
 
 y+=7
 
