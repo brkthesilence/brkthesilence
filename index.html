@@ -1,59 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>T20 Auction Board</title>
+<title>IPL Auction Board</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 
 body{
+background:#0b0f18;
+color:white;
+font-family:Segoe UI;
 margin:0;
-font-family:Segoe UI,Arial;
-background:#000;
-color:#fff;
-overflow:hidden;
 }
 
-.topbar{
-position:sticky;
-top:0;
-background:#111;
+header{
 display:flex;
-align-items:center;
-gap:10px;
-padding:10px;
+justify-content:space-between;
+padding:12px 20px;
+background:#0a0d14;
+border-bottom:1px solid #1f2a44;
+}
+
+.tabs{
+display:flex;
 overflow-x:auto;
-border-bottom:1px solid #333;
+border-bottom:1px solid #1f2a44;
 }
 
 .tab{
-padding:8px 14px;
-border:1px solid #444;
-background:#000;
+padding:10px 20px;
 cursor:pointer;
-white-space:nowrap;
+border-right:1px solid #1f2a44;
 }
 
 .tab.active{
-background:#1f1f1f;
-border-color:#888;
-}
-
-.timer{
-margin-left:auto;
-font-size:20px;
-font-weight:bold;
+background:#152238;
 }
 
 .container{
 display:flex;
-height:calc(100vh - 50px);
-}
-
-.table-wrap{
-flex:1;
-overflow-y:auto;
+height:calc(100vh - 90px);
 }
 
 table{
@@ -62,50 +51,66 @@ border-collapse:collapse;
 }
 
 th,td{
-border:1px solid #333;
+border:1px solid #1f2a44;
 padding:10px;
 text-align:center;
-min-width:120px;
 }
 
 th{
-background:#111;
+background:#121a2b;
 }
 
-.player{
-text-align:left;
-background:#000;
-color:#fff;
+td input{
+background:none;
 border:none;
+color:white;
 width:100%;
-outline:none;
 }
 
 .buyer{
 cursor:pointer;
-height:40px;
 }
 
-.buyer.active{
-background:#00c853;
-color:#000;
+.activeBuyer{
+background:#2ecc71;
+color:black;
 font-weight:bold;
 }
 
-.sold{
-background:#002b00;
-}
-
-.sidepanel{
-width:220px;
-border-left:1px solid #333;
+.side{
+width:280px;
+background:#060a12;
 padding:20px;
-background:#0a0a0a;
+border-left:1px solid #1f2a44;
 }
 
-.count{
-margin-bottom:15px;
-font-size:18px;
+.summaryBox{
+background:#10192c;
+padding:15px;
+margin-bottom:12px;
+border-radius:6px;
+display:flex;
+justify-content:space-between;
+}
+
+button{
+background:#1b2a44;
+color:white;
+border:none;
+padding:8px 14px;
+margin-left:8px;
+cursor:pointer;
+border-radius:4px;
+}
+
+.export{
+margin-top:20px;
+}
+
+.export button{
+display:block;
+width:100%;
+margin-bottom:10px;
 }
 
 </style>
@@ -113,16 +118,29 @@ font-size:18px;
 
 <body>
 
-<div class="topbar" id="tabs"></div>
+<header>
+<h2>IPL Auction Board</h2>
+
+<div>
+<button onclick="startTimer()">Start</button>
+<button onclick="resetTimer()">Reset</button>
+<button id="timer">15s</button>
+</div>
+
+</header>
+
+<div class="tabs" id="tabs"></div>
 
 <div class="container">
 
-<div class="table-wrap">
+<div style="flex:1; overflow:auto">
+
 <table id="auctionTable">
 
 <thead>
 <tr>
 <th>Player Name</th>
+<th>Status</th>
 <th>SD + GR</th>
 <th>KD + SK</th>
 <th>PP + LG</th>
@@ -131,20 +149,29 @@ font-size:18px;
 </tr>
 </thead>
 
-<tbody id="players"></tbody>
+<tbody id="rows"></tbody>
 
 </table>
+
 </div>
 
-<div class="sidepanel">
+<div class="side">
 
-<div class="timer" id="timer">15</div>
+<h3>Live Summary</h3>
 
-<div class="count">SD + GR: <span id="c0">0</span></div>
-<div class="count">KD + SK: <span id="c1">0</span></div>
-<div class="count">PP + LG: <span id="c2">0</span></div>
-<div class="count">NR + PK: <span id="c3">0</span></div>
-<div class="count">Devashish: <span id="c4">0</span></div>
+<div class="summaryBox">SD + GR <span id="c0">0</span></div>
+<div class="summaryBox">KD + SK <span id="c1">0</span></div>
+<div class="summaryBox">PP + LG <span id="c2">0</span></div>
+<div class="summaryBox">NR + PK <span id="c3">0</span></div>
+<div class="summaryBox">Devashish <span id="c4">0</span></div>
+
+<div class="export">
+<h4>Export Results</h4>
+
+<button onclick="exportExcel()">Export Excel</button>
+<button onclick="exportPDF()">Export PDF</button>
+
+</div>
 
 </div>
 
@@ -152,19 +179,13 @@ font-size:18px;
 
 <script>
 
-const buyers=[
-"SD + GR",
-"KD + SK",
-"PP + LG",
-"NR + PK",
-"DEVASHISH"
-]
-
 const teams=[
 "Mumbai","Punjab","Rajasthan","Bangalore","Hyderabad",
-"Chennai","Delhi","Gujarat","Kolkata","Lucknow",
-"Mumbai 2","Punjab 2","Rajasthan 2","Bangalore 2","Hyderabad 2",
-"Chennai 2","Delhi 2","Gujarat 2","Kolkata 2","Lucknow 2"
+"Chennai","Delhi","Gujarat","Kolkata","Lucknow"
+]
+
+const buyers=[
+"SD + GR","KD + SK","PP + LG","NR + PK","DEVASHISH"
 ]
 
 let currentTeam=0
@@ -189,37 +210,37 @@ render()
 tabs.appendChild(el)
 })
 
-tabs.firstChild.classList.add("active")
+tabs.children[0].classList.add("active")
 
 function render(){
 
-const body=document.getElementById("players")
+const body=document.getElementById("rows")
 body.innerHTML=""
 
 for(let i=0;i<25;i++){
 
-const tr=document.createElement("tr")
+let tr=document.createElement("tr")
 
-const td=document.createElement("td")
-const input=document.createElement("input")
-input.className="player"
-input.placeholder="Paste player name"
-td.appendChild(input)
-tr.appendChild(td)
+let nameCell=document.createElement("td")
+nameCell.innerHTML='<input placeholder="Player '+(i+1)+'">'
+tr.appendChild(nameCell)
+
+let status=document.createElement("td")
+status.innerText=data[teams[currentTeam]][i]==null?"—":"SOLD"
+tr.appendChild(status)
 
 buyers.forEach((b,bi)=>{
 
-const cell=document.createElement("td")
-cell.className="buyer"
+let td=document.createElement("td")
+td.className="buyer"
 
-if(data[teams[currentTeam]][i]===bi){
-cell.classList.add("active")
-tr.classList.add("sold")
+if(data[teams[currentTeam]][i]==bi){
+td.classList.add("activeBuyer")
 }
 
-cell.onclick=()=>{
+td.onclick=()=>{
 
-if(data[teams[currentTeam]][i]===bi){
+if(data[teams[currentTeam]][i]==bi){
 data[teams[currentTeam]][i]=null
 }else{
 data[teams[currentTeam]][i]=bi
@@ -230,7 +251,7 @@ render()
 
 }
 
-tr.appendChild(cell)
+tr.appendChild(td)
 
 })
 
@@ -246,7 +267,7 @@ let counts=[0,0,0,0,0]
 
 Object.values(data).forEach(team=>{
 team.forEach(b=>{
-if(b!==null) counts[b]++
+if(b!=null) counts[b]++
 })
 })
 
@@ -258,13 +279,62 @@ document.getElementById("c"+i).innerText=c
 
 render()
 
-let time=15
+let timer=15
+let interval
 
-setInterval(()=>{
-time--
-if(time<=0) time=15
-document.getElementById("timer").innerText=time
+function startTimer(){
+clearInterval(interval)
+
+interval=setInterval(()=>{
+timer--
+document.getElementById("timer").innerText=timer+"s"
+
+if(timer<=0){
+clearInterval(interval)
+}
 },1000)
+}
+
+function resetTimer(){
+timer=15
+document.getElementById("timer").innerText="15s"
+clearInterval(interval)
+}
+
+function exportExcel(){
+
+let rows=[]
+
+document.querySelectorAll("#rows tr").forEach(tr=>{
+let cols=[...tr.querySelectorAll("td input")].map(i=>i.value)
+rows.push(cols)
+})
+
+let ws=XLSX.utils.json_to_sheet(rows)
+let wb=XLSX.utils.book_new()
+XLSX.utils.book_append_sheet(wb,ws,"Auction")
+XLSX.writeFile(wb,"auction_results.xlsx")
+
+}
+
+function exportPDF(){
+
+const {jsPDF}=window.jspdf
+const doc=new jsPDF()
+
+doc.text("Auction Results",20,20)
+
+let y=30
+
+document.querySelectorAll("#rows tr").forEach(tr=>{
+let name=tr.querySelector("input").value
+doc.text(name,20,y)
+y+=8
+})
+
+doc.save("auction_results.pdf")
+
+}
 
 </script>
 
