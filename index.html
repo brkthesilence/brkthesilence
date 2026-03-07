@@ -2,20 +2,105 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T20 Auction Board</title>
+<title>T20 Auction Board Live</title>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+apiKey: "PASTE_API_KEY",
+authDomain: "PASTE_DOMAIN",
+databaseURL: "PASTE_DATABASE_URL",
+projectId: "PASTE_PROJECT_ID",
+storageBucket: "PASTE_BUCKET",
+messagingSenderId: "PASTE_ID",
+appId: "PASTE_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* BUYERS */
+
+const buyers=["KD","PG","SD","DEV","NR","SPL"]
+
+/* PLAYERS */
+
+const players=[
+"Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton",
+"Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir",
+"Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch",
+"Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar",
+"Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"
+]
+
+/* DATA */
+
+let data=Array(25).fill(null)
+
+/* SAVE */
+
+function save(){
+set(ref(db,"auction"),data)
+}
+
+/* LIVE SYNC */
+
+onValue(ref(db,"auction"),snap=>{
+let v=snap.val()
+if(v) data=v
+render()
+})
+
+/* RENDER */
+
+window.render=function(){
+
+const body=document.getElementById("rows")
+body.innerHTML=""
+
+players.forEach((p,i)=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=`<td>${i+1}</td><td>${p}</td>`
+
+buyers.forEach((b,bi)=>{
+
+let td=document.createElement("td")
+
+if(data[i]==bi){
+td.className="buyer"+bi
+td.innerHTML="✓"
+}
+
+td.onclick=()=>{
+data[i]=data[i]==bi?null:bi
+save()
+}
+
+tr.appendChild(td)
+
+})
+
+body.appendChild(tr)
+
+})
+
+}
+
+</script>
 
 <style>
 
 body{
-margin:0;
 font-family:Segoe UI;
 background:#0b0f18;
 color:white;
-padding:20px;
-}
-
-h2{
-margin-bottom:15px;
 }
 
 table{
@@ -29,16 +114,6 @@ padding:8px;
 text-align:center;
 }
 
-.player{
-text-align:left;
-padding-left:10px;
-}
-
-select{
-margin-bottom:10px;
-padding:6px;
-}
-
 .buyer0{background:#3b82f6}
 .buyer1{background:#22c55e}
 .buyer2{background:#a855f7}
@@ -47,13 +122,12 @@ padding:6px;
 .buyer5{background:#14b8a6}
 
 </style>
+
 </head>
 
-<body>
+<body onload="render()">
 
-<h2>T20 Auction Board</h2>
-
-<select id="teamSelect"></select>
+<h2>T20 Auction Board Live</h2>
 
 <table>
 
@@ -73,105 +147,6 @@ padding:6px;
 <tbody id="rows"></tbody>
 
 </table>
-
-
-<script>
-
-/* TEAMS */
-
-const teams=[
-"Mumbai","Punjab","Rajasthan","Bangalore","Hyderabad",
-"Chennai","Delhi","Gujarat","Kolkata","Lucknow"
-]
-
-/* BUYERS */
-
-const buyers=["KD","PG","SD","DEV","NR","SPL"]
-
-/* PLAYERS */
-
-const players={
-
-Mumbai:[
-"Rohit Sharma","Surya Kumar Yadav","Robin Minz","Sherfane Rutherford","Ryan Rickelton",
-"Quinton DeKock","Danish Malewar","Tilak Verma","Hardik Pandya","Naman Dhir",
-"Mitchell Santner","Raj Angad Bawa","Atharva Ankolekar","Mayank Rawat","Corbin Bosch",
-"Will Jacks","Shardul Thakur","Trent Boult","Mayank Markande","Deepak Chahar",
-"Ashwani Kumar","Raghu Sharma","Mohd Izhar","Allah Ghazankar","Jasprit Bumrah"
-],
-
-Punjab:[
-"Shreyas Iyer","Nehal Wadhera","Vishnu Vinod","Harnoor Pannu","Pyla Avinash",
-"Prabhsimran Singh","Shashank Singh","Marcus Stoinis","Harpreet Brar","Marco Jensen",
-"Azmatullah Omerzai","Priyansh Arya","Musheer Khan","Suryansh Shedge","Mitch Owen",
-"Cooper Connolly","Ben Dwarshuis","Arsheep Singh","Yuzvendra Chahal","Vyshak Vijakumar",
-"Yash Thakur","Xavier Bartlett","Pravin Dubey","Vishal Nishad","Lockie Ferguson"
-]
-
-}
-
-/* DATA */
-
-let data={}
-teams.forEach(t=>data[t]=Array(25).fill(null))
-
-let currentTeam="Mumbai"
-
-/* TEAM SELECT */
-
-const select=document.getElementById("teamSelect")
-
-teams.forEach(t=>{
-let o=document.createElement("option")
-o.text=t
-select.add(o)
-})
-
-select.onchange=()=>{
-currentTeam=select.value
-render()
-}
-
-/* RENDER */
-
-function render(){
-
-const body=document.getElementById("rows")
-body.innerHTML=""
-
-players[currentTeam].forEach((p,i)=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=`<td>${i+1}</td><td class="player">${p}</td>`
-
-buyers.forEach((b,bi)=>{
-
-let td=document.createElement("td")
-
-if(data[currentTeam][i]==bi){
-td.className="buyer"+bi
-td.innerHTML=b
-}
-
-td.onclick=()=>{
-data[currentTeam][i]=data[currentTeam][i]==bi?null:bi
-render()
-}
-
-tr.appendChild(td)
-
-})
-
-body.appendChild(tr)
-
-})
-
-}
-
-render()
-
-</script>
 
 </body>
 </html>
