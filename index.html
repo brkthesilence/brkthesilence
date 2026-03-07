@@ -4,6 +4,77 @@
 <meta charset="UTF-8">
 <title>T20 Auction Board Live</title>
 
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:#0b0f18;
+color:white;
+padding:20px;
+}
+
+h2{
+margin-bottom:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+border:1px solid #1f2a44;
+padding:8px;
+text-align:center;
+}
+
+.player{
+text-align:left;
+padding-left:10px;
+}
+
+select{
+padding:6px;
+margin-bottom:10px;
+}
+
+.buyer0{background:#3b82f6}
+.buyer1{background:#22c55e}
+.buyer2{background:#a855f7}
+.buyer3{background:#fb923c}
+.buyer4{background:#f43f5e}
+.buyer5{background:#14b8a6}
+
+</style>
+</head>
+
+<body>
+
+<h2>T20 Auction Board Live</h2>
+
+<select id="teamSelect"></select>
+
+<table>
+
+<thead>
+<tr>
+<th>#</th>
+<th>Player</th>
+<th>KD</th>
+<th>PG</th>
+<th>SD</th>
+<th>DEV</th>
+<th>NR</th>
+<th>SPL</th>
+</tr>
+</thead>
+
+<tbody id="rows"></tbody>
+
+</table>
+
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -11,18 +82,18 @@ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebase
 
 /* FIREBASE CONFIG */
 
-const firebaseConfig = {
-apiKey: "PASTE_API_KEY",
-authDomain: "PASTE_DOMAIN",
-databaseURL: "PASTE_DATABASE_URL",
-projectId: "PASTE_PROJECT_ID",
-storageBucket: "PASTE_BUCKET",
-messagingSenderId: "PASTE_ID",
-appId: "PASTE_APP_ID"
-};
+const firebaseConfig={
+apiKey:"PASTE_API_KEY",
+authDomain:"PASTE_DOMAIN",
+databaseURL:"PASTE_DATABASE_URL",
+projectId:"PASTE_PROJECT_ID",
+storageBucket:"PASTE_BUCKET",
+messagingSenderId:"PASTE_ID",
+appId:"PASTE_APP_ID"
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig)
+const db=getDatabase(app)
 
 /* TEAMS */
 
@@ -124,42 +195,28 @@ Lucknow:[
 /* DATA */
 
 let data={}
+teams.forEach(t=>data[t]=Array(25).fill(null))
+
 let currentTeam="Mumbai"
 
+/* TEAM SELECT */
+
+const teamSelect=document.getElementById("teamSelect")
+
 teams.forEach(t=>{
-data[t]=Array(25).fill(null)
+let op=document.createElement("option")
+op.text=t
+teamSelect.add(op)
 })
 
-/* SAVE */
-
-function save(){
-set(ref(db,"auction"),data)
-}
-
-/* LIVE SYNC */
-
-onValue(ref(db,"auction"),snap=>{
-
-let v=snap.val()
-
-if(v){
-data=v
-}
-
-render()
-
-})
-
-/* TEAM CHANGE */
-
-window.changeTeam=function(){
-currentTeam=document.getElementById("teamSelect").value
+teamSelect.onchange=()=>{
+currentTeam=teamSelect.value
 render()
 }
 
 /* RENDER */
 
-window.render=function(){
+function render(){
 
 const body=document.getElementById("rows")
 body.innerHTML=""
@@ -167,7 +224,6 @@ body.innerHTML=""
 players[currentTeam].forEach((p,i)=>{
 
 let tr=document.createElement("tr")
-
 tr.innerHTML=`<td>${i+1}</td><td class="player">${p}</td>`
 
 buyers.forEach((b,bi)=>{
@@ -181,7 +237,7 @@ td.innerHTML=b
 
 td.onclick=()=>{
 data[currentTeam][i]=data[currentTeam][i]==bi?null:bi
-save()
+set(ref(db,"auction"),data)
 }
 
 tr.appendChild(td)
@@ -194,86 +250,16 @@ body.appendChild(tr)
 
 }
 
+/* LIVE SYNC */
+
+onValue(ref(db,"auction"),snap=>{
+if(snap.val()) data=snap.val()
+render()
+})
+
+render()
+
 </script>
-
-<style>
-
-body{
-font-family:Segoe UI;
-background:#0b0f18;
-color:white;
-padding:20px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-td,th{
-border:1px solid #1f2a44;
-padding:8px;
-text-align:center;
-}
-
-.player{
-text-align:left;
-padding-left:10px;
-}
-
-select{
-margin-bottom:10px;
-padding:6px;
-}
-
-.buyer0{background:#3b82f6}
-.buyer1{background:#22c55e}
-.buyer2{background:#a855f7}
-.buyer3{background:#fb923c}
-.buyer4{background:#f43f5e}
-.buyer5{background:#14b8a6}
-
-</style>
-
-</head>
-
-<body onload="render()">
-
-<h2>T20 Auction Board Live</h2>
-
-<select id="teamSelect" onchange="changeTeam()">
-
-<option>Mumbai</option>
-<option>Punjab</option>
-<option>Rajasthan</option>
-<option>Bangalore</option>
-<option>Hyderabad</option>
-<option>Chennai</option>
-<option>Delhi</option>
-<option>Gujarat</option>
-<option>Kolkata</option>
-<option>Lucknow</option>
-
-</select>
-
-<table>
-
-<thead>
-<tr>
-<th>#</th>
-<th>Player</th>
-<th>KD</th>
-<th>PG</th>
-<th>SD</th>
-<th>DEV</th>
-<th>NR</th>
-<th>SPL</th>
-</tr>
-</thead>
-
-<tbody id="rows"></tbody>
-
-</table>
 
 </body>
 </html>
