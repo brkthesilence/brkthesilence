@@ -130,21 +130,34 @@ teams.forEach(t=>{
 data[t]=Array(25).fill(null)
 })
 
+/* SAVE */
+
 function save(){
 set(ref(db,"auction"),data)
 }
 
+/* LIVE SYNC */
+
 onValue(ref(db,"auction"),snap=>{
+
 let v=snap.val()
-if(!v) return
+
+if(v){
 data=v
+}
+
 render()
+
 })
+
+/* TEAM CHANGE */
 
 window.changeTeam=function(){
 currentTeam=document.getElementById("teamSelect").value
 render()
 }
+
+/* RENDER */
 
 window.render=function(){
 
@@ -154,6 +167,7 @@ body.innerHTML=""
 players[currentTeam].forEach((p,i)=>{
 
 let tr=document.createElement("tr")
+
 tr.innerHTML=`<td>${i+1}</td><td class="player">${p}</td>`
 
 buyers.forEach((b,bi)=>{
