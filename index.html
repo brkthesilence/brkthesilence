@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <title>T20 Auction Board Live</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-/* ---------------- FIREBASE CONFIG ---------------- */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 apiKey: "PASTE_API_KEY",
@@ -22,8 +20,6 @@ storageBucket: "PASTE_BUCKET",
 messagingSenderId: "PASTE_ID",
 appId: "PASTE_APP_ID"
 };
-
-/* -------------------------------------------------- */
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -39,7 +35,7 @@ const teams=[
 
 const buyers=["KD","PG","SD","DEV","NR","SPL"]
 
-/* PLAYER LISTS */
+/* PLAYERS */
 
 const players={
 
@@ -112,7 +108,7 @@ Kolkata:[
 "Finn Allen","Tejasvi Singh","Rahul Tripathi","Tim Seifert","Rovman Powell",
 "Anukul Roy","Sarthak Ranjan","Daksh Kamra","Rachin Ravindra","Ramandeep Singh",
 "Vaibhav Arora","Matheesha Pathirana","Kartik Tyagi","Prashant Solanki","Akash Deep",
-"Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","NA"
+"Harshit Rana","Umran Malik","Sunil Narine","Varun Chakravarthy","Andre Russell"
 ],
 
 Lucknow:[
@@ -125,56 +121,52 @@ Lucknow:[
 
 }
 
-/* DATA STRUCTURE */
+/* DATA */
 
 let data={}
-let points={}
+let currentTeam="Mumbai"
 
 teams.forEach(t=>{
 data[t]=Array(25).fill(null)
-points[t]=Array(25).fill(0)
 })
 
-/* SAVE */
-
 function save(){
-set(ref(db,"auction"),{data,points})
+set(ref(db,"auction"),data)
 }
-
-/* LIVE SYNC */
 
 onValue(ref(db,"auction"),snap=>{
 let v=snap.val()
 if(!v) return
-data=v.data
-points=v.points
+data=v
 render()
 })
 
-/* RENDER */
+window.changeTeam=function(){
+currentTeam=document.getElementById("teamSelect").value
+render()
+}
 
 window.render=function(){
 
 const body=document.getElementById("rows")
 body.innerHTML=""
 
-players["Mumbai"].forEach((p,i)=>{
+players[currentTeam].forEach((p,i)=>{
 
 let tr=document.createElement("tr")
-
-tr.innerHTML=`<td>${i+1}</td><td>${p}</td>`
+tr.innerHTML=`<td>${i+1}</td><td class="player">${p}</td>`
 
 buyers.forEach((b,bi)=>{
 
 let td=document.createElement("td")
 
-if(data["Mumbai"][i]==bi){
+if(data[currentTeam][i]==bi){
 td.className="buyer"+bi
-td.innerHTML="✓"
+td.innerHTML=b
 }
 
 td.onclick=()=>{
-data["Mumbai"][i]=data["Mumbai"][i]==bi?null:bi
+data[currentTeam][i]=data[currentTeam][i]==bi?null:bi
 save()
 }
 
@@ -196,6 +188,7 @@ body{
 font-family:Segoe UI;
 background:#0b0f18;
 color:white;
+padding:20px;
 }
 
 table{
@@ -207,6 +200,16 @@ td,th{
 border:1px solid #1f2a44;
 padding:8px;
 text-align:center;
+}
+
+.player{
+text-align:left;
+padding-left:10px;
+}
+
+select{
+margin-bottom:10px;
+padding:6px;
 }
 
 .buyer0{background:#3b82f6}
@@ -223,6 +226,21 @@ text-align:center;
 <body onload="render()">
 
 <h2>T20 Auction Board Live</h2>
+
+<select id="teamSelect" onchange="changeTeam()">
+
+<option>Mumbai</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>Bangalore</option>
+<option>Hyderabad</option>
+<option>Chennai</option>
+<option>Delhi</option>
+<option>Gujarat</option>
+<option>Kolkata</option>
+<option>Lucknow</option>
+
+</select>
 
 <table>
 
@@ -245,4 +263,3 @@ text-align:center;
 
 </body>
 </html>
-```
